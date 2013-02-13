@@ -1,11 +1,12 @@
 package com.example.solarpanelmanager.tests.api;
 
-import java.util.HashMap;
-
 import junit.framework.TestCase;
 
-import com.example.solarpanelmanager.api.parsers.APIKeys;
 import com.example.solarpanelmanager.api.parsers.BaseParser;
+import com.example.solarpanelmanager.api.responses.BaseResponse;
+import com.example.solarpanelmanager.api.responses.HistoryResponse;
+import com.example.solarpanelmanager.api.responses.SnapshotResponse;
+import com.example.solarpanelmanager.api.responses.StreamResponse;
 
 public class ApiParserTest extends TestCase {
 
@@ -16,29 +17,29 @@ public class ApiParserTest extends TestCase {
 	private static int RESULT_OK = 200;
 
 	public void testResultOK() {
-		HashMap<String, Object> results = BaseParser.parseResponse(DATE_TIME);
+		BaseResponse response = BaseParser.parseBasicResponse(DATE_TIME);
 
-		assertEquals(RESULT_OK, results.get(APIKeys.RESULT));
+		assertEquals(RESULT_OK, response.getResult());
 	}
 
 	public void testStreamParser() {
-		HashMap<String, Object> results = BaseParser.parseResponse(STREAM_PACKET);
+		StreamResponse response = BaseParser.parseStreamResponse(STREAM_PACKET);
 
-		assertEquals(RESULT_OK, results.get(APIKeys.RESULT));
+		assertEquals(RESULT_OK, response.getResult());
 		// Test for other info here
 	}
 
 	public void testHistoryParser() {
-		HashMap<String, Object> results = BaseParser.parseResponse(HISTORY_DATA);
+		HistoryResponse response = BaseParser.parseHistoryResponse(HISTORY_DATA);
 
-		assertEquals(RESULT_OK, results.get(APIKeys.RESULT));
+		assertEquals(RESULT_OK, response.getResult());
 		// Test for other info here
 	}
 
 	public void testSnapshotParser() {
-		HashMap<String, Object> results = BaseParser.parseResponse(SNAPSHOT_DATA);
+		SnapshotResponse response = BaseParser.parseSnapshotResponse(SNAPSHOT_DATA);
 
-		assertEquals(RESULT_OK, results.get(APIKeys.RESULT));
+		assertEquals(RESULT_OK, response.getResult());
 		// Test for other info here
 	}
 }
