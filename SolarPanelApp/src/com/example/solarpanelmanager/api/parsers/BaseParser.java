@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class BaseParser {
 
-	public HashMap<String, Object> parseResponse(String response) {
+	public static HashMap<String, Object> parseResponse(String response) {
 		HashMap<String, Object> values = new HashMap<String, Object>();
 
 		return values;
