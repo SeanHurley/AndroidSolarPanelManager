@@ -5,7 +5,6 @@ import java.util.HashMap;
 import com.example.solarpanelmanager.api.responses.BaseResponse;
 import com.example.solarpanelmanager.api.responses.HistoryResponse;
 import com.example.solarpanelmanager.api.responses.SnapshotResponse;
-import com.example.solarpanelmanager.api.responses.StreamResponse;
 
 public class ResponseParser {
 
@@ -30,12 +29,6 @@ public class ResponseParser {
 	}
 
 	public static HistoryResponse parseHistoryResponse(String response) {
-		// Call the parse response for the basic map, and then create the proper
-		// response object
-		return null;
-	}
-
-	public static StreamResponse parseStreamResponse(String response) {
 		// Call the parse response for the basic map, and then create the proper
 		// response object
 		return null;

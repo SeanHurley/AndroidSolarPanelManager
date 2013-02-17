@@ -2,10 +2,19 @@ package com.example.solarpanelmanager.api.responses;
 
 public class BaseResponse {
 	private int result;
+	private String type;
 
 	public BaseResponse(int result) {
 		// This will set the result, but that's all the base response has
 		this.result = result;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public int getResult() {
