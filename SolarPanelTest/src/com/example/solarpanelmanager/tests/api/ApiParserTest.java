@@ -1,6 +1,12 @@
 package com.example.solarpanelmanager.tests.api;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
+
 import junit.framework.TestCase;
+
+import org.apache.commons.io.IOUtils;
 
 import com.example.solarpanelmanager.api.parsers.ResponseParser;
 import com.example.solarpanelmanager.api.responses.BaseResponse;
@@ -12,10 +18,10 @@ public class ApiParserTest extends TestCase {
 
 	private static String DATE_TIME = "";
 	private static String STREAM_PACKET = "";
-	private static String HISTORY_DATA = "";
-	private static String SNAPSHOT_DATA = "";
-	private static int RESULT_OK = 200;
-
+	private static String HISTORY_DATA = "history.json";
+	private static String SNAPSHOT_DATA = "snapshot.json";
+	private static final int RESULT_OK = 200;
+	
 	public void testResultOK() {
 		BaseResponse response = ResponseParser.parseBasicResponse(DATE_TIME);
 
@@ -29,17 +35,26 @@ public class ApiParserTest extends TestCase {
 		// Test for other info here
 	}
 
-	public void testHistoryParser() {
-		HistoryResponse response = ResponseParser.parseHistoryResponse(HISTORY_DATA);
+	public void testHistoryParser() throws IOException {
+		String data = loadFile(HISTORY_DATA);
+		HistoryResponse response = ResponseParser.parseHistoryResponse(data);
 
 		assertEquals(RESULT_OK, response.getResult());
 		// Test for other info here
 	}
 
-	public void testSnapshotParser() {
-		SnapshotResponse response = ResponseParser.parseSnapshotResponse(SNAPSHOT_DATA);
+	public void testSnapshotParser() throws IOException {
+		String data = loadFile(SNAPSHOT_DATA);
+		SnapshotResponse response = ResponseParser.parseSnapshotResponse(data);
 
 		assertEquals(RESULT_OK, response.getResult());
 		// Test for other info here
+	}
+	
+	private static String loadFile(String name) throws IOException {
+		InputStream in = ApiParserTest.class.getClassLoader().getResourceAsStream(name);
+		StringWriter writer = new StringWriter();
+		IOUtils.copy(in, writer);
+		return writer.toString();
 	}
 }
