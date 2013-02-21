@@ -2,9 +2,14 @@ package com.example.solarpanelmanager.api.responses;
 
 
 public class HistoryResponse extends BaseResponse {
-
-	public HistoryResponse(int result) {
+	private SnapshotResponse[] historyData;
+	public HistoryResponse(int result, SnapshotResponse[] historyData) {
 		super(result);
-		// Setup other values
+		this.historyData = historyData;
+		setType("history-data");
+	}
+	
+	public SnapshotResponse[] getHistoryData(){
+		return historyData;
 	}
 }

@@ -1,25 +1,32 @@
 package com.example.solarpanelmanager.api.responses;
 
 public class SnapshotResponse extends BaseResponse {
-
-	public SnapshotResponse(int result) {
+	private long timestamp;
+	private double batteryVoltage;
+	private double PVCurrent;
+	private double PVVoltage;
+	public SnapshotResponse(int result, long timestamp, double batteryVoltage, double PVCurrent, double PVVoltage) {
 		super(result);
-		// Setup other values
+		this.timestamp = timestamp;
+		this.batteryVoltage = batteryVoltage;
+		this.PVCurrent = PVCurrent;
+		this.PVVoltage = PVVoltage;
+		setType("snapshot");
 	}
 
 	public long getTimestamp() {
-		return 0L;
+		return timestamp;
 	}
 
-	public float getBatteryVoltage() {
-		return 0.0f;
+	public double getBatteryVoltage() {
+		return batteryVoltage;
 	}
 
-	public float getPVCurrent() {
-		return 0.0f;
+	public double getPVCurrent() {
+		return PVCurrent;
 	}
 
-	public float getPVVoltage() {
-		return 0.0f;
+	public double getPVVoltage() {
+		return PVVoltage;
 	}
 }
