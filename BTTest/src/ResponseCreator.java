@@ -1,7 +1,7 @@
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
-public class ResponseFactory {
+public class ResponseCreator {
 
 	static final int RESULT_OK = 200;
 
