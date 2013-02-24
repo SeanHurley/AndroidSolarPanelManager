@@ -4,9 +4,10 @@ import net.minidev.json.JSONObject;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
+import android.widget.Toast;
 
 import com.example.bluetooth.Callback;
-import com.example.bluetooth.HistoryCaller;
+import com.example.bluetooth.SnapshotHandler;
 
 public class MainActivity extends Activity {
 
@@ -19,7 +20,17 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		test.run();
+
+		// Do a basic call to the device for testing purposes.
+		SnapshotHandler call = new SnapshotHandler(new Callback() {
+
+			@Override
+			public void onComplete(JSONObject json) {
+				System.out.println("---Finished---");
+				Toast.makeText(MainActivity.this, json.toJSONString(), Toast.LENGTH_LONG).show();
+			}
+		});
+		call.performAction();
 	}
 
 	@Override
@@ -28,21 +39,5 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
-
-	Thread test = new Thread(new Runnable() {
-
-		@Override
-		public void run() {
-
-			HistoryCaller call = new HistoryCaller(new Callback() {
-
-				@Override
-				public void onComplete(JSONObject json) {
-					System.out.println(json.toString());
-				}
-			});
-			call.performAction();
-		}
-	});
 
 }
