@@ -16,6 +16,10 @@
         <activity
             android:name="com.example.solarpanelmanager.MainActivity"
             android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="com.example.solarpanelmanager.SplashActivity"
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
