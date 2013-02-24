@@ -15,7 +15,7 @@ import javax.microedition.io.StreamConnectionNotifier;
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONValue;
 
-public class MockPanel {
+public class MockPanel {	
 	private static Queue<Snapshot> historyData = new LinkedList<Snapshot>();
 
 	public static void main(String[] args) {
@@ -38,7 +38,12 @@ public class MockPanel {
 		public void run() {
 			while (true) {
 				Snapshot snap = new Snapshot(new Date(), Math.random(), Math.random(), Math.random(), Math.random());
+				
+				if (historyData.size() > 10) {
+					historyData.poll();
+				}
 				historyData.offer(snap);
+				
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
@@ -50,6 +55,7 @@ public class MockPanel {
 	};
 
 	public static class RequestHandler {
+		
 		public final UUID uuid = new UUID( // the uid of the service, it has to
 											// be
 											// unique,
@@ -64,19 +70,30 @@ public class MockPanel {
 		StreamConnection conn = null;
 
 		private String getResponse(String request) {
-			System.out.println("Request: " + request);
+//			System.out.println("Request: " + request);
 			JSONObject json = (JSONObject) JSONValue.parse(request);
 			String type = (String) json.get("type");
-			if (type.equals("snapshot")) {
-				Snapshot snap = new Snapshot(new Date(), Math.random(), Math.random(), Math.random(), Math.random());
-				String response = ResponseFactory.buildSnapshot(snap);
-				return response;
-			} else if (type.equals("history")) {
-				ArrayList<Snapshot> snaps = new ArrayList<Snapshot>(historyData);
-				History history = new History(snaps);
-				String response = ResponseFactory.buildHistory(history);
-				return response;
+			
+			if (MessageTypes.TIME_UPDATE.equals(type)) {
+				return handleTimeUpdate(json);
+			} else if (MessageTypes.LOCATION_UPDATE.equals(type)) {
+				return handleLocationUpdate(json);
+			} else if (MessageTypes.SNAPSHOT.equals(type)) {
+				return handleSnapshot();
+			} else if (MessageTypes.HISTORY.equals(type)) {
+				return handleHistory();
+			} else if (MessageTypes.ADD_DEVICE.equals(type)) {
+				return handleAddDevice(json);
+			} else if (MessageTypes.REMOVE_DEVICE.equals(type)) {
+				return handleRemoveDevice(json);
+			} else if (MessageTypes.SCEDULE_EVENT.equals(type)) {
+				return handleScheduleEvent(json);
+			} else if (MessageTypes.UNSCHEDULE_EVENT.equals(type)){
+				return handleUnscheduleEvent(json);
+			} else {
+				System.out.println("Received unknown message type.");
 			}
+			
 			return "{}\n";
 		}
 
@@ -112,5 +129,80 @@ public class MockPanel {
 				System.out.println("Exception Occured: " + e.toString());
 			}
 		}
+		
+		private String handleTimeUpdate(JSONObject json) {
+			
+			long time = (Long) json.get("timestamp");
+			System.out.println("New time= " + time);
+			
+			return null;
+		}
+		
+		private String handleLocationUpdate(JSONObject json) {
+			
+			float lon = (Float) json.get("longitude");
+			float lat = (Float) json.get("latitude");
+			System.out.println("New location= (" + lon + ", " + lat + ")");
+			
+			return null;
+		}
+		
+		private String handleSnapshot() {
+			
+			Snapshot snap = new Snapshot(new Date(), Math.random(), Math.random(), Math.random(), Math.random());
+			String response = ResponseFactory.buildSnapshot(snap);
+			
+			return response;
+			
+		}
+		
+		private String handleHistory() {
+			
+			ArrayList<Snapshot> snaps = new ArrayList<Snapshot>(historyData);
+			History history = new History(snaps);
+			String response = ResponseFactory.buildHistory(history);
+			
+			return response;
+			
+		}
+		
+		private String handleAddDevice(JSONObject json) {
+			
+			String id = (String) json.get("indentifier");
+			String mask = (String) json.get("mask");
+			System.out.println("Adding device: id=" + id + ", mask=" + mask);
+			
+			return null;
+		}
+		
+		private String handleRemoveDevice(JSONObject json) {
+			
+			String id = (String) json.get("identifier");
+			System.out.println("Removing devide: id=" + id);
+			
+			return null;
+		}
+		
+		private String handleScheduleEvent(JSONObject json) {
+			
+			String id = (String) json.get("identifier");
+			long firstRun = (Long) json.get("first-run-timestamp");
+			long duration = (Long) json.get("run-duration");
+			long interval = (Long) json.get("interval-durations");
+			System.out.println("Adding event: id=" + id + ", first run=" + 
+					firstRun + ", duration=" + duration + ", interval=" + interval);
+			
+			return null;
+		}
+		
+		private String handleUnscheduleEvent(JSONObject json) {
+			
+			String id = (String) json.get("identifier");
+			System.out.println("Removing device: id=" + id);
+			
+			return null;
+		}
+		
+		
 	}
 }
