@@ -30,12 +30,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.solarpanelmanager.DeviceListActivity"
+            android:name="com.example.solarpanelmanager.AddDeviceActivity"
             android:label="@string/title_activity_device_list"
             android:parentActivityName="com.example.solarpanelmanager.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.solarpanelmanager.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.example.solarpanelmanager.KnownDevicesActivity"
+            android:label="@string/title_activity_known_devices" >
         </activity>
     </application>
 
