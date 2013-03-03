@@ -21,7 +21,6 @@ import android.os.AsyncTask;
  *         the functionality.
  */
 public abstract class CommunicationHandler {
-
 	private Callback responseCallback;
 
 	/**
@@ -61,6 +60,11 @@ public abstract class CommunicationHandler {
 			// TODO Fix the newline ending?
 			String request = getRequest() + "\n";
 			BluetoothSocket clientSocket = null;
+
+			if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
+				// Bluetooth is not enabled
+				return null;
+			}
 
 			// TODO Client knows the MAC address of server
 			// This should be passed along from the app to give them the which
