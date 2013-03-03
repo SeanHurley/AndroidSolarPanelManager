@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -19,26 +18,14 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
-		final Activity me = this;
-		Button b = (Button) findViewById(R.id.button1);
-		b.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				Intent i = new Intent(me, DeviceListActivity.class);
-				startActivity(i);
-			}
-			
-		});
 
 		// BUTTON: Connect to existing device
 		final Button buttonConnect = (Button) findViewById(R.id.button_connect_device);
 		buttonConnect.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
+				Intent i = new Intent(MainActivity.this, DeviceListActivity.class);
+				startActivity(i);
 			}
 		});
 
