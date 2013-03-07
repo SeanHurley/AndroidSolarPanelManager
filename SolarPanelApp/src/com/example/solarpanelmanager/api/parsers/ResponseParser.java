@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
+import net.minidev.json.JSONValue;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
 
@@ -12,7 +13,6 @@ import com.example.solarpanelmanager.api.responses.HistoryResponse;
 import com.example.solarpanelmanager.api.responses.SnapshotResponse;
 
 public class ResponseParser {
-	private static JSONParser jparse = new JSONParser(JSONParser.DEFAULT_PERMISSIVE_MODE);
 
 	/**
 	 * @param response
@@ -28,17 +28,17 @@ public class ResponseParser {
 		return values;
 	}
 
-	public static BaseResponse parseBasicResponse(String response) throws ParseException {
+	public static BaseResponse parseBasicResponse(String response) {
 		// Call the parse response for the basic map, and then create the proper
 		// response object
-		JSONObject json = (JSONObject) jparse.parse(response);
+		JSONObject json = (JSONObject) JSONValue.parse(response);
 		return new BaseResponse((Integer) json.get("result"));
 	}
 
-	public static HistoryResponse parseHistoryResponse(String response) throws ParseException {
+	public static HistoryResponse parseHistoryResponse(String response) {
 		// Call the parse response for the basic map, and then create the proper
 		// response object
-		JSONObject json = (JSONObject) jparse.parse(response);
+		JSONObject json = (JSONObject) JSONValue.parse(response);
 		JSONArray snapshots = (JSONArray) json.get("history-data");
 		SnapshotResponse[] snapshotResponses = new SnapshotResponse[snapshots.size()];
 		
@@ -49,10 +49,10 @@ public class ResponseParser {
 		return new HistoryResponse(result, snapshotResponses);
 	}
 
-	public static SnapshotResponse parseSnapshotResponse(String response) throws ParseException {
+	public static SnapshotResponse parseSnapshotResponse(String response) {
 		// Call the parse response for the basic map, and then create the proper
 		// response object
-		JSONObject json = (JSONObject)(jparse.parse(response));
+		JSONObject json = (JSONObject)(JSONValue.parse(response));
 		int result = (Integer) json.get("result");
 		
 		Object timestamp = json.get("timestamp");

@@ -1,5 +1,8 @@
 package com.example.bluetooth;
 
+import com.example.solarpanelmanager.api.parsers.ResponseParser;
+import com.example.solarpanelmanager.api.responses.BaseResponse;
+
 import net.minidev.json.JSONObject;
 
 /**
@@ -20,4 +23,10 @@ public class SnapshotHandler extends CommunicationHandler {
 		json.put("type", "snapshot");
 		return json.toJSONString();
 	}
+	
+	@Override
+	protected BaseResponse parseResponse(String data) {
+		return ResponseParser.parseSnapshotResponse(data);
+	}
+	
 }
