@@ -1,7 +1,6 @@
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -18,7 +17,7 @@ import net.minidev.json.JSONValue;
 
 public class MockPanel {
 	private static boolean testing = false;
-	
+
 	private static String pin;
 	private static Queue<Snapshot> historyData = new LinkedList<Snapshot>();
 	private static float time;
@@ -29,8 +28,11 @@ public class MockPanel {
 	private static int minCharge;
 
 	public static void main(String[] args) {
-		for(int i = 1; i < args.length; i++) {
-			if ("-t".equals(args[i])) testing = true;
+		for (int i = 0; i < args.length; i++) {
+			if ("-t".equals(args[i])) {
+				testing = true;
+				System.out.println("Entering testing mode");
+			}
 		}
 		startHistory();
 		startBluetoothServer();
@@ -54,7 +56,8 @@ public class MockPanel {
 				if (testing) {
 					snap = new Snapshot(System.currentTimeMillis(), 0.5, 0.5, 0.5, 0.5);
 				} else {
-					snap = new Snapshot(System.currentTimeMillis(), Math.random(), Math.random(), Math.random(), Math.random());
+					snap = new Snapshot(System.currentTimeMillis(), Math.random(), Math.random(), Math.random(),
+							Math.random());
 				}
 
 				if (historyData.size() > 10) {
@@ -95,7 +98,8 @@ public class MockPanel {
 			String response = "{}";
 			if (MessageTypes.PIN_UPDATE.equals(type)) {
 				response = handlePinUpdate(json);
-			} if (MessageTypes.TIME_UPDATE.equals(type)) {
+			}
+			if (MessageTypes.TIME_UPDATE.equals(type)) {
 				response = handleTimeUpdate(json);
 			} else if (MessageTypes.LOCATION_UPDATE.equals(type)) {
 				response = handleLocationUpdate(json);
@@ -154,24 +158,26 @@ public class MockPanel {
 				System.out.println("Exception Occured: " + e.toString());
 			}
 		}
-		
+
 		private String handlePinUpdate(JSONObject json) {
 			try {
 				String p = (String) json.get("pin");
 				pin = p;
 				return ResponseCreator.buildDefaultOK(MessageTypes.PIN_UPDATE_RESPONSE);
 			} catch (Exception e) {
-				return ResponseCreator.buildDefaultInternalError(MessageTypes.PIN_UPDATE_RESPONSE, "Pin error: " + e.getMessage());
+				return ResponseCreator.buildDefaultInternalError(MessageTypes.PIN_UPDATE_RESPONSE,
+						"Pin error: " + e.getMessage());
 			}
 		}
-		
+
 		private String handleTimeUpdate(JSONObject json) {
 			try {
 				long t = (Long) json.get("timestamp");
 				time = t;
 				return ResponseCreator.buildDefaultOK(MessageTypes.TIME_UPDATE_RESPONSE);
 			} catch (Exception e) {
-				return ResponseCreator.buildDefaultInternalError(MessageTypes.TIME_UPDATE_RESPONSE, "Time error: " + e.getMessage());
+				return ResponseCreator.buildDefaultInternalError(MessageTypes.TIME_UPDATE_RESPONSE,
+						"Time error: " + e.getMessage());
 			}
 		}
 
@@ -183,7 +189,8 @@ public class MockPanel {
 				latitude = lat;
 				return ResponseCreator.buildDefaultOK(MessageTypes.LOCATION_UPDATE_RESPONSE);
 			} catch (Exception e) {
-				return ResponseCreator.buildDefaultInternalError(MessageTypes.LOCATION_UPDATE_RESPONSE, "Location error: " + e.getMessage());
+				return ResponseCreator.buildDefaultInternalError(MessageTypes.LOCATION_UPDATE_RESPONSE,
+						"Location error: " + e.getMessage());
 			}
 		}
 
@@ -193,11 +200,13 @@ public class MockPanel {
 				if (testing) {
 					snap = new Snapshot(System.currentTimeMillis(), 0.5, 0.5, 0.5, 0.5);
 				} else {
-					snap = new Snapshot(System.currentTimeMillis(), Math.random(), Math.random(), Math.random(), Math.random());
+					snap = new Snapshot(System.currentTimeMillis(), Math.random(), Math.random(), Math.random(),
+							Math.random());
 				}
 				return ResponseCreator.buildSnapshot(snap);
 			} catch (Exception e) {
-				return ResponseCreator.buildDefaultInternalError(MessageTypes.SNAPSHOT_RESPONSE, "Snapshot error: " + e.getMessage());
+				return ResponseCreator.buildDefaultInternalError(MessageTypes.SNAPSHOT_RESPONSE,
+						"Snapshot error: " + e.getMessage());
 			}
 		}
 
@@ -207,7 +216,8 @@ public class MockPanel {
 				History history = new History(snaps);
 				return ResponseCreator.buildHistory(history);
 			} catch (Exception e) {
-				return ResponseCreator.buildDefaultInternalError(MessageTypes.HISTORY_RESPONSE, "History error: " + e.getMessage());
+				return ResponseCreator.buildDefaultInternalError(MessageTypes.HISTORY_RESPONSE,
+						"History error: " + e.getMessage());
 			}
 
 		}
@@ -223,7 +233,8 @@ public class MockPanel {
 				events.put(id, e);
 				return ResponseCreator.buildDefaultOK(MessageTypes.SCHEDULE_EVENT_REPONSE);
 			} catch (Exception e) {
-				return ResponseCreator.buildDefaultInternalError(MessageTypes.SCHEDULE_EVENT_REPONSE, "Schedule error: " + e.getMessage());
+				return ResponseCreator.buildDefaultInternalError(MessageTypes.SCHEDULE_EVENT_REPONSE,
+						"Schedule error: " + e.getMessage());
 			}
 		}
 
@@ -233,38 +244,42 @@ public class MockPanel {
 				events.remove(id);
 				return ResponseCreator.buildDefaultOK(MessageTypes.UNSCHEDULE_EVENT_REPONSE);
 			} catch (Exception e) {
-				return ResponseCreator.buildDefaultInternalError(MessageTypes.UNSCHEDULE_EVENT_REPONSE, "Unschedule error: " + e.getMessage());
+				return ResponseCreator.buildDefaultInternalError(MessageTypes.UNSCHEDULE_EVENT_REPONSE,
+						"Unschedule error: " + e.getMessage());
 			}
 		}
-		
+
 		private String handleViewEvents() {
 			try {
 				ArrayList<Event> e = new ArrayList<Event>(events.values());
 				EventsList ev = new EventsList(e);
 				return ResponseCreator.buildEventsList(ev);
 			} catch (Exception e) {
-				return ResponseCreator.buildDefaultInternalError(MessageTypes.EVENTS_RESPONSE, "View events error: " + e.getMessage());
+				return ResponseCreator.buildDefaultInternalError(MessageTypes.EVENTS_RESPONSE, "View events error: "
+						+ e.getMessage());
 			}
 		}
-		
+
 		private String handleSetChargeConstraints(JSONObject json) {
 			try {
 				maxCharge = (Integer) json.get("max");
 				minCharge = (Integer) json.get("min");
-				return ResponseCreator.buildDefaultOK(MessageTypes.SET_CHARGE_CONSTRAINTS_RESPONSE);				
+				return ResponseCreator.buildDefaultOK(MessageTypes.SET_CHARGE_CONSTRAINTS_RESPONSE);
 			} catch (Exception e) {
-				return ResponseCreator.buildDefaultInternalError(MessageTypes.SET_CHARGE_CONSTRAINTS_RESPONSE, "Set charge constrints error: " + e.getMessage());
+				return ResponseCreator.buildDefaultInternalError(MessageTypes.SET_CHARGE_CONSTRAINTS_RESPONSE,
+						"Set charge constrints error: " + e.getMessage());
 			}
 		}
-		
+
 		private String handleViewChargeConstraints() {
 			try {
 				return ResponseCreator.buildViewChargeConstraints(maxCharge, minCharge);
 			} catch (Exception e) {
-				return ResponseCreator.buildDefaultInternalError(MessageTypes.VIEW_CHARGE_CONSTRAINTS_RESPONSE, "View charge constrints error: " + e.getMessage());
+				return ResponseCreator.buildDefaultInternalError(MessageTypes.VIEW_CHARGE_CONSTRAINTS_RESPONSE,
+						"View charge constrints error: " + e.getMessage());
 			}
 		}
-		
+
 		private String handleUnknownRequest(JSONObject json) {
 			return ResponseCreator.buildDefaultNotFound();
 		}
