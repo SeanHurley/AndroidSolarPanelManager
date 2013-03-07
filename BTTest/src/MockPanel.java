@@ -29,8 +29,8 @@ public class MockPanel {
 	private static int minCharge;
 
 	public static void main(String[] args) {
-		if ("-t".equals(args[1])) {
-			testing = true;
+		for(int i = 1; i < args.length; i++) {
+			if ("-t".equals(args[i])) testing = true;
 		}
 		startHistory();
 		startBluetoothServer();
