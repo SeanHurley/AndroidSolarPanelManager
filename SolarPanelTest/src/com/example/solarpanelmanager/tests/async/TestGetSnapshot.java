@@ -12,23 +12,22 @@ public class TestGetSnapshot extends TestCase {
 	}
 
 	public void testGetSnapshot() {
-		final Container c = new Container();
+		final Container container = new Container();
 		SnapshotHandler handler = new SnapshotHandler(new Callback() {
 
 			@Override
 			public void onComplete(JSONObject json) {
-				c.json = json;
+				container.json = json;
 			}
 		});
 		handler.performAction();
 
 		handler.waitOnTask(5000);
 
-		assertEquals(200, c.json.get("result"));
-		assertTrue(c.json.get("timestamp") instanceof Long);
-		assertTrue(c.json.get("batteryvoltage") instanceof Double);
-		assertTrue(c.json.get("pv-current") instanceof Double);
-		assertTrue(c.json.get("pv-voltage") instanceof Double);
-		assertTrue(c.json.get("battery-current") instanceof Double);
+		assertEquals(200, container.json.get("result"));
+		assertTrue(((Double) container.json.get("battery-voltage")) == .5);
+		assertTrue(((Double) container.json.get("pv-current")) == .5);
+		assertTrue(((Double) container.json.get("pv-voltage")) == .5);
+		assertTrue(((Double) container.json.get("battery-current")) == .5);
 	}
 }
