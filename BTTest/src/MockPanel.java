@@ -56,7 +56,7 @@ public class MockPanel {
 				if (testing) {
 					snap = new Snapshot(System.currentTimeMillis(), 50, 0.5, 0.5, 0.5, 0.5);
 				} else {
-					snap = new Snapshot(System.currentTimeMillis(), (int) Math.random() * 100, Math.random(),
+					snap = new Snapshot(System.currentTimeMillis(), (int) (Math.random() * 100), Math.random(),
 							Math.random(), Math.random(), Math.random());
 				}
 
@@ -66,7 +66,7 @@ public class MockPanel {
 				historyData.offer(snap);
 
 				try {
-					Thread.sleep(10000);
+					Thread.sleep(500);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -204,7 +204,7 @@ public class MockPanel {
 				if (testing) {
 					snap = new Snapshot(System.currentTimeMillis(), 50, 0.5, 0.5, 0.5, 0.5);
 				} else {
-					snap = new Snapshot(System.currentTimeMillis(), (int) Math.random() * 100, Math.random(),
+					snap = new Snapshot(System.currentTimeMillis(), (int) (Math.random() * 100), Math.random(),
 							Math.random(), Math.random(), Math.random());
 				}
 				return ResponseCreator.buildSnapshot(snap);

@@ -1,5 +1,6 @@
 package com.example.solarpanelmanager.api.parsers;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -74,14 +75,24 @@ public class ResponseParser {
 			longTimestamp = (Integer) timestamp;
 		}
 
-		double batteryVoltage = (Double) json.get("battery-voltage");
-		double PVCurrent = (Double) json.get("pv-current");
-		double PVVoltage = (Double) json.get("pv-voltage");
-		double batteryCurrent = (Double) json.get("battery-current");
+		double batteryVoltage = getDouble(json.get("battery-voltage"));
+		double PVCurrent = getDouble(json.get("pv-current"));
+		double PVVoltage = getDouble(json.get("pv-voltage"));
+		double batteryCurrent = getDouble(json.get("battery-current"));
+
 		int percent = (Integer) json.get("battery-percent");
 
 		return new SnapshotResponse(result, longTimestamp, percent, batteryVoltage, PVCurrent, PVVoltage,
 				batteryCurrent);
+	}
+
+	private static double getDouble(Object obj) {
+		if (obj instanceof BigDecimal) {
+			BigDecimal dec = (BigDecimal) obj;
+			return dec.doubleValue();
+		} else {
+			return (Double) obj;
+		}
 	}
 
 	public static EventsResponse parseEventsResponse(String response) {
