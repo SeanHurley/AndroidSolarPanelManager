@@ -7,15 +7,13 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import com.example.solarpanelmanager.api.parsers.ResponseParser;
-import com.example.solarpanelmanager.api.responses.BaseResponse;
-
-import net.minidev.json.JSONObject;
-import net.minidev.json.JSONValue;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.AsyncTask;
+
+import com.example.solarpanelmanager.api.parsers.ResponseParser;
+import com.example.solarpanelmanager.api.responses.BaseResponse;
 
 /**
  * @author seanhurley
@@ -35,7 +33,7 @@ public abstract class CommunicationHandler {
 	 *         which type of request this is.
 	 */
 	abstract protected String getRequest();
-	
+
 	protected BaseResponse parseResponse(String data) {
 		return ResponseParser.parseBasicResponse(data);
 	}
@@ -57,13 +55,10 @@ public abstract class CommunicationHandler {
 		try {
 			task.get(millis, TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (TimeoutException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
