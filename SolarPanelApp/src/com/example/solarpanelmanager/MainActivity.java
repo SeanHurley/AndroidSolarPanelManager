@@ -2,6 +2,7 @@ package com.example.solarpanelmanager;
 
 import net.minidev.json.JSONObject;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -44,8 +45,8 @@ public class MainActivity extends Activity {
 		buttonSettings.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
+				Intent mainIntent = new Intent().setClass(MainActivity.this, BatteryActivity.class);
+				MainActivity.this.startActivity(mainIntent);
 			}
 		});
 
