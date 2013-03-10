@@ -18,7 +18,7 @@ public class KnownDevicesActivity extends Activity {
 			
 			@Override
 			public void onClick(View arg0) {
-				startActivity(new Intent(KnownDevicesActivity.this, AddDeviceActivity.class));
+				startActivity(new Intent(KnownDevicesActivity.this, ConnectActivity.class));
 			}
 		});
 	}

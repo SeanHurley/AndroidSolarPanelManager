@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>  
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"  
+  android:orientation="vertical"  
+  android:layout_width="fill_parent"  
+  android:layout_height="fill_parent">
+    
+    <LinearLayout
+        android:id="@+id/bluetooth_loading"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="invisible">
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Scanning for bluetooth devices" />
+	    <ProgressBar
+	          style="?android:attr/progressBarStyleSmallInverse"
+	          android:layout_height="wrap_content"
+	          android:layout_width="wrap_content"
+	          android:indeterminateOnly="true" />    
+    </LinearLayout>
+    <Button
+  	  android:id="@+id/button_bluetooth_scan"
+  	  android:layout_width="wrap_content"
+  	  android:layout_height="wrap_content"
+      android:text="Rescan" />
+  
+    <TextView android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/pairing_memo" />
+    
+    <ListView android:layout_width="fill_parent"   
+      android:layout_height="fill_parent"   
+      android:id="@+id/mainListView" />  
+      
+</LinearLayout>  
