@@ -109,6 +109,10 @@ public abstract class CommunicationHandler {
 				while (((b = in.readByte()) > 0) && (b != 0x0a)) {
 					data += (char) b;
 				}
+
+				in.close();
+				out.close();
+				clientSocket.close();
 			} catch (Exception e) {
 			}
 

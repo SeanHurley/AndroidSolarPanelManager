@@ -66,7 +66,7 @@ public class MockPanel {
 				historyData.offer(snap);
 
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(10000);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -135,12 +135,12 @@ public class MockPanel {
 				System.out.println("Start advertising service...");
 				server = (StreamConnectionNotifier) Connector.open(url);
 				System.out.println("Waiting for incoming connection...");
-				conn = server.acceptAndOpen();
-				System.out.println("Client Connected...");
-				DataInputStream din = new DataInputStream(conn.openInputStream());
-				DataOutputStream out = new DataOutputStream(conn.openOutputStream());
-
 				while (true) {
+					conn = server.acceptAndOpen();
+					System.out.println("Client Connected...");
+					DataInputStream din = new DataInputStream(conn.openInputStream());
+					DataOutputStream out = new DataOutputStream(conn.openOutputStream());
+
 					String cmd = "";
 
 					byte b;
@@ -152,10 +152,15 @@ public class MockPanel {
 					System.out.println("Received: " + cmd);
 					String response = getResponse(cmd);
 					out.write(response.getBytes());
-				}
 
+					// Cleanup
+					out.flush();
+					out.close();
+					din.close();
+					out.close();
+				}
 			} catch (Exception e) {
-				System.out.println("Exception Occured: " + e.toString());
+				e.printStackTrace();
 			}
 		}
 

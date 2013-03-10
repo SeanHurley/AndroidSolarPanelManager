@@ -72,10 +72,11 @@ public class MainActivity extends Activity {
 					// TODO Something went wrong Alert the user
 					return;
 				}
-				System.out.println("---Finished---");
-				Toast.makeText(MainActivity.this, json.toJSONString(), Toast.LENGTH_LONG).show();
+
+				Toast.makeText(MainActivity.this, json.toString(), Toast.LENGTH_LONG).show();
 			}
 		});
+		call.performAction();
 	}
 
 	@Override
