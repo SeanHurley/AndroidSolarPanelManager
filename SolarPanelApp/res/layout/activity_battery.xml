@@ -1,0 +1,97 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    tools:context=".BatteryActivity" >
+
+    <SeekBar
+        android:id="@+id/maxbar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="124dp"
+        android:max="100"
+        android:minWidth="250dp" />
+
+    <TextView
+        android:id="@+id/top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/maxbar"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="10dp"
+        android:gravity="center_vertical"
+        android:text="@string/battery_main"
+        android:layout_centerHorizontal="true"
+        android:textSize="25sp" />
+
+    <TextView
+        android:id="@+id/currVoltage"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/currVoltageText"
+        android:layout_marginLeft="10dp"
+        android:text="@string/zero" />
+
+    <TextView
+        android:id="@+id/currVoltageText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/top"
+        android:layout_marginLeft="10dp"
+        android:text="@string/battery_current" />
+
+    <TextView
+        android:id="@+id/maxVoltageText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/currVoltage"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp"
+        android:text="@string/battery_max" />
+
+    <TextView
+        android:id="@+id/maxView"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/maxbar"
+        android:layout_marginLeft="10dp" />
+
+    <SeekBar
+        android:id="@+id/minbar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/minxVoltageText"
+        android:layout_marginTop="18dp"
+        android:max="100"
+        android:minWidth="250dp" />
+
+    <TextView
+        android:id="@+id/minxVoltageText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/maxView"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/battery_min" />
+
+    <TextView
+        android:id="@+id/minView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/minbar"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="19dp" />
+
+</RelativeLayout>

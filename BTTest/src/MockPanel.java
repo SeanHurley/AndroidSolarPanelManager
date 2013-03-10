@@ -54,10 +54,10 @@ public class MockPanel {
 			while (true) {
 				Snapshot snap;
 				if (testing) {
-					snap = new Snapshot(System.currentTimeMillis(), 0.5, 0.5, 0.5, 0.5);
+					snap = new Snapshot(System.currentTimeMillis(), 50, 0.5, 0.5, 0.5, 0.5);
 				} else {
-					snap = new Snapshot(System.currentTimeMillis(), Math.random(), Math.random(), Math.random(),
-							Math.random());
+					snap = new Snapshot(System.currentTimeMillis(), (int) (Math.random() * 100), Math.random(),
+							Math.random(), Math.random(), Math.random());
 				}
 
 				if (historyData.size() > 10) {
@@ -66,7 +66,7 @@ public class MockPanel {
 				historyData.offer(snap);
 
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(500);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -135,27 +135,31 @@ public class MockPanel {
 				System.out.println("Start advertising service...");
 				server = (StreamConnectionNotifier) Connector.open(url);
 				System.out.println("Waiting for incoming connection...");
-				conn = server.acceptAndOpen();
-				System.out.println("Client Connected...");
-				DataInputStream din = new DataInputStream(conn.openInputStream());
-				DataOutputStream out = new DataOutputStream(conn.openOutputStream());
-
 				while (true) {
+					conn = server.acceptAndOpen();
+					System.out.println("Client Connected...");
+					DataInputStream din = new DataInputStream(conn.openInputStream());
+					DataOutputStream out = new DataOutputStream(conn.openOutputStream());
+
 					String cmd = "";
 
 					byte b;
 					while (((b = din.readByte()) > 0) && (b != 0x0a)) {
-						System.out.println(b);
 						cmd += (char) b;
 					}
 
 					System.out.println("Received: " + cmd);
 					String response = getResponse(cmd);
 					out.write(response.getBytes());
-				}
 
+					// Cleanup
+					out.flush();
+					out.close();
+					din.close();
+					out.close();
+				}
 			} catch (Exception e) {
-				System.out.println("Exception Occured: " + e.toString());
+				e.printStackTrace();
 			}
 		}
 
@@ -198,10 +202,10 @@ public class MockPanel {
 			try {
 				Snapshot snap;
 				if (testing) {
-					snap = new Snapshot(System.currentTimeMillis(), 0.5, 0.5, 0.5, 0.5);
+					snap = new Snapshot(System.currentTimeMillis(), 50, 0.5, 0.5, 0.5, 0.5);
 				} else {
-					snap = new Snapshot(System.currentTimeMillis(), Math.random(), Math.random(), Math.random(),
-							Math.random());
+					snap = new Snapshot(System.currentTimeMillis(), (int) (Math.random() * 100), Math.random(),
+							Math.random(), Math.random(), Math.random());
 				}
 				return ResponseCreator.buildSnapshot(snap);
 			} catch (Exception e) {
@@ -212,7 +216,14 @@ public class MockPanel {
 
 		private String handleHistory() {
 			try {
-				ArrayList<Snapshot> snaps = new ArrayList<Snapshot>(historyData);
+				ArrayList<Snapshot> snaps;
+				if (!testing) {
+					snaps = new ArrayList<Snapshot>(historyData);
+				} else {
+					snaps = new ArrayList<Snapshot>();
+					snaps.add(new Snapshot(System.currentTimeMillis(), 25, 0.1, 0.2, 0.3, 0.4));
+					snaps.add(new Snapshot(System.currentTimeMillis(), 30, 0.6, 0.7, 0.8, 0.9));
+				}
 				History history = new History(snaps);
 				return ResponseCreator.buildHistory(history);
 			} catch (Exception e) {

@@ -1,16 +1,16 @@
 package com.example.solarpanelmanager;
 
-import net.minidev.json.JSONObject;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.example.bluetooth.Callback;
-import com.example.bluetooth.SnapshotHandler;
+import com.example.bluetooth.HistoryHandler;
+import com.example.solarpanelmanager.api.responses.BaseResponse;
+import com.example.solarpanelmanager.api.responses.HistoryResponse;
 
 public class MainActivity extends Activity {
 	private final int REQUEST_ENABLE_BT = 1;
@@ -35,8 +35,8 @@ public class MainActivity extends Activity {
 		buttonSettings.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
+				Intent mainIntent = new Intent().setClass(MainActivity.this, BatteryActivity.class);
+				MainActivity.this.startActivity(mainIntent);
 			}
 		});
 
@@ -49,22 +49,31 @@ public class MainActivity extends Activity {
 
 			}
 		});
-	}
 
-	@Override
-	protected void onStart() {
-		super.onStart();
-
-		// Do a basic call to the device for testing purposes.
-		SnapshotHandler call = new SnapshotHandler(new Callback() {
+		// Historical Data
+		final Button buttonHistoricalData = (Button) findViewById(R.id.button_historical_data);
+		buttonHistoricalData.setOnClickListener(new View.OnClickListener() {
 			@Override
-			public void onComplete(JSONObject json) {
-				if (json == null) {
-					// TODO Something went wrong Alert the user
-					return;
-				}
-				System.out.println("---Finished---");
-				Toast.makeText(MainActivity.this, json.toJSONString(), Toast.LENGTH_LONG).show();
+			public void onClick(View v) {
+				// Do a basic call to the device for testing purposes.
+				HistoryHandler call = new HistoryHandler(new Callback() {
+					@Override
+					public void onComplete(BaseResponse json) {
+						if (json == null) {
+							// TODO Something went wrong Alert the user
+							return;
+						}
+						HistoryResponse response = (HistoryResponse) json;
+						LineGraph lineGraph = new LineGraph();
+						/**
+						 * TODO: Pass a collection of SnapshotResponses to
+						 * display in our graph
+						 */
+						Intent lineGraphIntent = lineGraph.getIntent(MainActivity.this, response.getHistoryData());
+						startActivity(lineGraphIntent);
+					}
+				});
+				call.performAction();
 			}
 		});
 	}

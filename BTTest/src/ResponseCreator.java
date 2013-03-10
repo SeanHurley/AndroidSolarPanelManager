@@ -15,9 +15,10 @@ public class ResponseCreator {
 		json.put("pv-current", snap.getPanelI());
 		json.put("pv-voltage", snap.getPanelV());
 		json.put("battery-current", snap.getBatteryI());
+		json.put("battery-percent", snap.getPercent());
 		return json;
 	}
-	
+
 	private static JSONObject event(Event e) {
 		JSONObject json = new JSONObject();
 		json.put("id", e.getId());
@@ -26,7 +27,7 @@ public class ResponseCreator {
 		json.put("interval", e.getInterval());
 		return json;
 	}
-	
+
 	public static String buildDefaultOK(String type) {
 		JSONObject json = new JSONObject();
 		json.put("type", type);
@@ -34,14 +35,14 @@ public class ResponseCreator {
 		json.put("message", "OK");
 		return json.toJSONString();
 	}
-	
+
 	public static String buildDefaultNotFound() {
 		JSONObject json = new JSONObject();
 		json.put("result", NOT_FOUND);
 		json.put("message", "Not Found");
 		return json.toJSONString();
 	}
-	
+
 	public static String buildDefaultPermissionDenied(String type) {
 		JSONObject json = new JSONObject();
 		json.put("type", type);
@@ -49,7 +50,7 @@ public class ResponseCreator {
 		json.put("message", "Permission Denied");
 		return json.toJSONString();
 	}
-	
+
 	public static String buildDefaultInternalError(String type, String message) {
 		JSONObject json = new JSONObject();
 		json.put("type", type);
@@ -76,7 +77,7 @@ public class ResponseCreator {
 		json.put("history-data", array);
 		return json.toJSONString();
 	}
-	
+
 	public static String buildEventsList(EventsList events) {
 		JSONObject json = new JSONObject();
 		json.put("type", "events-response");
@@ -88,7 +89,7 @@ public class ResponseCreator {
 		json.put("events-data", array);
 		return json.toJSONString();
 	}
-	
+
 	public static String buildViewChargeConstraints(int max, int min) {
 		JSONObject json = new JSONObject();
 		json.put("type", "view-charge-constraints-response");

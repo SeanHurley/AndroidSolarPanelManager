@@ -1,18 +1,21 @@
 package com.example.solarpanelmanager.api.parsers;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
-import net.minidev.json.parser.JSONParser;
-import net.minidev.json.parser.ParseException;
+import net.minidev.json.JSONValue;
 
 import com.example.solarpanelmanager.api.responses.BaseResponse;
+import com.example.solarpanelmanager.api.responses.Event;
+import com.example.solarpanelmanager.api.responses.EventsResponse;
 import com.example.solarpanelmanager.api.responses.HistoryResponse;
 import com.example.solarpanelmanager.api.responses.SnapshotResponse;
+import com.example.solarpanelmanager.api.responses.ViewChargeConstraintsResponse;
 
 public class ResponseParser {
-	private static JSONParser jparse = new JSONParser(JSONParser.DEFAULT_PERMISSIVE_MODE);
 
 	/**
 	 * @param response
@@ -28,45 +31,98 @@ public class ResponseParser {
 		return values;
 	}
 
-	public static BaseResponse parseBasicResponse(String response) throws ParseException {
+	public static BaseResponse parseBasicResponse(String response) {
 		// Call the parse response for the basic map, and then create the proper
 		// response object
-		JSONObject json = (JSONObject) jparse.parse(response);
-		return new BaseResponse((Integer) json.get("result"));
+		JSONObject json = (JSONObject) JSONValue.parse(response);
+		return new BaseResponse((String) json.get("type"), (Integer) json.get("result"));
 	}
 
-	public static HistoryResponse parseHistoryResponse(String response) throws ParseException {
+	public static HistoryResponse parseHistoryResponse(String response) {
 		// Call the parse response for the basic map, and then create the proper
 		// response object
-		JSONObject json = (JSONObject) jparse.parse(response);
+		JSONObject json = (JSONObject) JSONValue.parse(response);
 		JSONArray snapshots = (JSONArray) json.get("history-data");
-		SnapshotResponse[] snapshotResponses = new SnapshotResponse[snapshots.size()];
-		
-		for(int i = 0; i < snapshots.size(); i++)
-			snapshotResponses[i] = parseSnapshotResponse(((JSONObject) snapshots.get(i)).toJSONString());
-		
+		ArrayList<SnapshotResponse> snapshotResponses = new ArrayList<SnapshotResponse>();
+		// SnapshotResponse[] snapshotResponses = new
+		// SnapshotResponse[snapshots.size()];
+
+		for (int i = 0; i < snapshots.size(); i++) {
+			// snapshotResponses[i] = parseSnapshotResponse(((JSONObject)
+			// snapshots.get(i)).toJSONString());
+			snapshotResponses.add(parseSnapshotResponse(((JSONObject) snapshots.get(i)).toJSONString()));
+		}
+
 		int result = (Integer) json.get("result");
 		return new HistoryResponse(result, snapshotResponses);
 	}
 
-	public static SnapshotResponse parseSnapshotResponse(String response) throws ParseException {
+	public static SnapshotResponse parseSnapshotResponse(String response) {
 		// Call the parse response for the basic map, and then create the proper
 		// response object
-		JSONObject json = (JSONObject)(jparse.parse(response));
-		int result = (Integer) json.get("result");
-		
+		System.out.println(response);
+		JSONObject json = (JSONObject) (JSONValue.parse(response));
+		int result = 200;
+		if (json.containsKey("result")) {
+			result = (Integer) json.get("result");
+		}
+
 		Object timestamp = json.get("timestamp");
 		long longTimestamp;
-		if(timestamp instanceof Long)
+		if (timestamp instanceof Long) {
 			longTimestamp = (Long) timestamp;
-		else // needed since JSON converts longs to integers when possible
+		} else {
 			longTimestamp = (Integer) timestamp;
-		
-		double batteryVoltage = (Double) json.get("battery-voltage");
-		double PVCurrent = (Double) json.get("pv-current");
-		double PVVoltage = (Double) json.get("pv-voltage");
-		
-		return new SnapshotResponse(result, longTimestamp, batteryVoltage, PVCurrent, PVVoltage);
+		}
+
+		double batteryVoltage = getDouble(json.get("battery-voltage"));
+		double PVCurrent = getDouble(json.get("pv-current"));
+		double PVVoltage = getDouble(json.get("pv-voltage"));
+		double batteryCurrent = getDouble(json.get("battery-current"));
+
+		int percent = (Integer) json.get("battery-percent");
+
+		return new SnapshotResponse(result, longTimestamp, percent, batteryVoltage, PVCurrent, PVVoltage,
+				batteryCurrent);
+	}
+
+	private static double getDouble(Object obj) {
+		if (obj instanceof BigDecimal) {
+			BigDecimal dec = (BigDecimal) obj;
+			return dec.doubleValue();
+		} else {
+			return (Double) obj;
+		}
+	}
+
+	public static EventsResponse parseEventsResponse(String response) {
+		JSONObject json = (JSONObject) (JSONValue.parse(response));
+		int result = (Integer) json.get("result");
+
+		JSONArray eventsArray = (JSONArray) json.get("events-data");
+		ArrayList<Event> events = new ArrayList<Event>();
+
+		for (int i = 0; i < eventsArray.size(); i++) {
+			events.add(parseEvent((JSONObject) eventsArray.get(i)));
+		}
+
+		return new EventsResponse(result, events);
+	}
+
+	private static Event parseEvent(JSONObject json) {
+		String id = (String) json.get("id");
+		long firstTime = (Long) json.get("first-run");
+		long duration = (Long) json.get("duration");
+		long interval = (Long) json.get("interval");
+		return new Event(id, firstTime, duration, interval);
+	}
+
+	public static ViewChargeConstraintsResponse parseViewChargeConstraintsResponse(String response) {
+		JSONObject json = (JSONObject) (JSONValue.parse(response));
+		int result = (Integer) json.get("result");
+		int max = (Integer) json.get("max");
+		int min = (Integer) json.get("min");
+		return new ViewChargeConstraintsResponse(result, max, min);
 	}
 
 }
