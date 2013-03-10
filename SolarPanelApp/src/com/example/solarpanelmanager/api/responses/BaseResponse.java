@@ -4,8 +4,9 @@ public class BaseResponse {
 	private int result;
 	private String type;
 
-	public BaseResponse(int result) {
+	public BaseResponse(String type, int result) {
 		// This will set the result, but that's all the base response has
+		this.type = type;
 		this.result = result;
 	}
 
@@ -13,16 +14,8 @@ public class BaseResponse {
 		return type;
 	}
 
-	public void setType(String type) {
-		this.type = type;
-	}
-
 	public int getResult() {
 		return result;
-	}
-
-	public void setResult(int result) {
-		this.result = result;
 	}
 
 	public String getErrorMessage() {
