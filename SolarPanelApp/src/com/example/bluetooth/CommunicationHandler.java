@@ -7,6 +7,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import com.example.solarpanelmanager.api.parsers.ResponseParser;
+import com.example.solarpanelmanager.api.responses.BaseResponse;
+
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONValue;
 import android.bluetooth.BluetoothAdapter;
@@ -32,6 +35,10 @@ public abstract class CommunicationHandler {
 	 *         which type of request this is.
 	 */
 	abstract protected String getRequest();
+	
+	protected BaseResponse parseResponse(String data) {
+		return ResponseParser.parseBasicResponse(data);
+	}
 
 	public CommunicationHandler(Callback callback) {
 		this.responseCallback = callback;
@@ -65,7 +72,7 @@ public abstract class CommunicationHandler {
 	 * @author seanhurley This will actually serve as the asynchronous method by
 	 *         which we communicate with the device.
 	 */
-	private class ServiceASyncTask extends AsyncTask<Void, Void, JSONObject> {
+	private class ServiceASyncTask extends AsyncTask<Void, Void, BaseResponse> {
 
 		private BluetoothAdapter mBluetoothAdapter;
 
@@ -74,7 +81,7 @@ public abstract class CommunicationHandler {
 		}
 
 		@Override
-		protected JSONObject doInBackground(Void... args) {
+		protected BaseResponse doInBackground(Void... args) {
 
 			// TODO Fix the newline ending?
 			String request = getRequest() + "\n";
@@ -116,11 +123,12 @@ public abstract class CommunicationHandler {
 			} catch (Exception e) {
 			}
 
-			return (JSONObject) JSONValue.parse(data);
+			BaseResponse response = parseResponse(data);
+			return response;
 		}
 
 		@Override
-		protected void onPostExecute(JSONObject result) {
+		protected void onPostExecute(BaseResponse result) {
 			responseCallback.onComplete(result);
 		}
 

@@ -1,15 +1,20 @@
 package com.example.solarpanelmanager.api.responses;
 
+import java.util.List;
+
+import com.example.solarpanelmanager.api.parsers.MessageTypes;
+
 
 public class HistoryResponse extends BaseResponse {
-	private SnapshotResponse[] historyData;
-	public HistoryResponse(int result, SnapshotResponse[] historyData) {
-		super(result);
+	
+	private List<SnapshotResponse> historyData;
+	
+	public HistoryResponse(int result, List<SnapshotResponse> historyData) {
+		super(MessageTypes.HISTORY_RESPONSE, result);
 		this.historyData = historyData;
-		setType("history-data");
 	}
 	
-	public SnapshotResponse[] getHistoryData(){
+	public List<SnapshotResponse> getHistoryData(){
 		return historyData;
 	}
 }

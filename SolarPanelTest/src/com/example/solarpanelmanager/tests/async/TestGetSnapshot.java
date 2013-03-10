@@ -1,14 +1,15 @@
 package com.example.solarpanelmanager.tests.async;
 
 import junit.framework.TestCase;
-import net.minidev.json.JSONObject;
 
 import com.example.bluetooth.Callback;
 import com.example.bluetooth.SnapshotHandler;
+import com.example.solarpanelmanager.api.responses.BaseResponse;
+import com.example.solarpanelmanager.api.responses.SnapshotResponse;
 
 public class TestGetSnapshot extends TestCase {
 	private class Container {
-		public JSONObject json;
+		public SnapshotResponse json;
 	}
 
 	public void testGetSnapshot() {
@@ -16,18 +17,18 @@ public class TestGetSnapshot extends TestCase {
 		SnapshotHandler handler = new SnapshotHandler(new Callback() {
 
 			@Override
-			public void onComplete(JSONObject json) {
-				container.json = json;
+			public void onComplete(BaseResponse json) {
+				container.json = (SnapshotResponse) json;
 			}
+
 		});
 		handler.performAction();
 
 		handler.waitOnTask(5000);
 
-		assertEquals(200, container.json.get("result"));
-		assertTrue(((Double) container.json.get("battery-voltage")) == .5);
-		assertTrue(((Double) container.json.get("pv-current")) == .5);
-		assertTrue(((Double) container.json.get("pv-voltage")) == .5);
-		assertTrue(((Double) container.json.get("battery-current")) == .5);
+		assertEquals(200, container.json.getResult());
+		assertTrue((container.json.getBatteryVoltage()) == .5);
+		assertTrue((container.json.getPVVoltage()) == .5);
+		assertTrue((container.json.getPVCurrent()) == .5);
 	}
 }

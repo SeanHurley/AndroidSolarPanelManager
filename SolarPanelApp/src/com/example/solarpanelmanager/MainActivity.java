@@ -1,6 +1,5 @@
 package com.example.solarpanelmanager;
 
-import net.minidev.json.JSONObject;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,6 +9,7 @@ import android.widget.Toast;
 
 import com.example.bluetooth.Callback;
 import com.example.bluetooth.SnapshotHandler;
+import com.example.solarpanelmanager.api.responses.BaseResponse;
 
 public class MainActivity extends Activity {
 	private final int REQUEST_ENABLE_BT = 1;
@@ -67,12 +67,11 @@ public class MainActivity extends Activity {
 		// Do a basic call to the device for testing purposes.
 		SnapshotHandler call = new SnapshotHandler(new Callback() {
 			@Override
-			public void onComplete(JSONObject json) {
+			public void onComplete(BaseResponse json) {
 				if (json == null) {
 					// TODO Something went wrong Alert the user
 					return;
 				}
-
 				Toast.makeText(MainActivity.this, json.toString(), Toast.LENGTH_LONG).show();
 			}
 		});
