@@ -45,8 +45,8 @@ public class MainActivity extends Activity {
 		buttonSettings.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
+				Intent mainIntent = new Intent().setClass(MainActivity.this, BatteryActivity.class);
+				MainActivity.this.startActivity(mainIntent);
 			}
 		});
 
