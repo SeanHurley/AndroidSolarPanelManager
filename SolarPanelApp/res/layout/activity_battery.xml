@@ -7,7 +7,7 @@
 
     <SeekBar
         android:id="@+id/maxbar"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
@@ -18,12 +18,14 @@
 
     <TextView
         android:id="@+id/top"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/maxbar"
         android:layout_marginBottom="20dp"
+        android:layout_marginLeft="10dp"
         android:gravity="center_vertical"
-        android:text="@string/battery_main" 
+        android:text="@string/battery_main"
+        android:layout_centerHorizontal="true"
         android:textSize="25sp" />
 
     <TextView
@@ -32,6 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/currVoltageText"
+        android:layout_marginLeft="10dp"
         android:text="@string/zero" />
 
     <TextView
@@ -40,6 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/top"
+        android:layout_marginLeft="10dp"
         android:text="@string/battery_current" />
 
     <TextView
@@ -48,6 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/currVoltage"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="15dp"
         android:text="@string/battery_max" />
 
@@ -57,11 +62,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/maxbar" />
+        android:layout_below="@+id/maxbar"
+        android:layout_marginLeft="10dp" />
 
     <SeekBar
         android:id="@+id/minbar"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/minxVoltageText"
@@ -75,6 +81,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/maxView"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="16dp"
         android:text="@string/battery_min" />
 
@@ -84,6 +91,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/minbar"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="19dp" />
 
 </RelativeLayout>
