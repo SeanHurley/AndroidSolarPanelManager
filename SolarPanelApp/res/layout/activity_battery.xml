@@ -4,6 +4,22 @@
     android:layout_height="match_parent"
     android:gravity="center_vertical"
     tools:context=".BatteryActivity" >
+    
+    <RelativeLayout
+        android:id="@+id/activityIndicator" 
+        android:layout_width="match_parent"
+    	android:layout_height="match_parent"
+    	android:background="#CC000000">
+
+                <ProgressBar 
+                    android:layout_centerInParent="true"
+                    android:id="@+id/progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:visibility="visible" />
+
+    </RelativeLayout>
 
     <SeekBar
         android:id="@+id/maxbar"
@@ -14,7 +30,8 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="124dp"
         android:max="100"
-        android:minWidth="250dp" />
+        android:minWidth="250dp"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/top"
@@ -73,7 +90,8 @@
         android:layout_below="@+id/minxVoltageText"
         android:layout_marginTop="18dp"
         android:max="100"
-        android:minWidth="250dp" />
+        android:minWidth="250dp"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/minxVoltageText"
