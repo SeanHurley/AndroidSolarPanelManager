@@ -67,13 +67,7 @@ public class ResponseParser {
 			result = (Integer) json.get("result");
 		}
 
-		Object timestamp = json.get("timestamp");
-		long longTimestamp;
-		if (timestamp instanceof Long) {
-			longTimestamp = (Long) timestamp;
-		} else {
-			longTimestamp = (Integer) timestamp;
-		}
+		long longTimestamp = getLong(json.get("timestamp"));
 
 		double batteryVoltage = getDouble(json.get("battery-voltage"));
 		double PVCurrent = getDouble(json.get("pv-current"));
@@ -111,10 +105,18 @@ public class ResponseParser {
 
 	private static Event parseEvent(JSONObject json) {
 		String id = (String) json.get("id");
-		long firstTime = (Long) json.get("first-run");
-		long duration = (Long) json.get("duration");
-		long interval = (Long) json.get("interval");
+		long firstTime = getLong(json.get("first-run"));
+		long duration = getLong(json.get("duration"));
+		long interval = getLong(json.get("interval"));
 		return new Event(id, firstTime, duration, interval);
+	}
+
+	private static long getLong(Object obj) {
+		if (obj instanceof Integer) {
+			return (Integer) obj;
+		} else {
+			return (Long) obj;
+		}
 	}
 
 	public static ViewChargeConstraintsResponse parseViewChargeConstraintsResponse(String response) {

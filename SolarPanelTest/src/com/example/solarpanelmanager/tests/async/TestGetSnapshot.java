@@ -27,10 +27,10 @@ public class TestGetSnapshot extends TestCase {
 		handler.waitOnTask(5000);
 
 		assertEquals(200, container.response.getResult());
-		assertTrue((container.response.getBatteryVoltage()) == .5);
-		assertTrue((container.response.getBatteryCurrent()) == .5);
-		assertTrue((container.response.getPVVoltage()) == .5);
-		assertTrue((container.response.getPVCurrent()) == .5);
-		assertTrue(container.response.getBatteryPercent() == 50);
+		assertEquals(.5, container.response.getBatteryVoltage());
+		assertEquals(.5, container.response.getBatteryCurrent());
+		assertEquals(.5, container.response.getPVVoltage());
+		assertEquals(.5, container.response.getPVCurrent());
+		assertEquals(50, container.response.getBatteryPercent());
 	}
 }
