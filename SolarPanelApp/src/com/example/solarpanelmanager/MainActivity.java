@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.bluetooth.Callback;
-import com.example.bluetooth.SnapshotHandler;
+import com.example.bluetooth.HistoryHandler;
 import com.example.solarpanelmanager.api.responses.BaseResponse;
 
 public class MainActivity extends Activity {
@@ -65,7 +65,7 @@ public class MainActivity extends Activity {
 		super.onStart();
 
 		// Do a basic call to the device for testing purposes.
-		SnapshotHandler call = new SnapshotHandler(new Callback() {
+		HistoryHandler call = new HistoryHandler(new Callback() {
 			@Override
 			public void onComplete(BaseResponse json) {
 				if (json == null) {

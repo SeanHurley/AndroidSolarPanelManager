@@ -9,7 +9,7 @@ import com.example.solarpanelmanager.api.responses.SnapshotResponse;
 
 public class TestGetSnapshot extends TestCase {
 	private class Container {
-		public SnapshotResponse json;
+		public SnapshotResponse response;
 	}
 
 	public void testGetSnapshot() {
@@ -18,7 +18,7 @@ public class TestGetSnapshot extends TestCase {
 
 			@Override
 			public void onComplete(BaseResponse json) {
-				container.json = (SnapshotResponse) json;
+				container.response = (SnapshotResponse) json;
 			}
 
 		});
@@ -26,9 +26,11 @@ public class TestGetSnapshot extends TestCase {
 
 		handler.waitOnTask(5000);
 
-		assertEquals(200, container.json.getResult());
-		assertTrue((container.json.getBatteryVoltage()) == .5);
-		assertTrue((container.json.getPVVoltage()) == .5);
-		assertTrue((container.json.getPVCurrent()) == .5);
+		assertEquals(200, container.response.getResult());
+		assertTrue((container.response.getBatteryVoltage()) == .5);
+		assertTrue((container.response.getBatteryCurrent()) == .5);
+		assertTrue((container.response.getPVVoltage()) == .5);
+		assertTrue((container.response.getPVCurrent()) == .5);
+		assertTrue(container.response.getBatteryPercent() == 50);
 	}
 }

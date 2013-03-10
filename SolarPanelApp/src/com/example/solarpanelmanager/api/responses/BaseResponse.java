@@ -1,6 +1,11 @@
 package com.example.solarpanelmanager.api.responses;
 
 public class BaseResponse {
+	@Override
+	public String toString() {
+		return "BaseResponse [result=" + result + ", type=" + type + "]";
+	}
+
 	private int result;
 	private String type;
 
