@@ -35,14 +35,14 @@ public class ResponseParser {
 		// Call the parse response for the basic map, and then create the proper
 		// response object
 		JSONObject json = (JSONObject) JSONValue.parse(response);
-		return new BaseResponse((String) json.get("type"), (Integer) json.get("result"));
+		return new BaseResponse((String) json.get(MessageKeys.MESSAGE_TYPE), (Integer) json.get(MessageKeys.RESPONSE_CODE));
 	}
 
 	public static HistoryResponse parseHistoryResponse(String response) {
 		// Call the parse response for the basic map, and then create the proper
 		// response object
 		JSONObject json = (JSONObject) JSONValue.parse(response);
-		JSONArray snapshots = (JSONArray) json.get("history-data");
+		JSONArray snapshots = (JSONArray) json.get(MessageKeys.HISTORY_DATA);
 		ArrayList<SnapshotResponse> snapshotResponses = new ArrayList<SnapshotResponse>();
 		// SnapshotResponse[] snapshotResponses = new
 		// SnapshotResponse[snapshots.size()];
@@ -53,7 +53,7 @@ public class ResponseParser {
 			snapshotResponses.add(parseSnapshotResponse(((JSONObject) snapshots.get(i)).toJSONString()));
 		}
 
-		int result = (Integer) json.get("result");
+		int result = (Integer) json.get(MessageKeys.RESPONSE_CODE);
 		return new HistoryResponse(result, snapshotResponses);
 	}
 
@@ -63,11 +63,11 @@ public class ResponseParser {
 		System.out.println(response);
 		JSONObject json = (JSONObject) (JSONValue.parse(response));
 		int result = 200;
-		if (json.containsKey("result")) {
-			result = (Integer) json.get("result");
+		if (json.containsKey(MessageKeys.RESPONSE_CODE)) {
+			result = (Integer) json.get(MessageKeys.RESPONSE_CODE);
 		}
 
-		Object timestamp = json.get("timestamp");
+		Object timestamp = json.get(MessageKeys.SNAPSHOT_TIMESTAMP);
 		long longTimestamp;
 		if (timestamp instanceof Long) {
 			longTimestamp = (Long) timestamp;
@@ -75,12 +75,13 @@ public class ResponseParser {
 			longTimestamp = (Integer) timestamp;
 		}
 
-		double batteryVoltage = getDouble(json.get("battery-voltage"));
-		double PVCurrent = getDouble(json.get("pv-current"));
-		double PVVoltage = getDouble(json.get("pv-voltage"));
-		double batteryCurrent = getDouble(json.get("battery-current"));
 
-		int percent = (Integer) json.get("battery-percent");
+		double batteryVoltage = getDouble(json.get(MessageKeys.SNAPSHOT_BATTERY_VOLTAGE));
+		double batteryCurrent = getDouble(json.get(MessageKeys.SNAPSHOT_BATTERY_CURRENT));
+		double PVVoltage = getDouble(json.get(MessageKeys.SNAPSHOT_PANEL_VOLTAGE));
+		double PVCurrent = getDouble(json.get(MessageKeys.SNAPSHOT_PANEL_CURRENT));
+		
+		int percent = (Integer) json.get(MessageKeys.SNAPSHOT_BATTERY_PERCENT);
 
 		return new SnapshotResponse(result, longTimestamp, percent, batteryVoltage, PVCurrent, PVVoltage,
 				batteryCurrent);
@@ -97,9 +98,9 @@ public class ResponseParser {
 
 	public static EventsResponse parseEventsResponse(String response) {
 		JSONObject json = (JSONObject) (JSONValue.parse(response));
-		int result = (Integer) json.get("result");
+		int result = (Integer) json.get(MessageKeys.RESPONSE_CODE);
 
-		JSONArray eventsArray = (JSONArray) json.get("events-data");
+		JSONArray eventsArray = (JSONArray) json.get(MessageKeys.EVENTS_DATA);
 		ArrayList<Event> events = new ArrayList<Event>();
 
 		for (int i = 0; i < eventsArray.size(); i++) {
@@ -110,18 +111,18 @@ public class ResponseParser {
 	}
 
 	private static Event parseEvent(JSONObject json) {
-		String id = (String) json.get("id");
-		long firstTime = (Long) json.get("first-run");
-		long duration = (Long) json.get("duration");
-		long interval = (Long) json.get("interval");
+		String id = (String) json.get(MessageKeys.EVENT_ID);
+		long firstTime = (Long) json.get(MessageKeys.EVENT_FIRST_TIME);
+		long duration = (Long) json.get(MessageKeys.EVENT_DURATION);
+		long interval = (Long) json.get(MessageKeys.EVENT_INTERVAL);
 		return new Event(id, firstTime, duration, interval);
 	}
 
 	public static ViewChargeConstraintsResponse parseViewChargeConstraintsResponse(String response) {
 		JSONObject json = (JSONObject) (JSONValue.parse(response));
-		int result = (Integer) json.get("result");
-		int max = (Integer) json.get("max");
-		int min = (Integer) json.get("min");
+		int result = (Integer) json.get(MessageKeys.RESPONSE_CODE);
+		int max = (Integer) json.get(MessageKeys.CHARGE_MAX);
+		int min = (Integer) json.get(MessageKeys.CHARGE_MIN);
 		return new ViewChargeConstraintsResponse(result, max, min);
 	}
 

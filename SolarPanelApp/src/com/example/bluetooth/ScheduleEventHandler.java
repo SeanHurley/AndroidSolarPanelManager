@@ -1,5 +1,6 @@
 package com.example.bluetooth;
 
+import com.example.solarpanelmanager.api.parsers.MessageKeys;
 import com.example.solarpanelmanager.api.parsers.MessageTypes;
 
 import net.minidev.json.JSONObject;
@@ -21,11 +22,11 @@ public class ScheduleEventHandler extends CommunicationHandler {
 	@Override
 	protected String getRequest() {
 		JSONObject json = new JSONObject();
-		json.put("type", MessageTypes.SCHEDULE_EVENT);
-		json.put("identifier", id);
-		json.put("first-run-timestamp", firstRun);
-		json.put("run_duration", duration);
-		json.put("interval-duration", interval);
+		json.put(MessageKeys.MESSAGE_TYPE, MessageTypes.SCHEDULE_EVENT);
+		json.put(MessageKeys.EVENT_ID, id);
+		json.put(MessageKeys.EVENT_FIRST_TIME, firstRun);
+		json.put(MessageKeys.EVENT_DURATION, duration);
+		json.put(MessageKeys.EVENT_INTERVAL, interval);
 		return json.toJSONString();
 	}
 

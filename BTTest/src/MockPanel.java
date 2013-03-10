@@ -165,7 +165,7 @@ public class MockPanel {
 
 		private String handlePinUpdate(JSONObject json) {
 			try {
-				String p = (String) json.get("pin");
+				String p = (String) json.get(MessageKeys.PIN_PASSWORD);
 				pin = p;
 				return ResponseCreator.buildDefaultOK(MessageTypes.PIN_UPDATE_RESPONSE);
 			} catch (Exception e) {
@@ -176,7 +176,7 @@ public class MockPanel {
 
 		private String handleTimeUpdate(JSONObject json) {
 			try {
-				long t = (Long) json.get("timestamp");
+				long t = (Long) json.get(MessageKeys.TIME_TIME);
 				time = t;
 				return ResponseCreator.buildDefaultOK(MessageTypes.TIME_UPDATE_RESPONSE);
 			} catch (Exception e) {
@@ -187,8 +187,8 @@ public class MockPanel {
 
 		private String handleLocationUpdate(JSONObject json) {
 			try {
-				float lon = (Float) json.get("longitude");
-				float lat = (Float) json.get("latitude");
+				float lon = (Float) json.get(MessageKeys.LOCATION_LONGITUDE);
+				float lat = (Float) json.get(MessageKeys.LOCATION_LATITUDE);
 				longitude = lon;
 				latitude = lat;
 				return ResponseCreator.buildDefaultOK(MessageTypes.LOCATION_UPDATE_RESPONSE);
@@ -235,10 +235,10 @@ public class MockPanel {
 
 		private String handleScheduleEvent(JSONObject json) {
 			try {
-				String id = (String) json.get("identifier");
-				long firstRun = (Long) json.get("first-run-timestamp");
-				long duration = (Long) json.get("run-duration");
-				long interval = (Long) json.get("interval-durations");
+				String id = (String) json.get(MessageKeys.EVENT_ID);
+				long firstRun = (Long) json.get(MessageKeys.EVENT_FIRST_TIME);
+				long duration = (Long) json.get(MessageKeys.EVENT_DURATION);
+				long interval = (Long) json.get(MessageKeys.EVENT_INTERVAL);
 
 				Event e = new Event(id, firstRun, duration, interval);
 				events.put(id, e);
@@ -251,7 +251,7 @@ public class MockPanel {
 
 		private String handleUnscheduleEvent(JSONObject json) {
 			try {
-				String id = (String) json.get("identifier");
+				String id = (String) json.get(MessageKeys.EVENT_ID);
 				events.remove(id);
 				return ResponseCreator.buildDefaultOK(MessageTypes.UNSCHEDULE_EVENT_REPONSE);
 			} catch (Exception e) {
@@ -273,8 +273,8 @@ public class MockPanel {
 
 		private String handleSetChargeConstraints(JSONObject json) {
 			try {
-				maxCharge = (Integer) json.get("max");
-				minCharge = (Integer) json.get("min");
+				maxCharge = (Integer) json.get(MessageKeys.CHARGE_MAX);
+				minCharge = (Integer) json.get(MessageKeys.CHARGE_MIN);
 				return ResponseCreator.buildDefaultOK(MessageTypes.SET_CHARGE_CONSTRAINTS_RESPONSE);
 			} catch (Exception e) {
 				return ResponseCreator.buildDefaultInternalError(MessageTypes.SET_CHARGE_CONSTRAINTS_RESPONSE,
