@@ -1,5 +1,7 @@
 package com.example.bluetooth;
 
+import com.example.solarpanelmanager.api.parsers.MessageKeys;
+import com.example.solarpanelmanager.api.parsers.MessageTypes;
 import com.example.solarpanelmanager.api.parsers.ResponseParser;
 import com.example.solarpanelmanager.api.responses.BaseResponse;
 
@@ -20,7 +22,7 @@ public class SnapshotHandler extends CommunicationHandler {
 	@Override
 	protected String getRequest() {
 		JSONObject json = new JSONObject();
-		json.put("type", "snapshot");
+		json.put(MessageKeys.MESSAGE_TYPE, MessageTypes.SNAPSHOT);
 		return json.toJSONString();
 	}
 	
