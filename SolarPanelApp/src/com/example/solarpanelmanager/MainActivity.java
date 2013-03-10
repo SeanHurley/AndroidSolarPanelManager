@@ -25,18 +25,8 @@ public class MainActivity extends Activity {
 		buttonConnect.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
-			}
-		});
-
-		// Add a new device
-		final Button buttonAddDevice = (Button) findViewById(R.id.button_add_device);
-		buttonAddDevice.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
+				Intent i = new Intent(MainActivity.this, KnownDevicesActivity.class);
+				startActivity(i);
 			}
 		});
 
