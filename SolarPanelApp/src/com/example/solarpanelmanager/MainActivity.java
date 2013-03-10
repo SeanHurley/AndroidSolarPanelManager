@@ -1,6 +1,7 @@
 package com.example.solarpanelmanager;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -58,7 +59,23 @@ public class MainActivity extends Activity {
 
 			}
 		});
+
+		// Historical Data
+		final Button buttonHistoricalData = (Button) findViewById(R.id.button_historical_data);
+		buttonHistoricalData.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				LineGraph lineGraph = new LineGraph();
+				/**
+				 * TODO: Pass a collection of SnapshotResponses to display in our graph
+				 */
+		    	Intent lineGraphIntent = lineGraph.getIntent(MainActivity.this, null);
+		        startActivity(lineGraphIntent);
+			}
+		});
 	}
+	
+	
 
 	@Override
 	protected void onStart() {
