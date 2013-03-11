@@ -8,9 +8,20 @@
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_splash"> SolarSplashActivity</string>
+    <string name="title_activity_device_list">DeviceListActivity</string>
     <string name="button_connect_device">Connect to existing device</string>
     <string name="button_add_device">Add a new device</string>
-    <string name="button_settings">Settings</string>
+    <string name="button_settings">Battery settings</string>
     <string name="button_about">About</string>
-
+    <string name="button_historical_data">Display Historical Data</string>
+    <string name="title_activity_history_graph">HistoryGraphActivity</string>
+    <string name="title_activity_historical_graph">HistoricalGraph</string>
+    <string name="battery_main">Battery Settings</string>
+    <string name="battery_current">Current voltage</string>
+    <string name="battery_max">Maximum voltage</string>
+    <string name="battery_min">Minimum voltage</string>
+    <string name="zero">0</string>
+    <string name="button_bluetooth_settings">Pair Device</string>
+    <string name="pairing_memo">You must pair with your installation controller before it can be added as a known device.</string>
+    <string name="title_activity_known_devices">KnownDevicesActivity</string>
 </resources>

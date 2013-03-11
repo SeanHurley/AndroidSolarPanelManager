@@ -1,7 +1,7 @@
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -16,9 +16,24 @@ import net.minidev.json.JSONObject;
 import net.minidev.json.JSONValue;
 
 public class MockPanel {
+	private static boolean testing = false;
+
+	private static String pin;
 	private static Queue<Snapshot> historyData = new LinkedList<Snapshot>();
+	private static float time;
+	private static float latitude;
+	private static float longitude;
+	private static Hashtable<String, Event> events;
+	private static int maxCharge;
+	private static int minCharge;
 
 	public static void main(String[] args) {
+		for (int i = 0; i < args.length; i++) {
+			if ("-t".equals(args[i])) {
+				testing = true;
+				System.out.println("Entering testing mode");
+			}
+		}
 		startHistory();
 		startBluetoothServer();
 	}
@@ -37,7 +52,13 @@ public class MockPanel {
 		@Override
 		public void run() {
 			while (true) {
-				Snapshot snap = new Snapshot(new Date(), Math.random(), Math.random(), Math.random(), Math.random());
+				Snapshot snap;
+				if (testing) {
+					snap = new Snapshot(System.currentTimeMillis(), 50, 0.5, 0.5, 0.5, 0.5);
+				} else {
+					snap = new Snapshot(System.currentTimeMillis(), (int) (Math.random() * 100), Math.random(),
+							Math.random(), Math.random(), Math.random());
+				}
 
 				if (historyData.size() > 10) {
 					historyData.poll();
@@ -45,7 +66,7 @@ public class MockPanel {
 				historyData.offer(snap);
 
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(10000);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -75,6 +96,9 @@ public class MockPanel {
 			String type = (String) json.get("type");
 
 			String response = "{}";
+			if (MessageTypes.PIN_UPDATE.equals(type)) {
+				response = handlePinUpdate(json);
+			}
 			if (MessageTypes.TIME_UPDATE.equals(type)) {
 				response = handleTimeUpdate(json);
 			} else if (MessageTypes.LOCATION_UPDATE.equals(type)) {
@@ -83,16 +107,20 @@ public class MockPanel {
 				response = handleSnapshot();
 			} else if (MessageTypes.HISTORY.equals(type)) {
 				response = handleHistory();
-			} else if (MessageTypes.ADD_DEVICE.equals(type)) {
-				response = handleAddDevice(json);
-			} else if (MessageTypes.REMOVE_DEVICE.equals(type)) {
-				response = handleRemoveDevice(json);
-			} else if (MessageTypes.SCEDULE_EVENT.equals(type)) {
+			} else if (MessageTypes.SCHEDULE_EVENT.equals(type)) {
 				response = handleScheduleEvent(json);
 			} else if (MessageTypes.UNSCHEDULE_EVENT.equals(type)) {
 				response = handleUnscheduleEvent(json);
+			} else if (MessageTypes.EVENTS.equals(type)) {
+				response = handleViewEvents();
+			} else if (MessageTypes.SET_CHARGE_CONSTRAINTS.equals(type)) {
+				response = handleSetChargeConstraints(json);
+			} else if (MessageTypes.VIEW_CHARGE_CONSTRAINTS.equals(type)) {
+				response = handleViewChargeConstraints();
+			} else if (MessageTypes.PIN_UPDATE.equals(type)) {
+				response = handlePinUpdate(json);
 			} else {
-				System.out.println("Received unknown message type.");
+				response = handleUnknownRequest(json);
 			}
 
 			response += "\n";
@@ -109,101 +137,199 @@ public class MockPanel {
 				System.out.println("Start advertising service...");
 				server = (StreamConnectionNotifier) Connector.open(url);
 				System.out.println("Waiting for incoming connection...");
-				conn = server.acceptAndOpen();
-				System.out.println("Client Connected...");
-				DataInputStream din = new DataInputStream(conn.openInputStream());
-				DataOutputStream out = new DataOutputStream(conn.openOutputStream());
-
 				while (true) {
+					conn = server.acceptAndOpen();
+					System.out.println("Client Connected...");
+					DataInputStream din = new DataInputStream(conn.openInputStream());
+					DataOutputStream out = new DataOutputStream(conn.openOutputStream());
+
 					String cmd = "";
 
 					byte b;
 					while (((b = din.readByte()) > 0) && (b != 0x0a)) {
-						System.out.println(b);
 						cmd += (char) b;
 					}
 
 					System.out.println("Received: " + cmd);
 					String response = getResponse(cmd);
 					out.write(response.getBytes());
-				}
 
+					// Cleanup
+					out.flush();
+					out.close();
+					din.close();
+					out.close();
+				}
 			} catch (Exception e) {
-				System.out.println("Exception Occured: " + e.toString());
+				e.printStackTrace();
+			}
+		}
+
+		private String handlePinUpdate(JSONObject json) {
+			try {
+				if (testing) {
+					return ResponseCreator.buildDefaultOK(MessageTypes.PIN_UPDATE_RESPONSE);
+				} else {
+					String p = (String) json.get(MessageKeys.PIN_PASSWORD);
+					pin = p;
+					return ResponseCreator.buildDefaultOK(MessageTypes.PIN_UPDATE_RESPONSE);
+				}
+			} catch (Exception e) {
+				return ResponseCreator.buildDefaultInternalError(MessageTypes.PIN_UPDATE_RESPONSE,
+						"Pin error: " + e.getMessage());
 			}
 		}
 
 		private String handleTimeUpdate(JSONObject json) {
-
-			long time = (Long) json.get("timestamp");
-			System.out.println("New time= " + time);
-
-			return null;
+			try {
+				if (testing) {
+					return ResponseCreator.buildDefaultOK(MessageTypes.LOCATION_UPDATE_RESPONSE);
+				} else {
+					long t = (Long) json.get(MessageKeys.TIME_TIME);
+					time = t;
+					return ResponseCreator.buildDefaultOK(MessageTypes.TIME_UPDATE_RESPONSE);
+				}
+			} catch (Exception e) {
+				return ResponseCreator.buildDefaultInternalError(MessageTypes.TIME_UPDATE_RESPONSE,
+						"Time error: " + e.getMessage());
+			}
 		}
 
 		private String handleLocationUpdate(JSONObject json) {
-
-			float lon = (Float) json.get("longitude");
-			float lat = (Float) json.get("latitude");
-			System.out.println("New location= (" + lon + ", " + lat + ")");
-
-			return null;
+			try {
+				if (testing) {
+					return ResponseCreator.buildDefaultOK(MessageTypes.LOCATION_UPDATE_RESPONSE);
+				} else {
+					float lon = (Float) json.get(MessageKeys.LOCATION_LONGITUDE);
+					float lat = (Float) json.get(MessageKeys.LOCATION_LATITUDE);
+					longitude = lon;
+					latitude = lat;
+					return ResponseCreator.buildDefaultOK(MessageTypes.LOCATION_UPDATE_RESPONSE);
+				}
+			} catch (Exception e) {
+				return ResponseCreator.buildDefaultInternalError(MessageTypes.LOCATION_UPDATE_RESPONSE,
+						"Location error: " + e.getMessage());
+			}
 		}
 
 		private String handleSnapshot() {
-
-			Snapshot snap = new Snapshot(new Date(), Math.random(), Math.random(), Math.random(), Math.random());
-			String response = ResponseCreator.buildSnapshot(snap);
-
-			return response;
-
+			try {
+				Snapshot snap;
+				if (testing) {
+					snap = new Snapshot(System.currentTimeMillis(), 50, 0.5, 0.5, 0.5, 0.5);
+				} else {
+					snap = new Snapshot(System.currentTimeMillis(), (int) (Math.random() * 100), Math.random(),
+							Math.random(), Math.random(), Math.random());
+				}
+				return ResponseCreator.buildSnapshot(snap);
+			} catch (Exception e) {
+				return ResponseCreator.buildDefaultInternalError(MessageTypes.SNAPSHOT_RESPONSE,
+						"Snapshot error: " + e.getMessage());
+			}
 		}
 
 		private String handleHistory() {
+			try {
+				ArrayList<Snapshot> snaps;
+				if (!testing) {
+					snaps = new ArrayList<Snapshot>(historyData);
+				} else {
+					snaps = new ArrayList<Snapshot>();
+					snaps.add(new Snapshot(System.currentTimeMillis(), 25, 0.1, 0.2, 0.3, 0.4));
+					snaps.add(new Snapshot(System.currentTimeMillis(), 30, 0.6, 0.7, 0.8, 0.9));
+				}
+				History history = new History(snaps);
+				return ResponseCreator.buildHistory(history);
+			} catch (Exception e) {
+				return ResponseCreator.buildDefaultInternalError(MessageTypes.HISTORY_RESPONSE,
+						"History error: " + e.getMessage());
+			}
 
-			ArrayList<Snapshot> snaps = new ArrayList<Snapshot>(historyData);
-			History history = new History(snaps);
-			String response = ResponseCreator.buildHistory(history);
-
-			return response;
-
-		}
-
-		private String handleAddDevice(JSONObject json) {
-
-			String id = (String) json.get("indentifier");
-			String mask = (String) json.get("mask");
-			System.out.println("Adding device: id=" + id + ", mask=" + mask);
-
-			return null;
-		}
-
-		private String handleRemoveDevice(JSONObject json) {
-
-			String id = (String) json.get("identifier");
-			System.out.println("Removing devide: id=" + id);
-
-			return null;
 		}
 
 		private String handleScheduleEvent(JSONObject json) {
+			try {
+				if (testing) {
+					return ResponseCreator.buildDefaultOK(MessageTypes.SCHEDULE_EVENT_REPONSE);
+				} else {
+					String id = (String) json.get(MessageKeys.EVENT_ID);
+					long firstRun = (Long) json.get(MessageKeys.EVENT_FIRST_TIME);
+					long duration = (Long) json.get(MessageKeys.EVENT_DURATION);
+					long interval = (Long) json.get(MessageKeys.EVENT_INTERVAL);
 
-			String id = (String) json.get("identifier");
-			long firstRun = (Long) json.get("first-run-timestamp");
-			long duration = (Long) json.get("run-duration");
-			long interval = (Long) json.get("interval-durations");
-			System.out.println("Adding event: id=" + id + ", first run=" + firstRun + ", duration=" + duration
-					+ ", interval=" + interval);
-
-			return null;
+					Event e = new Event(id, firstRun, duration, interval);
+					events.put(id, e);
+					return ResponseCreator.buildDefaultOK(MessageTypes.SCHEDULE_EVENT_REPONSE);
+				}
+			} catch (Exception e) {
+				return ResponseCreator.buildDefaultInternalError(MessageTypes.SCHEDULE_EVENT_REPONSE,
+						"Schedule error: " + e.getMessage());
+			}
 		}
 
 		private String handleUnscheduleEvent(JSONObject json) {
+			try {
+				if (testing) {
+					return ResponseCreator.buildDefaultOK(MessageTypes.UNSCHEDULE_EVENT_REPONSE);
+				} else {
+					String id = (String) json.get(MessageKeys.EVENT_ID);
+					events.remove(id);
+					return ResponseCreator.buildDefaultOK(MessageTypes.UNSCHEDULE_EVENT_REPONSE);
+				}
+			} catch (Exception e) {
+				return ResponseCreator.buildDefaultInternalError(MessageTypes.UNSCHEDULE_EVENT_REPONSE,
+						"Unschedule error: " + e.getMessage());
+			}
+		}
 
-			String id = (String) json.get("identifier");
-			System.out.println("Removing device: id=" + id);
+		private String handleViewEvents() {
+			try {
+				if (testing) {
+					ArrayList<Event> events = new ArrayList<Event>();
+					events.add(new Event("a", 1000, 2000, 3000));
+					events.add(new Event("a", 4000, 5000, 6000));
+					return ResponseCreator.buildEventsList(new EventsList(events));
+				} else {
+					ArrayList<Event> e = new ArrayList<Event>(events.values());
+					EventsList ev = new EventsList(e);
+					return ResponseCreator.buildEventsList(ev);
+				}
+			} catch (Exception e) {
+				return ResponseCreator.buildDefaultInternalError(MessageTypes.EVENTS_RESPONSE, "View events error: "
+						+ e.getMessage());
+			}
+		}
 
-			return null;
+		private String handleSetChargeConstraints(JSONObject json) {
+			try {
+				if (testing) {
+					return ResponseCreator.buildDefaultOK(MessageTypes.SET_CHARGE_CONSTRAINTS_RESPONSE);
+				} else {
+					maxCharge = (Integer) json.get(MessageKeys.CHARGE_MAX);
+					minCharge = (Integer) json.get(MessageKeys.CHARGE_MIN);
+					return ResponseCreator.buildDefaultOK(MessageTypes.SET_CHARGE_CONSTRAINTS_RESPONSE);
+				}
+			} catch (Exception e) {
+				return ResponseCreator.buildDefaultInternalError(MessageTypes.SET_CHARGE_CONSTRAINTS_RESPONSE,
+						"Set charge constrints error: " + e.getMessage());
+			}
+		}
+
+		private String handleViewChargeConstraints() {
+			try {
+				if (testing) {
+					return ResponseCreator.buildViewChargeConstraints(90, 10);
+				} else {
+					return ResponseCreator.buildViewChargeConstraints(maxCharge, minCharge);
+				}
+			} catch (Exception e) {
+				return ResponseCreator.buildDefaultInternalError(MessageTypes.VIEW_CHARGE_CONSTRAINTS_RESPONSE,
+						"View charge constrints error: " + e.getMessage());
+			}
+		}
+
+		private String handleUnknownRequest(JSONObject json) {
+			return ResponseCreator.buildDefaultNotFound();
 		}
 
 	}

@@ -1,22 +1,19 @@
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 public class Snapshot {
-	private Date date;
-	private DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	private long time;
 	private double panelV, panelI, batteryV, batteryI;
+	private int percent;
 
-	public Snapshot(Date d, double pV, double pI, double bV, double bI) {
-		this.date = d;
+	public Snapshot(long t, int percent, double pV, double pI, double bV, double bI) {
+		this.time = t;
 		this.panelI = pI;
 		this.panelV = pV;
 		this.batteryI = bI;
 		this.batteryV = bV;
+		this.percent = percent;
 	}
 
-	public Date getDate() {
-		return date;
+	public long getTime() {
+		return time;
 	}
 
 	public double getPanelV() {
@@ -33,6 +30,10 @@ public class Snapshot {
 
 	public double getBatteryI() {
 		return batteryI;
+	}
+
+	public int getPercent() {
+		return this.percent;
 	}
 
 }

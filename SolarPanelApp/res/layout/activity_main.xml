@@ -10,19 +10,12 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/button_connect_device" />
-    
-    <Button
-        android:id="@+id/button_add_device"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/button_connect_device"
-        android:text="@string/button_add_device" />
 
     <Button
         android:id="@+id/button_settings"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/button_add_device"
+        android:layout_below="@+id/button_connect_device"
         android:text="@string/button_settings" />
         
     <Button
@@ -31,5 +24,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/button_settings"
         android:text="@string/button_about" />
+    
+    <Button
+        android:id="@+id/button_historical_data"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button_about"
+        android:text="@string/button_historical_data" />
 
 </RelativeLayout>

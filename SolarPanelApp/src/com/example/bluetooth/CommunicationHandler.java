@@ -3,13 +3,17 @@ package com.example.bluetooth;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
-import net.minidev.json.JSONObject;
-import net.minidev.json.JSONValue;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.AsyncTask;
+
+import com.example.solarpanelmanager.api.parsers.ResponseParser;
+import com.example.solarpanelmanager.api.responses.BaseResponse;
 
 /**
  * @author seanhurley
@@ -21,14 +25,18 @@ import android.os.AsyncTask;
  *         the functionality.
  */
 public abstract class CommunicationHandler {
-
 	private Callback responseCallback;
+	private ServiceASyncTask task;
 
 	/**
 	 * @return A JSON formatted string which will tell the bluetooth device
 	 *         which type of request this is.
 	 */
 	abstract protected String getRequest();
+
+	protected BaseResponse parseResponse(String data) {
+		return ResponseParser.parseBasicResponse(data);
+	}
 
 	public CommunicationHandler(Callback callback) {
 		this.responseCallback = callback;
@@ -39,15 +47,27 @@ public abstract class CommunicationHandler {
 	 * callback when it is finished.
 	 */
 	public void performAction() {
-		ServiceASyncTask task = new ServiceASyncTask();
+		task = new ServiceASyncTask();
 		task.execute();
+	}
+
+	public void waitOnTask(long millis) {
+		try {
+			task.get(millis, TimeUnit.MILLISECONDS);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		} catch (TimeoutException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
 	 * @author seanhurley This will actually serve as the asynchronous method by
 	 *         which we communicate with the device.
 	 */
-	private class ServiceASyncTask extends AsyncTask<Void, Void, JSONObject> {
+	private class ServiceASyncTask extends AsyncTask<Void, Void, BaseResponse> {
 
 		private BluetoothAdapter mBluetoothAdapter;
 
@@ -56,18 +76,22 @@ public abstract class CommunicationHandler {
 		}
 
 		@Override
-		protected JSONObject doInBackground(Void... args) {
+		protected BaseResponse doInBackground(Void... args) {
 
 			// TODO Fix the newline ending?
 			String request = getRequest() + "\n";
 			BluetoothSocket clientSocket = null;
+
+			if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
+				// Bluetooth is not enabled
+				return null;
+			}
 
 			// TODO Client knows the MAC address of server
 			// This should be passed along from the app to give them the which
 			// device address to talk to
 			BluetoothDevice mmDevice = mBluetoothAdapter.getRemoteDevice("14:10:9F:E7:CA:93");
 			String data = "";
-
 			try {
 
 				// The app's UUID string, also used by the server code
@@ -87,14 +111,19 @@ public abstract class CommunicationHandler {
 				while (((b = in.readByte()) > 0) && (b != 0x0a)) {
 					data += (char) b;
 				}
+
+				in.close();
+				out.close();
+				clientSocket.close();
 			} catch (Exception e) {
 			}
 
-			return (JSONObject) JSONValue.parse(data);
+			BaseResponse response = parseResponse(data);
+			return response;
 		}
 
 		@Override
-		protected void onPostExecute(JSONObject result) {
+		protected void onPostExecute(BaseResponse result) {
 			responseCallback.onComplete(result);
 		}
 

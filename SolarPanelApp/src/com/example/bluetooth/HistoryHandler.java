@@ -1,5 +1,10 @@
 package com.example.bluetooth;
 
+import com.example.solarpanelmanager.api.parsers.MessageKeys;
+import com.example.solarpanelmanager.api.parsers.MessageTypes;
+import com.example.solarpanelmanager.api.parsers.ResponseParser;
+import com.example.solarpanelmanager.api.responses.BaseResponse;
+
 import net.minidev.json.JSONObject;
 
 /**
@@ -17,8 +22,13 @@ public class HistoryHandler extends CommunicationHandler {
 	@Override
 	protected String getRequest() {
 		JSONObject json = new JSONObject();
-		json.put("type", "history");
+		json.put(MessageKeys.MESSAGE_TYPE, MessageTypes.HISTORY);
 		return json.toJSONString();
+	}
+
+	@Override
+	protected BaseResponse parseResponse(String data) {
+		return ResponseParser.parseHistoryResponse(data);
 	}
 
 }
