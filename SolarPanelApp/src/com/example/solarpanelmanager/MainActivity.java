@@ -23,7 +23,7 @@ public class MainActivity extends Activity {
 		buttonConnect.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent i = new Intent(MainActivity.this, KnownDevicesActivity.class);
+				Intent i = new Intent(MainActivity.this, ConnectActivity.class);
 				startActivity(i);
 			}
 		});
