@@ -9,7 +9,6 @@ import android.widget.Button;
 
 import com.example.bluetooth.Callback;
 import com.example.bluetooth.HistoryHandler;
-import com.example.solarpanelmanager.api.responses.BaseResponse;
 import com.example.solarpanelmanager.api.responses.HistoryResponse;
 
 public class MainActivity extends Activity {
@@ -54,14 +53,14 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// Do a basic call to the device for testing purposes.
-				HistoryHandler call = new HistoryHandler(new Callback() {
+				HistoryHandler call = new HistoryHandler(new Callback<HistoryResponse>() {
 					@Override
-					public void onComplete(BaseResponse json) {
-						if (json == null) {
+					public void onComplete(HistoryResponse response) {
+						if (response == null) {
 							// TODO Something went wrong Alert the user
 							return;
 						}
-						HistoryResponse response = (HistoryResponse) json;
+
 						LineGraph lineGraph = new LineGraph();
 						/**
 						 * TODO: Pass a collection of SnapshotResponses to

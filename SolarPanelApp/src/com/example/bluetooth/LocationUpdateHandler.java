@@ -1,16 +1,17 @@
 package com.example.bluetooth;
 
-import com.example.solarpanelmanager.api.parsers.MessageKeys;
-import com.example.solarpanelmanager.api.parsers.MessageTypes;
-
 import net.minidev.json.JSONObject;
 
-public class LocationUpdateHandler extends CommunicationHandler {
-	
+import com.example.solarpanelmanager.api.parsers.MessageKeys;
+import com.example.solarpanelmanager.api.parsers.MessageTypes;
+import com.example.solarpanelmanager.api.responses.BaseResponse;
+
+public class LocationUpdateHandler extends BaseResponseHandler {
+
 	private float latitude;
 	private float longitude;
-	
-	public LocationUpdateHandler(Callback callback, float longitude, float latitude) {
+
+	public LocationUpdateHandler(Callback<BaseResponse> callback, float longitude, float latitude) {
 		super(callback);
 		this.longitude = longitude;
 		this.latitude = latitude;
