@@ -2,13 +2,15 @@ package com.example.bluetooth;
 
 import net.minidev.json.JSONObject;
 
+import com.example.solarpanelmanager.api.parsers.MessageKeys;
 import com.example.solarpanelmanager.api.parsers.MessageTypes;
+import com.example.solarpanelmanager.api.responses.BaseResponse;
 
-public class TimeUpdateHandler extends CommunicationHandler {
-	
+public class TimeUpdateHandler extends BaseResponseHandler {
+
 	private long timestamp;
-	
-	public TimeUpdateHandler(Callback callback, String device, long timestamp) {
+
+	public TimeUpdateHandler(Callback<BaseResponse> callback, String device, long timestamp) {
 		super(callback, device);
 		this.timestamp = timestamp;
 	}
@@ -16,8 +18,8 @@ public class TimeUpdateHandler extends CommunicationHandler {
 	@Override
 	protected String getRequest() {
 		JSONObject json = new JSONObject();
-		json.put("type", MessageTypes.TIME_UPDATE);
-		json.put("timestamp", this.timestamp);
+		json.put(MessageKeys.MESSAGE_TYPE, MessageTypes.TIME_UPDATE);
+		json.put(MessageKeys.TIME_TIME, this.timestamp);
 		return json.toJSONString();
 	}
 }

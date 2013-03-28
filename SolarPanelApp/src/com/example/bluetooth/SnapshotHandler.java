@@ -2,8 +2,10 @@ package com.example.bluetooth;
 
 import net.minidev.json.JSONObject;
 
+import com.example.solarpanelmanager.api.parsers.MessageKeys;
+import com.example.solarpanelmanager.api.parsers.MessageTypes;
 import com.example.solarpanelmanager.api.parsers.ResponseParser;
-import com.example.solarpanelmanager.api.responses.BaseResponse;
+import com.example.solarpanelmanager.api.responses.SnapshotResponse;
 
 /**
  * @author seanhurley
@@ -11,22 +13,22 @@ import com.example.solarpanelmanager.api.responses.BaseResponse;
  *         This is the handler which will manage the communication for getting
  *         the history.
  */
-public class SnapshotHandler extends CommunicationHandler {
+public class SnapshotHandler extends CommunicationHandler<SnapshotResponse> {
 
-	public SnapshotHandler(Callback callback, String device) {
+	public SnapshotHandler(Callback<SnapshotResponse> callback, String device) {
 		super(callback, device);
 	}
 
 	@Override
 	protected String getRequest() {
 		JSONObject json = new JSONObject();
-		json.put("type", "snapshot");
+		json.put(MessageKeys.MESSAGE_TYPE, MessageTypes.SNAPSHOT);
 		return json.toJSONString();
 	}
-	
+
 	@Override
-	protected BaseResponse parseResponse(String data) {
+	protected SnapshotResponse parseResponse(String data) {
 		return ResponseParser.parseSnapshotResponse(data);
 	}
-	
+
 }

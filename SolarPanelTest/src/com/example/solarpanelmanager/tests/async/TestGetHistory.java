@@ -36,15 +36,15 @@ public class TestGetHistory extends TestCase {
 		SnapshotResponse response1 = responses.get(0);
 		SnapshotResponse response2 = responses.get(1);
 
-		assertTrue(response1.getBatteryVoltage() == .3);
-		assertTrue(response1.getBatteryCurrent() == .4);
-		assertTrue(response1.getPVVoltage() == .1);
-		assertTrue(response1.getPVCurrent() == .2);
-		assertTrue(response1.getBatteryPercent() == 25);
-		assertTrue(response2.getBatteryVoltage() == .8);
-		assertTrue(response2.getBatteryCurrent() == .9);
-		assertTrue(response2.getPVVoltage() == .6);
-		assertTrue(response2.getPVCurrent() == .7);
-		assertTrue(response2.getBatteryPercent() == 30);
+		assertEquals(.3, response1.getBatteryVoltage());
+		assertEquals(.4, response1.getBatteryCurrent());
+		assertEquals(.1, response1.getPVVoltage());
+		assertEquals(.2, response1.getPVCurrent());
+		assertEquals(25, response1.getBatteryPercent());
+		assertEquals(.8, response2.getBatteryVoltage());
+		assertEquals(.9, response2.getBatteryCurrent());
+		assertEquals(.6, response2.getPVVoltage());
+		assertEquals(.7, response2.getPVCurrent());
+		assertEquals(30, response2.getBatteryPercent());
 	}
 }

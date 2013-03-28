@@ -13,9 +13,6 @@
     <string name="button_add_device">Add a new device</string>
     <string name="button_settings">Battery settings</string>
     <string name="button_about">About</string>
-    <string name="button_bluetooth_settings">Pair Device</string>
-    <string name="pairing_memo">You must pair with your installation controller before it can be added as a known device.</string>
-    <string name="title_activity_known_devices">KnownDevicesActivity</string>
     <string name="button_historical_data">Display Historical Data</string>
     <string name="title_activity_history_graph">HistoryGraphActivity</string>
     <string name="title_activity_historical_graph">HistoricalGraph</string>
@@ -24,4 +21,13 @@
     <string name="battery_max">Maximum voltage</string>
     <string name="battery_min">Minimum voltage</string>
     <string name="zero">0</string>
+    <string name="button_bluetooth_settings">Pair Device</string>
+    <string name="pairing_memo">You must pair with your installation controller before it can be added as a known device.</string>
+    <string name="title_activity_known_devices">KnownDevicesActivity</string>
+    <string name="general_settings">General Settings</string>
+    <string name="power_user_mode">Power User Mode Enabled</string>
+    <string name="power_user_message_title">Enable Power User Mode?</string>
+    <string name="power_user_warning">Are you sure that you would like to enable power user mode? Some of these setting could be dangerous to the solar panel.</string>
+    <string name="confirm">Yes</string> 
+    <string name="cancel">Cancel</string>    
 </resources>

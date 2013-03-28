@@ -12,7 +12,6 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.AsyncTask;
 
-import com.example.solarpanelmanager.api.parsers.ResponseParser;
 import com.example.solarpanelmanager.api.responses.BaseResponse;
 
 /**
@@ -24,8 +23,8 @@ import com.example.solarpanelmanager.api.responses.BaseResponse;
  *         bluetooth device which request it's sending in order to get all of
  *         the functionality.
  */
-public abstract class CommunicationHandler {
-	private Callback responseCallback;
+public abstract class CommunicationHandler<T extends BaseResponse> {
+	private Callback<T> responseCallback;
 	private String address;
 	private ServiceASyncTask task;
 
@@ -34,12 +33,10 @@ public abstract class CommunicationHandler {
 	 *         which type of request this is.
 	 */
 	abstract protected String getRequest();
-	
-	protected BaseResponse parseResponse(String data) {
-		return ResponseParser.parseBasicResponse(data);
-	}
 
-	public CommunicationHandler(Callback callback, String target) {
+	abstract protected T parseResponse(String data);
+
+	public CommunicationHandler(Callback<T> callback, String target) {
 		this.address = target;
 		this.responseCallback = callback;
 	}
@@ -57,14 +54,10 @@ public abstract class CommunicationHandler {
 		try {
 			task.get(millis, TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (TimeoutException e) {
-			// TODO Auto-generated catch block
-			System.out.println("print anything?");
 			e.printStackTrace();
 		}
 	}
@@ -73,7 +66,7 @@ public abstract class CommunicationHandler {
 	 * @author seanhurley This will actually serve as the asynchronous method by
 	 *         which we communicate with the device.
 	 */
-	private class ServiceASyncTask extends AsyncTask<Void, Void, BaseResponse> {
+	private class ServiceASyncTask extends AsyncTask<Void, Void, T> {
 
 		private BluetoothAdapter mBluetoothAdapter;
 
@@ -82,9 +75,7 @@ public abstract class CommunicationHandler {
 		}
 
 		@Override
-		protected BaseResponse doInBackground(Void... args) {
-			
-			System.out.println("called at all?");
+		protected T doInBackground(Void... args) {
 
 			// TODO Fix the newline ending?
 			String request = getRequest() + "\n";
@@ -130,12 +121,12 @@ public abstract class CommunicationHandler {
 			} catch (Exception e) {
 			}
 
-			BaseResponse response = parseResponse(data);
+			T response = parseResponse(data);
 			return response;
 		}
 
 		@Override
-		protected void onPostExecute(BaseResponse result) {
+		protected void onPostExecute(T result) {
 			responseCallback.onComplete(result);
 		}
 

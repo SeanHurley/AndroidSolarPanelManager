@@ -66,7 +66,7 @@ public class MockPanel {
 				historyData.offer(snap);
 
 				try {
-					Thread.sleep(500);
+					Thread.sleep(10000);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -117,6 +117,8 @@ public class MockPanel {
 				response = handleSetChargeConstraints(json);
 			} else if (MessageTypes.VIEW_CHARGE_CONSTRAINTS.equals(type)) {
 				response = handleViewChargeConstraints();
+			} else if (MessageTypes.PIN_UPDATE.equals(type)) {
+				response = handlePinUpdate(json);
 			} else {
 				response = handleUnknownRequest(json);
 			}
@@ -165,9 +167,13 @@ public class MockPanel {
 
 		private String handlePinUpdate(JSONObject json) {
 			try {
-				String p = (String) json.get("pin");
-				pin = p;
-				return ResponseCreator.buildDefaultOK(MessageTypes.PIN_UPDATE_RESPONSE);
+				if (testing) {
+					return ResponseCreator.buildDefaultOK(MessageTypes.PIN_UPDATE_RESPONSE);
+				} else {
+					String p = (String) json.get(MessageKeys.PIN_PASSWORD);
+					pin = p;
+					return ResponseCreator.buildDefaultOK(MessageTypes.PIN_UPDATE_RESPONSE);
+				}
 			} catch (Exception e) {
 				return ResponseCreator.buildDefaultInternalError(MessageTypes.PIN_UPDATE_RESPONSE,
 						"Pin error: " + e.getMessage());
@@ -176,9 +182,13 @@ public class MockPanel {
 
 		private String handleTimeUpdate(JSONObject json) {
 			try {
-				long t = (Long) json.get("timestamp");
-				time = t;
-				return ResponseCreator.buildDefaultOK(MessageTypes.TIME_UPDATE_RESPONSE);
+				if (testing) {
+					return ResponseCreator.buildDefaultOK(MessageTypes.LOCATION_UPDATE_RESPONSE);
+				} else {
+					long t = (Long) json.get(MessageKeys.TIME_TIME);
+					time = t;
+					return ResponseCreator.buildDefaultOK(MessageTypes.TIME_UPDATE_RESPONSE);
+				}
 			} catch (Exception e) {
 				return ResponseCreator.buildDefaultInternalError(MessageTypes.TIME_UPDATE_RESPONSE,
 						"Time error: " + e.getMessage());
@@ -187,11 +197,15 @@ public class MockPanel {
 
 		private String handleLocationUpdate(JSONObject json) {
 			try {
-				float lon = (Float) json.get("longitude");
-				float lat = (Float) json.get("latitude");
-				longitude = lon;
-				latitude = lat;
-				return ResponseCreator.buildDefaultOK(MessageTypes.LOCATION_UPDATE_RESPONSE);
+				if (testing) {
+					return ResponseCreator.buildDefaultOK(MessageTypes.LOCATION_UPDATE_RESPONSE);
+				} else {
+					float lon = (Float) json.get(MessageKeys.LOCATION_LONGITUDE);
+					float lat = (Float) json.get(MessageKeys.LOCATION_LATITUDE);
+					longitude = lon;
+					latitude = lat;
+					return ResponseCreator.buildDefaultOK(MessageTypes.LOCATION_UPDATE_RESPONSE);
+				}
 			} catch (Exception e) {
 				return ResponseCreator.buildDefaultInternalError(MessageTypes.LOCATION_UPDATE_RESPONSE,
 						"Location error: " + e.getMessage());
@@ -235,14 +249,18 @@ public class MockPanel {
 
 		private String handleScheduleEvent(JSONObject json) {
 			try {
-				String id = (String) json.get("identifier");
-				long firstRun = (Long) json.get("first-run-timestamp");
-				long duration = (Long) json.get("run-duration");
-				long interval = (Long) json.get("interval-durations");
+				if (testing) {
+					return ResponseCreator.buildDefaultOK(MessageTypes.SCHEDULE_EVENT_REPONSE);
+				} else {
+					String id = (String) json.get(MessageKeys.EVENT_ID);
+					long firstRun = (Long) json.get(MessageKeys.EVENT_FIRST_TIME);
+					long duration = (Long) json.get(MessageKeys.EVENT_DURATION);
+					long interval = (Long) json.get(MessageKeys.EVENT_INTERVAL);
 
-				Event e = new Event(id, firstRun, duration, interval);
-				events.put(id, e);
-				return ResponseCreator.buildDefaultOK(MessageTypes.SCHEDULE_EVENT_REPONSE);
+					Event e = new Event(id, firstRun, duration, interval);
+					events.put(id, e);
+					return ResponseCreator.buildDefaultOK(MessageTypes.SCHEDULE_EVENT_REPONSE);
+				}
 			} catch (Exception e) {
 				return ResponseCreator.buildDefaultInternalError(MessageTypes.SCHEDULE_EVENT_REPONSE,
 						"Schedule error: " + e.getMessage());
@@ -251,9 +269,13 @@ public class MockPanel {
 
 		private String handleUnscheduleEvent(JSONObject json) {
 			try {
-				String id = (String) json.get("identifier");
-				events.remove(id);
-				return ResponseCreator.buildDefaultOK(MessageTypes.UNSCHEDULE_EVENT_REPONSE);
+				if (testing) {
+					return ResponseCreator.buildDefaultOK(MessageTypes.UNSCHEDULE_EVENT_REPONSE);
+				} else {
+					String id = (String) json.get(MessageKeys.EVENT_ID);
+					events.remove(id);
+					return ResponseCreator.buildDefaultOK(MessageTypes.UNSCHEDULE_EVENT_REPONSE);
+				}
 			} catch (Exception e) {
 				return ResponseCreator.buildDefaultInternalError(MessageTypes.UNSCHEDULE_EVENT_REPONSE,
 						"Unschedule error: " + e.getMessage());
@@ -262,9 +284,16 @@ public class MockPanel {
 
 		private String handleViewEvents() {
 			try {
-				ArrayList<Event> e = new ArrayList<Event>(events.values());
-				EventsList ev = new EventsList(e);
-				return ResponseCreator.buildEventsList(ev);
+				if (testing) {
+					ArrayList<Event> events = new ArrayList<Event>();
+					events.add(new Event("a", 1000, 2000, 3000));
+					events.add(new Event("a", 4000, 5000, 6000));
+					return ResponseCreator.buildEventsList(new EventsList(events));
+				} else {
+					ArrayList<Event> e = new ArrayList<Event>(events.values());
+					EventsList ev = new EventsList(e);
+					return ResponseCreator.buildEventsList(ev);
+				}
 			} catch (Exception e) {
 				return ResponseCreator.buildDefaultInternalError(MessageTypes.EVENTS_RESPONSE, "View events error: "
 						+ e.getMessage());
@@ -273,9 +302,13 @@ public class MockPanel {
 
 		private String handleSetChargeConstraints(JSONObject json) {
 			try {
-				maxCharge = (Integer) json.get("max");
-				minCharge = (Integer) json.get("min");
-				return ResponseCreator.buildDefaultOK(MessageTypes.SET_CHARGE_CONSTRAINTS_RESPONSE);
+				if (testing) {
+					return ResponseCreator.buildDefaultOK(MessageTypes.SET_CHARGE_CONSTRAINTS_RESPONSE);
+				} else {
+					maxCharge = (Integer) json.get(MessageKeys.CHARGE_MAX);
+					minCharge = (Integer) json.get(MessageKeys.CHARGE_MIN);
+					return ResponseCreator.buildDefaultOK(MessageTypes.SET_CHARGE_CONSTRAINTS_RESPONSE);
+				}
 			} catch (Exception e) {
 				return ResponseCreator.buildDefaultInternalError(MessageTypes.SET_CHARGE_CONSTRAINTS_RESPONSE,
 						"Set charge constrints error: " + e.getMessage());
@@ -284,7 +317,11 @@ public class MockPanel {
 
 		private String handleViewChargeConstraints() {
 			try {
-				return ResponseCreator.buildViewChargeConstraints(maxCharge, minCharge);
+				if (testing) {
+					return ResponseCreator.buildViewChargeConstraints(90, 10);
+				} else {
+					return ResponseCreator.buildViewChargeConstraints(maxCharge, minCharge);
+				}
 			} catch (Exception e) {
 				return ResponseCreator.buildDefaultInternalError(MessageTypes.VIEW_CHARGE_CONSTRAINTS_RESPONSE,
 						"View charge constrints error: " + e.getMessage());

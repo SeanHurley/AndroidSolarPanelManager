@@ -2,7 +2,6 @@ package com.example.solarpanelmanager.api.parsers;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
@@ -17,32 +16,27 @@ import com.example.solarpanelmanager.api.responses.ViewChargeConstraintsResponse
 
 public class ResponseParser {
 
-	/**
-	 * @param response
-	 *            The response that will be given from the bluetooth
-	 *            communication layer
-	 * @return A mapping of just plain KEY-VALUE information in a HashMap. The
-	 *         object types may still need to be parsed as this will just be
-	 *         pulling raw from the responses
-	 */
-	private static HashMap<String, Object> parseResponse(String response) {
-		HashMap<String, Object> values = new HashMap<String, Object>();
-
-		return values;
-	}
-
 	public static BaseResponse parseBasicResponse(String response) {
 		// Call the parse response for the basic map, and then create the proper
 		// response object
 		JSONObject json = (JSONObject) JSONValue.parse(response);
-		return new BaseResponse((String) json.get("type"), (Integer) json.get("result"));
+		return new BaseResponse((String) json.get(MessageKeys.MESSAGE_TYPE),
+				(Integer) json.get(MessageKeys.RESPONSE_CODE), (String) json.get(MessageKeys.RESPONSE_MESSAGE));
 	}
 
 	public static HistoryResponse parseHistoryResponse(String response) {
 		// Call the parse response for the basic map, and then create the proper
 		// response object
 		JSONObject json = (JSONObject) JSONValue.parse(response);
-		JSONArray snapshots = (JSONArray) json.get("history-data");
+
+		int result = (Integer) json.get(MessageKeys.RESPONSE_CODE);
+		String message = (String) json.get(MessageKeys.RESPONSE_MESSAGE);
+
+		if (result != 200) {
+			return new HistoryResponse(result, message);
+		}
+
+		JSONArray snapshots = (JSONArray) json.get(MessageKeys.HISTORY_DATA);
 		ArrayList<SnapshotResponse> snapshotResponses = new ArrayList<SnapshotResponse>();
 		// SnapshotResponse[] snapshotResponses = new
 		// SnapshotResponse[snapshots.size()];
@@ -53,36 +47,38 @@ public class ResponseParser {
 			snapshotResponses.add(parseSnapshotResponse(((JSONObject) snapshots.get(i)).toJSONString()));
 		}
 
-		int result = (Integer) json.get("result");
-		return new HistoryResponse(result, snapshotResponses);
+		return new HistoryResponse(result, message, snapshotResponses);
 	}
 
 	public static SnapshotResponse parseSnapshotResponse(String response) {
 		// Call the parse response for the basic map, and then create the proper
 		// response object
-		System.out.println(response);
 		JSONObject json = (JSONObject) (JSONValue.parse(response));
+
 		int result = 200;
-		if (json.containsKey("result")) {
-			result = (Integer) json.get("result");
+		if (json.containsKey(MessageKeys.RESPONSE_CODE)) {
+			result = (Integer) json.get(MessageKeys.RESPONSE_CODE);
+		}
+		String message = (String) json.get(MessageKeys.RESPONSE_MESSAGE);
+
+		if (result != 200) {
+			return new SnapshotResponse(result, message);
 		}
 
-		Object timestamp = json.get("timestamp");
-		long longTimestamp;
-		if (timestamp instanceof Long) {
-			longTimestamp = (Long) timestamp;
-		} else {
-			longTimestamp = (Integer) timestamp;
+		if (json.containsKey(MessageKeys.RESPONSE_CODE)) {
+			result = (Integer) json.get(MessageKeys.RESPONSE_CODE);
 		}
 
-		double batteryVoltage = getDouble(json.get("battery-voltage"));
-		double PVCurrent = getDouble(json.get("pv-current"));
-		double PVVoltage = getDouble(json.get("pv-voltage"));
-		double batteryCurrent = getDouble(json.get("battery-current"));
+		long longTimestamp = getLong(json.get(MessageKeys.SNAPSHOT_TIMESTAMP));
 
-		int percent = (Integer) json.get("battery-percent");
+		double batteryVoltage = getDouble(json.get(MessageKeys.SNAPSHOT_BATTERY_VOLTAGE));
+		double batteryCurrent = getDouble(json.get(MessageKeys.SNAPSHOT_BATTERY_CURRENT));
+		double PVVoltage = getDouble(json.get(MessageKeys.SNAPSHOT_PANEL_VOLTAGE));
+		double PVCurrent = getDouble(json.get(MessageKeys.SNAPSHOT_PANEL_CURRENT));
 
-		return new SnapshotResponse(result, longTimestamp, percent, batteryVoltage, PVCurrent, PVVoltage,
+		int percent = (Integer) json.get(MessageKeys.SNAPSHOT_BATTERY_PERCENT);
+
+		return new SnapshotResponse(result, message, longTimestamp, percent, batteryVoltage, PVCurrent, PVVoltage,
 				batteryCurrent);
 	}
 
@@ -97,32 +93,53 @@ public class ResponseParser {
 
 	public static EventsResponse parseEventsResponse(String response) {
 		JSONObject json = (JSONObject) (JSONValue.parse(response));
-		int result = (Integer) json.get("result");
 
-		JSONArray eventsArray = (JSONArray) json.get("events-data");
+		int result = (Integer) json.get(MessageKeys.RESPONSE_CODE);
+		String message = (String) json.get(MessageKeys.RESPONSE_MESSAGE);
+
+		if (result != 200) {
+			return new EventsResponse(result, message);
+		}
+
+		JSONArray eventsArray = (JSONArray) json.get(MessageKeys.EVENTS_DATA);
 		ArrayList<Event> events = new ArrayList<Event>();
 
 		for (int i = 0; i < eventsArray.size(); i++) {
 			events.add(parseEvent((JSONObject) eventsArray.get(i)));
 		}
 
-		return new EventsResponse(result, events);
+		return new EventsResponse(result, message, events);
 	}
 
 	private static Event parseEvent(JSONObject json) {
-		String id = (String) json.get("id");
-		long firstTime = (Long) json.get("first-run");
-		long duration = (Long) json.get("duration");
-		long interval = (Long) json.get("interval");
+		String id = (String) json.get(MessageKeys.EVENT_ID);
+		long firstTime = getLong(json.get(MessageKeys.EVENT_FIRST_TIME));
+		long duration = getLong(json.get(MessageKeys.EVENT_DURATION));
+		long interval = getLong(json.get(MessageKeys.EVENT_INTERVAL));
 		return new Event(id, firstTime, duration, interval);
+	}
+
+	private static long getLong(Object obj) {
+		if (obj instanceof Integer) {
+			return (Integer) obj;
+		} else {
+			return (Long) obj;
+		}
 	}
 
 	public static ViewChargeConstraintsResponse parseViewChargeConstraintsResponse(String response) {
 		JSONObject json = (JSONObject) (JSONValue.parse(response));
-		int result = (Integer) json.get("result");
-		int max = (Integer) json.get("max");
-		int min = (Integer) json.get("min");
-		return new ViewChargeConstraintsResponse(result, max, min);
+
+		int result = (Integer) json.get(MessageKeys.RESPONSE_CODE);
+		String message = (String) json.get(MessageKeys.RESPONSE_MESSAGE);
+
+		if (result != 200) {
+			return new ViewChargeConstraintsResponse(result, message);
+		}
+
+		int max = (Integer) json.get(MessageKeys.CHARGE_MAX);
+		int min = (Integer) json.get(MessageKeys.CHARGE_MIN);
+		return new ViewChargeConstraintsResponse(result, message, max, min);
 	}
 
 }

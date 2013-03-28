@@ -13,9 +13,13 @@ public class HistoryResponse extends BaseResponse {
 
 	private List<SnapshotResponse> historyData;
 
-	public HistoryResponse(int result, List<SnapshotResponse> historyData) {
-		super(MessageTypes.HISTORY_RESPONSE, result);
+	public HistoryResponse(int result, String message, List<SnapshotResponse> historyData) {
+		super(MessageTypes.HISTORY_RESPONSE, result, message);
 		this.historyData = historyData;
+	}
+	
+	public HistoryResponse(int result, String message) {
+		super(MessageTypes.HISTORY_RESPONSE, result, message);
 	}
 
 	public List<SnapshotResponse> getHistoryData() {

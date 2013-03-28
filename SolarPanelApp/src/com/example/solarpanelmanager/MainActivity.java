@@ -3,10 +3,12 @@ package com.example.solarpanelmanager;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.Constants;
 import com.example.bluetooth.Callback;
 import com.example.bluetooth.HistoryHandler;
 import com.example.solarpanelmanager.api.responses.BaseResponse;
@@ -44,25 +46,33 @@ public class MainActivity extends Activity {
 		buttonAbout.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
+				Intent intent = new Intent(MainActivity.this, PreferencesActivity.class);
+				MainActivity.this.startActivity(intent);
 			}
 		});
 
-		// Historical Data
 		final Button buttonHistoricalData = (Button) findViewById(R.id.button_historical_data);
 		buttonHistoricalData.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				// Do a basic call to the device for testing purposes.
-				HistoryHandler call = new HistoryHandler(new Callback() {
+
+				String deviceId = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString(
+						Constants.CURRENT_DEVICE, null);
+				if (deviceId == null) {
+					// TODO - Tell the user that something is wrong
+				}
+
+				// TODO use the deviceid when calling the handler
+				HistoryHandler call = new HistoryHandler(new Callback<HistoryResponse>() {
+					
 					@Override
-					public void onComplete(BaseResponse json) {
-						if (json == null) {
+					public void onComplete(HistoryResponse response) {
+						if (response == null) {
 							// TODO Something went wrong Alert the user
 							return;
 						}
-						HistoryResponse response = (HistoryResponse) json;
+
 						LineGraph lineGraph = new LineGraph();
 						/**
 						 * TODO: Pass a collection of SnapshotResponses to
@@ -71,6 +81,7 @@ public class MainActivity extends Activity {
 						Intent lineGraphIntent = lineGraph.getIntent(MainActivity.this, response.getHistoryData());
 						startActivity(lineGraphIntent);
 					}
+
 				}, "14:10:9F:E7:CA:93"); 
 				call.performAction();
 			}

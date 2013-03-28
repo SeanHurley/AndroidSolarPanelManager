@@ -17,15 +17,19 @@ public class SnapshotResponse extends BaseResponse {
 	private double batteryCurrent;
 	private int batteryPercent;
 
-	public SnapshotResponse(int result, long timestamp, int batteryPercent, double batteryVoltage, double PVCurrent,
+	public SnapshotResponse(int result, String message, long timestamp, int batteryPercent, double batteryVoltage, double PVCurrent,
 			double PVVoltage, double batteryCurrent) {
-		super(MessageTypes.SNAPSHOT_RESPONSE, result);
+		super(MessageTypes.SNAPSHOT_RESPONSE, result, message);
 		this.timestamp = timestamp;
 		this.batteryPercent = batteryPercent;
 		this.batteryVoltage = batteryVoltage;
 		this.PVCurrent = PVCurrent;
 		this.PVVoltage = PVVoltage;
 		this.batteryCurrent = batteryCurrent;
+	}
+	
+	public SnapshotResponse(int result, String message) {
+		super(MessageTypes.SNAPSHOT_RESPONSE, result, message);
 	}
 
 	public double getBatteryCurrent() {
