@@ -21,21 +21,21 @@ public class ResponseParser {
 		// response object
 		JSONObject json = (JSONObject) JSONValue.parse(response);
 		return new BaseResponse((String) json.get(MessageKeys.MESSAGE_TYPE),
-				(Integer) json.get(MessageKeys.RESPONSE_CODE), (String)json.get(MessageKeys.RESPONSE_MESSAGE));
+				(Integer) json.get(MessageKeys.RESPONSE_CODE), (String) json.get(MessageKeys.RESPONSE_MESSAGE));
 	}
 
 	public static HistoryResponse parseHistoryResponse(String response) {
 		// Call the parse response for the basic map, and then create the proper
 		// response object
 		JSONObject json = (JSONObject) JSONValue.parse(response);
-		
+
 		int result = (Integer) json.get(MessageKeys.RESPONSE_CODE);
 		String message = (String) json.get(MessageKeys.RESPONSE_MESSAGE);
-		
+
 		if (result != 200) {
 			return new HistoryResponse(result, message);
 		}
-		
+
 		JSONArray snapshots = (JSONArray) json.get(MessageKeys.HISTORY_DATA);
 		ArrayList<SnapshotResponse> snapshotResponses = new ArrayList<SnapshotResponse>();
 		// SnapshotResponse[] snapshotResponses = new
@@ -54,14 +54,17 @@ public class ResponseParser {
 		// Call the parse response for the basic map, and then create the proper
 		// response object
 		JSONObject json = (JSONObject) (JSONValue.parse(response));
-		
-		int result = (Integer) json.get(MessageKeys.RESPONSE_CODE);
+
+		int result = 200;
+		if (json.containsKey(MessageKeys.RESPONSE_CODE)) {
+			result = (Integer) json.get(MessageKeys.RESPONSE_CODE);
+		}
 		String message = (String) json.get(MessageKeys.RESPONSE_MESSAGE);
-		
+
 		if (result != 200) {
 			return new SnapshotResponse(result, message);
 		}
-		
+
 		if (json.containsKey(MessageKeys.RESPONSE_CODE)) {
 			result = (Integer) json.get(MessageKeys.RESPONSE_CODE);
 		}
@@ -90,10 +93,10 @@ public class ResponseParser {
 
 	public static EventsResponse parseEventsResponse(String response) {
 		JSONObject json = (JSONObject) (JSONValue.parse(response));
-		
+
 		int result = (Integer) json.get(MessageKeys.RESPONSE_CODE);
 		String message = (String) json.get(MessageKeys.RESPONSE_MESSAGE);
-		
+
 		if (result != 200) {
 			return new EventsResponse(result, message);
 		}
@@ -126,14 +129,14 @@ public class ResponseParser {
 
 	public static ViewChargeConstraintsResponse parseViewChargeConstraintsResponse(String response) {
 		JSONObject json = (JSONObject) (JSONValue.parse(response));
-		
+
 		int result = (Integer) json.get(MessageKeys.RESPONSE_CODE);
 		String message = (String) json.get(MessageKeys.RESPONSE_MESSAGE);
-		
+
 		if (result != 200) {
 			return new ViewChargeConstraintsResponse(result, message);
 		}
-		
+
 		int max = (Integer) json.get(MessageKeys.CHARGE_MAX);
 		int min = (Integer) json.get(MessageKeys.CHARGE_MIN);
 		return new ViewChargeConstraintsResponse(result, message, max, min);
