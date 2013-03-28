@@ -2,11 +2,13 @@ package com.example.solarpanelmanager;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
+import com.example.Constants;
 import com.example.bluetooth.Callback;
 import com.example.bluetooth.SetChargeConstraintsHandler;
 import com.example.bluetooth.ViewChargeConstraintsHandler;
@@ -14,13 +16,13 @@ import com.example.solarpanelmanager.api.responses.BaseResponse;
 import com.example.solarpanelmanager.api.responses.ViewChargeConstraintsResponse;
 
 public class BatteryActivity extends Activity {
-	int minVal;
-	int maxVal;
+	private int minVal;
+	private int maxVal;
 
-	SeekBar min;
-	SeekBar max;
-	TextView minvalue;
-	TextView maxvalue;
+	private SeekBar min;
+	private SeekBar max;
+	private TextView minvalue;
+	private TextView maxvalue;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -36,7 +38,13 @@ public class BatteryActivity extends Activity {
 		min = (SeekBar) findViewById(R.id.minbar);
 		max = (SeekBar) findViewById(R.id.maxbar);
 
-		ViewChargeConstraintsHandler i = new ViewChargeConstraintsHandler(
+		String deviceId = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.CURRENT_DEVICE, null);
+		if (deviceId == null) {
+			// TODO - Tell the user that something is wrong
+		}
+
+		// TODO use the deviceid when calling the handler
+		ViewChargeConstraintsHandler handler = new ViewChargeConstraintsHandler(
 				new Callback<ViewChargeConstraintsResponse>() {
 
 					@Override
@@ -65,7 +73,7 @@ public class BatteryActivity extends Activity {
 
 				});
 
-		i.performAction();
+		handler.performAction();
 
 		minvalue.setText("Minimum:" + minVal);
 		maxvalue.setText("Maximum:" + maxVal);

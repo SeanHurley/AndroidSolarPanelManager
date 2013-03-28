@@ -3,10 +3,12 @@ package com.example.solarpanelmanager;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.Constants;
 import com.example.bluetooth.Callback;
 import com.example.bluetooth.HistoryHandler;
 import com.example.solarpanelmanager.api.responses.HistoryResponse;
@@ -47,12 +49,19 @@ public class MainActivity extends Activity {
 			}
 		});
 
-		// Historical Data
 		final Button buttonHistoricalData = (Button) findViewById(R.id.button_historical_data);
 		buttonHistoricalData.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				// Do a basic call to the device for testing purposes.
+
+				String deviceId = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString(
+						Constants.CURRENT_DEVICE, null);
+				if (deviceId == null) {
+					// TODO - Tell the user that something is wrong
+				}
+
+				// TODO use the deviceid when calling the handler
 				HistoryHandler call = new HistoryHandler(new Callback<HistoryResponse>() {
 					@Override
 					public void onComplete(HistoryResponse response) {
