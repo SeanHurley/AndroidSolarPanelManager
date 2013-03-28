@@ -2,24 +2,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/darkbackground"
     tools:context=".SplashActivity" >
 
-	<TextView
-	    android:id="@+id/Logo"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:text="@string/splash_activity_logo"
-		android:layout_centerInParent="true"
-	    android:textSize="35sp" />
+    <TextView
+        android:id="@+id/Logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="@string/splash_activity_logo"
+        android:textColor="#FFCCCCCC"
+        android:textSize="35sp" />
 
-	<TextView
-	    android:id="@+id/Version"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_below="@+id/Logo"
-	    android:text="@string/splash_activity_version"
-	    android:layout_centerHorizontal="true"
-	    android:layout_centerVertical="true"
-	    android:textSize="15sp" />
-    
+    <TextView
+        android:id="@+id/Version"
+        android:textColor="#FFCCCCCC"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Logo"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/splash_activity_version"
+        android:textSize="15sp" />
+
 </RelativeLayout>
