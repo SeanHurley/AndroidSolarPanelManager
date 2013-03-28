@@ -21,7 +21,7 @@ public class TestGetSnapshot extends TestCase {
 				container.response = (SnapshotResponse) json;
 			}
 
-		});
+		}, "14:10:9F:E7:CA:93");
 		handler.performAction();
 
 		handler.waitOnTask(5000);

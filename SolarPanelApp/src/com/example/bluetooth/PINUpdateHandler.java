@@ -2,14 +2,12 @@ package com.example.bluetooth;
 
 import net.minidev.json.JSONObject;
 
-import com.example.solarpanelmanager.api.responses.BaseResponse;
-
 public class PINUpdateHandler extends CommunicationHandler {
 	
 	private String pin;
 
-	public PINUpdateHandler(Callback callback, String pin) {
-		super(callback);
+	public PINUpdateHandler(Callback callback, String device, String pin) {
+		super(callback, device);
 		this.pin = pin;
 	}
 

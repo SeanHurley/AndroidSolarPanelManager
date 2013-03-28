@@ -13,7 +13,6 @@ import com.example.solarpanelmanager.api.responses.BaseResponse;
 import com.example.solarpanelmanager.api.responses.HistoryResponse;
 
 public class MainActivity extends Activity {
-	private final int REQUEST_ENABLE_BT = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +71,7 @@ public class MainActivity extends Activity {
 						Intent lineGraphIntent = lineGraph.getIntent(MainActivity.this, response.getHistoryData());
 						startActivity(lineGraphIntent);
 					}
-				});
+				}, "14:10:9F:E7:CA:93"); 
 				call.performAction();
 			}
 		});

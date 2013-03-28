@@ -1,15 +1,15 @@
 package com.example.bluetooth;
 
-import com.example.solarpanelmanager.api.parsers.MessageTypes;
-
 import net.minidev.json.JSONObject;
+
+import com.example.solarpanelmanager.api.parsers.MessageTypes;
 
 public class UnscheduleEventHandler extends CommunicationHandler {
 	
 	private String id;
 	
-	public UnscheduleEventHandler(Callback callback, String id) {
-		super(callback);
+	public UnscheduleEventHandler(Callback callback, String device, String id) {
+		super(callback, device);
 		this.id = id;
 	}
 

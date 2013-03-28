@@ -8,8 +8,8 @@ public class TimeUpdateHandler extends CommunicationHandler {
 	
 	private long timestamp;
 	
-	public TimeUpdateHandler(Callback callback, long timestamp) {
-		super(callback);
+	public TimeUpdateHandler(Callback callback, String device, long timestamp) {
+		super(callback, device);
 		this.timestamp = timestamp;
 	}
 

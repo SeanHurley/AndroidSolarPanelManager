@@ -21,10 +21,12 @@ public class TestGetHistory extends TestCase {
 
 			@Override
 			public void onComplete(BaseResponse json) {
+				System.out.println("in hook");
+				System.out.println(json);
 				container.response = (HistoryResponse) json;
 			}
 
-		});
+		}, "14:10:9F:E7:CA:93");
 		handler.performAction();
 
 		handler.waitOnTask(5000);

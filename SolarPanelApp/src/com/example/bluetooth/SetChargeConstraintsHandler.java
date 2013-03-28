@@ -1,15 +1,15 @@
 package com.example.bluetooth;
 
-import com.example.solarpanelmanager.api.parsers.MessageTypes;
-
 import net.minidev.json.JSONObject;
+
+import com.example.solarpanelmanager.api.parsers.MessageTypes;
 
 public class SetChargeConstraintsHandler extends CommunicationHandler {
 	private int max;
 	private int min;
 	
-	public SetChargeConstraintsHandler(Callback callback, int max, int min) {
-		super(callback);
+	public SetChargeConstraintsHandler(Callback callback, String device, int max, int min) {
+		super(callback, device);
 		this.max = max;
 		this.min = min;
 	}

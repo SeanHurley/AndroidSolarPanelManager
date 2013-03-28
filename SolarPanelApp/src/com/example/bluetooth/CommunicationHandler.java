@@ -7,15 +7,13 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import com.example.solarpanelmanager.api.parsers.ResponseParser;
-import com.example.solarpanelmanager.api.responses.BaseResponse;
-
-import net.minidev.json.JSONObject;
-import net.minidev.json.JSONValue;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.AsyncTask;
+
+import com.example.solarpanelmanager.api.parsers.ResponseParser;
+import com.example.solarpanelmanager.api.responses.BaseResponse;
 
 /**
  * @author seanhurley
@@ -28,6 +26,7 @@ import android.os.AsyncTask;
  */
 public abstract class CommunicationHandler {
 	private Callback responseCallback;
+	private String address;
 	private ServiceASyncTask task;
 
 	/**
@@ -40,7 +39,8 @@ public abstract class CommunicationHandler {
 		return ResponseParser.parseBasicResponse(data);
 	}
 
-	public CommunicationHandler(Callback callback) {
+	public CommunicationHandler(Callback callback, String target) {
+		this.address = target;
 		this.responseCallback = callback;
 	}
 
@@ -64,6 +64,7 @@ public abstract class CommunicationHandler {
 			e.printStackTrace();
 		} catch (TimeoutException e) {
 			// TODO Auto-generated catch block
+			System.out.println("print anything?");
 			e.printStackTrace();
 		}
 	}
@@ -82,6 +83,8 @@ public abstract class CommunicationHandler {
 
 		@Override
 		protected BaseResponse doInBackground(Void... args) {
+			
+			System.out.println("called at all?");
 
 			// TODO Fix the newline ending?
 			String request = getRequest() + "\n";
@@ -95,7 +98,9 @@ public abstract class CommunicationHandler {
 			// TODO Client knows the MAC address of server
 			// This should be passed along from the app to give them the which
 			// device address to talk to
-			BluetoothDevice mmDevice = mBluetoothAdapter.getRemoteDevice("14:10:9F:E7:CA:93");
+			System.out.println("checkpoint 1");
+			BluetoothDevice mmDevice = mBluetoothAdapter.getRemoteDevice(address);
+			System.out.println("checkpoint 2");
 			String data = "";
 			try {
 
@@ -105,7 +110,9 @@ public abstract class CommunicationHandler {
 
 				mBluetoothAdapter.cancelDiscovery(); // Cancel, discovery slows
 														// connection
+				System.out.println("but does get to here");
 				clientSocket.connect();
+				System.out.println("did get this far");
 				DataInputStream in = new DataInputStream(clientSocket.getInputStream());
 				DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
 
