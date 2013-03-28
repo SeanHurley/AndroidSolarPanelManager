@@ -1,5 +1,7 @@
 package com.example.solarpanelmanager.tests.async;
 
+import java.util.concurrent.Semaphore;
+
 import junit.framework.TestCase;
 
 import com.example.bluetooth.Callback;
@@ -18,11 +20,13 @@ public class TestBasicCalls extends TestCase {
 	}
 
 	private Container container;
-	private Callback callback = new Callback() {
+	private Semaphore sem = new Semaphore(1);
+	private Callback<BaseResponse> callback = new Callback<BaseResponse>() {
 
 		@Override
 		public void onComplete(BaseResponse json) {
 			container.response = json;
+			sem.release();
 		}
 	};
 
@@ -32,9 +36,19 @@ public class TestBasicCalls extends TestCase {
 		container = new Container();
 	}
 
-	private void testHandler(CommunicationHandler handler) {
+	private void testHandler(CommunicationHandler<BaseResponse> handler) {
+		try {
+			sem.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		handler.performAction();
 		handler.waitOnTask(5000);
+		try {
+			sem.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		assertEquals(200, container.response.getResult());
 	}
 
