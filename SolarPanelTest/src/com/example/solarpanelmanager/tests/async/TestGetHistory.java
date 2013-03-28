@@ -1,12 +1,12 @@
 package com.example.solarpanelmanager.tests.async;
 
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 import junit.framework.TestCase;
 
 import com.example.bluetooth.Callback;
 import com.example.bluetooth.HistoryHandler;
-import com.example.solarpanelmanager.api.responses.BaseResponse;
 import com.example.solarpanelmanager.api.responses.HistoryResponse;
 import com.example.solarpanelmanager.api.responses.SnapshotResponse;
 
@@ -17,18 +17,32 @@ public class TestGetHistory extends TestCase {
 
 	public void testGetHistory() {
 		final Container container = new Container();
-		HistoryHandler handler = new HistoryHandler(new Callback() {
+		final Semaphore sem = new Semaphore(1);
+		HistoryHandler handler = new HistoryHandler(new Callback<HistoryResponse>() {
 
 			@Override
-			public void onComplete(BaseResponse json) {
-				container.response = (HistoryResponse) json;
+			public void onComplete(HistoryResponse json) {
+				System.out.println("in hook");
+				System.out.println(json);
+				container.response = json;
+				sem.release();
 			}
 
-		});
+		}, "14:10:9F:E7:CA:93");
+		try {
+			sem.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		handler.performAction();
 
 		handler.waitOnTask(5000);
 
+		try {
+			sem.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		assertEquals(200, container.response.getResult());
 		List<SnapshotResponse> responses = container.response.getHistoryData();
 		SnapshotResponse response1 = responses.get(0);

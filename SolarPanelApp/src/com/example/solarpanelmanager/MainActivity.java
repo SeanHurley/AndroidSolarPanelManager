@@ -11,9 +11,11 @@ import android.widget.Button;
 import com.example.Constants;
 import com.example.bluetooth.Callback;
 import com.example.bluetooth.HistoryHandler;
+import com.example.solarpanelmanager.api.responses.BaseResponse;
 import com.example.solarpanelmanager.api.responses.HistoryResponse;
 
 public class MainActivity extends Activity {
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -63,6 +65,7 @@ public class MainActivity extends Activity {
 
 				// TODO use the deviceid when calling the handler
 				HistoryHandler call = new HistoryHandler(new Callback<HistoryResponse>() {
+					
 					@Override
 					public void onComplete(HistoryResponse response) {
 						if (response == null) {
@@ -78,7 +81,8 @@ public class MainActivity extends Activity {
 						Intent lineGraphIntent = lineGraph.getIntent(MainActivity.this, response.getHistoryData());
 						startActivity(lineGraphIntent);
 					}
-				});
+
+				}, "14:10:9F:E7:CA:93"); 
 				call.performAction();
 			}
 		});

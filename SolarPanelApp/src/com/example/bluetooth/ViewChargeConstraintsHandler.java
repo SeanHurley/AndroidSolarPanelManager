@@ -9,8 +9,8 @@ import com.example.solarpanelmanager.api.responses.ViewChargeConstraintsResponse
 
 public class ViewChargeConstraintsHandler extends CommunicationHandler<ViewChargeConstraintsResponse> {
 
-	public ViewChargeConstraintsHandler(Callback<ViewChargeConstraintsResponse> callback) {
-		super(callback);
+	public ViewChargeConstraintsHandler(Callback<ViewChargeConstraintsResponse> callback, String device) {
+		super(callback, device);
 	}
 
 	@Override

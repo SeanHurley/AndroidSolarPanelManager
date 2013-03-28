@@ -13,8 +13,9 @@ public class ScheduleEventHandler extends BaseResponseHandler {
 	private long duration;
 	private long interval;
 
-	public ScheduleEventHandler(Callback<BaseResponse> callback, String id, long firstRun, long duration, long interval) {
-		super(callback);
+	public ScheduleEventHandler(Callback<BaseResponse> callback, String device, 
+			String id, long firstRun, long duration, long interval) {
+		super(callback, device);
 		this.firstRun = firstRun;
 		this.duration = duration;
 		this.interval = interval;

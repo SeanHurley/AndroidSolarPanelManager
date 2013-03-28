@@ -15,8 +15,8 @@ import com.example.solarpanelmanager.api.responses.SnapshotResponse;
  */
 public class SnapshotHandler extends CommunicationHandler<SnapshotResponse> {
 
-	public SnapshotHandler(Callback<SnapshotResponse> callback) {
-		super(callback);
+	public SnapshotHandler(Callback<SnapshotResponse> callback, String device) {
+		super(callback, device);
 	}
 
 	@Override

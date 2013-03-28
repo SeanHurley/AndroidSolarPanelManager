@@ -71,7 +71,7 @@ public class BatteryActivity extends Activity {
 						}
 					}
 
-				});
+				}, "14:10:9F:E7:CA:93");
 
 		handler.performAction();
 
@@ -128,7 +128,7 @@ public class BatteryActivity extends Activity {
 			public void onComplete(BaseResponse response) {
 				System.out.println(response.getResult());
 			}
-		}, maxVal, minVal);
+		}, "14:10:9F:E7:CA:93", maxVal, minVal);
 
 		call.performAction();
 

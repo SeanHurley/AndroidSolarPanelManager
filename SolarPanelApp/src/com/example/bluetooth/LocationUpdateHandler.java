@@ -1,7 +1,6 @@
 package com.example.bluetooth;
 
 import net.minidev.json.JSONObject;
-
 import com.example.solarpanelmanager.api.parsers.MessageKeys;
 import com.example.solarpanelmanager.api.parsers.MessageTypes;
 import com.example.solarpanelmanager.api.responses.BaseResponse;
@@ -11,8 +10,8 @@ public class LocationUpdateHandler extends BaseResponseHandler {
 	private float latitude;
 	private float longitude;
 
-	public LocationUpdateHandler(Callback<BaseResponse> callback, float longitude, float latitude) {
-		super(callback);
+	public LocationUpdateHandler(Callback<BaseResponse> callback, String device, float longitude, float latitude) {
+		super(callback, device);
 		this.longitude = longitude;
 		this.latitude = latitude;
 	}

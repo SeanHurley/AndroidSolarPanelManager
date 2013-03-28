@@ -25,6 +25,7 @@ import com.example.solarpanelmanager.api.responses.BaseResponse;
  */
 public abstract class CommunicationHandler<T extends BaseResponse> {
 	private Callback<T> responseCallback;
+	private String address;
 	private ServiceASyncTask task;
 
 	/**
@@ -35,7 +36,8 @@ public abstract class CommunicationHandler<T extends BaseResponse> {
 
 	abstract protected T parseResponse(String data);
 
-	public CommunicationHandler(Callback<T> callback) {
+	public CommunicationHandler(Callback<T> callback, String target) {
+		this.address = target;
 		this.responseCallback = callback;
 	}
 
@@ -87,7 +89,9 @@ public abstract class CommunicationHandler<T extends BaseResponse> {
 			// TODO Client knows the MAC address of server
 			// This should be passed along from the app to give them the which
 			// device address to talk to
-			BluetoothDevice mmDevice = mBluetoothAdapter.getRemoteDevice("14:10:9F:E7:CA:93");
+			System.out.println("checkpoint 1");
+			BluetoothDevice mmDevice = mBluetoothAdapter.getRemoteDevice(address);
+			System.out.println("checkpoint 2");
 			String data = "";
 			try {
 
@@ -97,7 +101,9 @@ public abstract class CommunicationHandler<T extends BaseResponse> {
 
 				mBluetoothAdapter.cancelDiscovery(); // Cancel, discovery slows
 														// connection
+				System.out.println("but does get to here");
 				clientSocket.connect();
+				System.out.println("did get this far");
 				DataInputStream in = new DataInputStream(clientSocket.getInputStream());
 				DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
 
