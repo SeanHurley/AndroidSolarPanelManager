@@ -5,13 +5,13 @@ public class ResponseCreator {
 
 	private static final int RESULT_OK = 200;
 	private static final String OK_MESSAGE = "OK";
-	
+
 	private static final int NOT_FOUND = 404;
 	private static final String NOT_FOUND_MESSAGE = "Not Found";
-	
+
 	private static final int PERMISSION_DENIED = 403;
 	private static final String PERMISSION_DENIED_MESSAGE = "Permission Denied";
-	
+
 	private static final int INTERNAL_ERROR = 500;
 
 	private static JSONObject snapshot(Snapshot snap) {
@@ -101,7 +101,8 @@ public class ResponseCreator {
 
 	public static String buildViewChargeConstraints(int max, int min) {
 		JSONObject json = new JSONObject();
-		json.put(MessageKeys.MESSAGE_TYPE, MessageTypes.VIEW_CHARGE_CONSTRAINTS_RESPONSE);
+		json.put(MessageKeys.MESSAGE_TYPE,
+				MessageTypes.VIEW_CHARGE_CONSTRAINTS_RESPONSE);
 		json.put(MessageKeys.RESPONSE_CODE, RESULT_OK);
 		json.put(MessageKeys.RESPONSE_MESSAGE, OK_MESSAGE);
 		json.put(MessageKeys.CHARGE_MAX, max);

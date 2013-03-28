@@ -6,13 +6,15 @@ public class BaseResponse {
 		return "BaseResponse [result=" + result + ", type=" + type + "]";
 	}
 
-	private int result;
 	private String type;
+	private int result;
+	private String message;
 
-	public BaseResponse(String type, int result) {
+	public BaseResponse(String type, int result, String message) {
 		// This will set the result, but that's all the base response has
 		this.type = type;
 		this.result = result;
+		this.message = message;
 	}
 
 	public String getType() {
@@ -23,7 +25,7 @@ public class BaseResponse {
 		return result;
 	}
 
-	public String getErrorMessage() {
-		return "";
+	public String getMessage() {
+		return message;
 	}
 }
