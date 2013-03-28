@@ -46,6 +46,7 @@
             android:label="@string/title_activity_known_devices" >
         </activity>
         <activity android:name="ConnectActivity"></activity>
+        <activity android:name="PreferencesActivity"></activity>
     </application>
 
 </manifest>

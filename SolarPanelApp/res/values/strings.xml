@@ -24,4 +24,10 @@
     <string name="button_bluetooth_settings">Pair Device</string>
     <string name="pairing_memo">You must pair with your installation controller before it can be added as a known device.</string>
     <string name="title_activity_known_devices">KnownDevicesActivity</string>
+    <string name="general_settings">General Settings</string>
+    <string name="power_user_mode">Power User Mode Enabled</string>
+    <string name="power_user_message_title">Enable Power User Mode?</string>
+    <string name="power_user_warning">Are you sure that you would like to enable power user mode? Some of these setting could be dangerous to the solar panel.</string>
+    <string name="confirm">Yes</string> 
+    <string name="cancel">Cancel</string>    
 </resources>
