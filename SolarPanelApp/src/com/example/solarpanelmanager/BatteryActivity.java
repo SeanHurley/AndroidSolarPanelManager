@@ -1,5 +1,6 @@
 package com.example.solarpanelmanager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -8,6 +9,9 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.example.Constants;
 import com.example.bluetooth.Callback;
 import com.example.bluetooth.SetChargeConstraintsHandler;
@@ -132,5 +136,24 @@ public class BatteryActivity extends SherlockActivity {
 
 		call.performAction();
 
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getSupportMenuInflater();
+		inflater.inflate(R.menu.activity_battery_settings_menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.menu_change_device) {
+			Intent intent = new Intent(this, ConnectActivity.class);
+			startActivity(intent);
+		} else if (item.getItemId() == R.id.menu_settings) {
+			Intent intent = new Intent(this, PreferencesActivity.class);
+			startActivity(intent);
+		}
+		return super.onOptionsItemSelected(item);
 	}
 }

@@ -5,7 +5,9 @@ import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -16,6 +18,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.example.Constants;
 import com.example.bluetooth.BaseResponseHandler;
 import com.example.bluetooth.BluetoothScanner;
 import com.example.bluetooth.BluetoothScanner.BluetoothDeviceWrapper;
@@ -25,10 +28,6 @@ import com.example.bluetooth.HandshakeHandler;
 import com.example.solarpanelmanager.api.responses.BaseResponse;
 
 public class ConnectActivity extends SherlockActivity {
-
-	// private static final UUID uuid =
-	// UUID.fromString("87e65bc0-89d0-11e2-9e96-0800200c9a66");
-
 	private BluetoothScanner scanner;
 
 	@Override
@@ -44,7 +43,7 @@ public class ConnectActivity extends SherlockActivity {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-				String device = ((BluetoothDeviceWrapper) parent.getItemAtPosition(position)).address;
+				final String device = ((BluetoothDeviceWrapper) parent.getItemAtPosition(position)).address;
 
 				final ProgressDialog dialog = new ProgressDialog(ConnectActivity.this);
 				dialog.setTitle("Loading");
@@ -59,7 +58,12 @@ public class ConnectActivity extends SherlockActivity {
 
 						dialog.dismiss();
 						if (itWorked) {
-							// TODO: change state to connected
+							SharedPreferences prefs = PreferenceManager
+									.getDefaultSharedPreferences(ConnectActivity.this);
+							prefs.edit().putString(Constants.CURRENT_DEVICE, device).commit();
+
+							Intent intent = new Intent(ConnectActivity.this, BatteryActivity.class);
+							startActivity(intent);
 							ConnectActivity.this.finish();
 						} else {
 							new AlertDialog.Builder(ConnectActivity.this).setTitle("Communication Failed")

@@ -5,9 +5,11 @@ import java.util.TimerTask;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Window;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.example.Constants;
 
 public class SplashActivity extends SherlockActivity {
 	// Holds length of time to keep splash screen up
@@ -24,8 +26,18 @@ public class SplashActivity extends SherlockActivity {
 		TimerTask timer_task = new TimerTask() {
 			@Override
 			public void run() {
-				Intent mainIntent = new Intent().setClass(SplashActivity.this, MainActivity.class);
-				startActivity(mainIntent);
+				String deviceId = PreferenceManager.getDefaultSharedPreferences(SplashActivity.this).getString(
+						Constants.CURRENT_DEVICE, null);
+				if (deviceId == null) {
+					// The user hasn't chosen a device to manage yet, so send
+					// them to the screen to choose one
+					Intent mainIntent = new Intent().setClass(SplashActivity.this, ConnectActivity.class);
+					startActivity(mainIntent);
+				} else {
+					// Send them straight to the actual details screen.
+					Intent mainIntent = new Intent().setClass(SplashActivity.this, BatteryActivity.class);
+					startActivity(mainIntent);
+				}
 				finish();
 			}
 		};

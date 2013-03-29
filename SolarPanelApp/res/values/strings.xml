@@ -7,6 +7,7 @@
     <string name="main_activity_logo"> MENU</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
+    <string name="menu_change_device">Change Device</string>
     <string name="title_activity_splash"> SolarSplashActivity</string>
     <string name="title_activity_device_list">DeviceListActivity</string>
     <string name="button_connect_device">Connect to existing device</string>
