@@ -1,6 +1,5 @@
 package com.example.solarpanelmanager;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -8,6 +7,7 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.SherlockActivity;
 import com.example.Constants;
 import com.example.bluetooth.Callback;
 import com.example.bluetooth.SetChargeConstraintsHandler;
@@ -15,7 +15,7 @@ import com.example.bluetooth.ViewChargeConstraintsHandler;
 import com.example.solarpanelmanager.api.responses.BaseResponse;
 import com.example.solarpanelmanager.api.responses.ViewChargeConstraintsResponse;
 
-public class BatteryActivity extends Activity {
+public class BatteryActivity extends SherlockActivity {
 	private int minVal;
 	private int maxVal;
 

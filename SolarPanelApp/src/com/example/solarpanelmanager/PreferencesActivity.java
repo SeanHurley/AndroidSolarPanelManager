@@ -6,12 +6,12 @@ import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 
+import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.example.Constants;
 
-public class PreferencesActivity extends PreferenceActivity {
+public class PreferencesActivity extends SherlockPreferenceActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
