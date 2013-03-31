@@ -120,9 +120,8 @@ public abstract class CommunicationHandler<T extends BaseResponse> {
 				clientSocket.close();
 			} catch (Exception e) {
 			}
-
-			T response = parseResponse(data);
-			return response;
+			
+			return parseResponse(data);
 		}
 
 		@Override

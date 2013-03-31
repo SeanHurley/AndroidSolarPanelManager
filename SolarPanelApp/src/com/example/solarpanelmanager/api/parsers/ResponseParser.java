@@ -17,6 +17,10 @@ import com.example.solarpanelmanager.api.responses.ViewChargeConstraintsResponse
 public class ResponseParser {
 
 	public static BaseResponse parseBasicResponse(String response) {
+		if (response == "") {
+			return new BaseResponse(null, 500, null);
+		}
+		
 		// Call the parse response for the basic map, and then create the proper
 		// response object
 		JSONObject json = (JSONObject) JSONValue.parse(response);
