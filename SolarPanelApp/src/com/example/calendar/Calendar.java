@@ -20,8 +20,25 @@ public class Calendar {
 	}
 	
 	public void addEvent(Event event){
-		rawEvents.add(event);
-		generateRawEvents(rawEvents);
+		ArrayList<Event> expandedEvents = expandEvents(rawEvents, System.currentTimeMillis() + 5 * WEEKLY);
+		ArrayList<Event> newExpanded = new ArrayList<Event>();
+		newExpanded.add(event);
+		newExpanded = expandEvents(newExpanded, System.currentTimeMillis() + 5 * WEEKLY);
+		boolean conflict = false;
+		for(Event newEvent : newExpanded){
+			long newStart = newEvent.getFirstTime();
+			long newEnd = newEvent.getFirstTime() + newEvent.getDuration();
+			for(Event oldEvent : expandedEvents){
+				long oldStart = oldEvent.getFirstTime();
+				long oldEnd = oldEvent.getFirstTime() + newEvent.getDuration();
+				if((newStart > oldStart && newStart < oldEnd) || (newEnd > oldStart && newEnd < oldEnd))
+					conflict = true;
+			}
+		}
+		if(! conflict){
+			rawEvents.add(event);
+			generateRawEvents(rawEvents);
+		}
 	}
 	
 	public void removeEvent(String id){
