@@ -14,8 +14,7 @@
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:text="@string/button_connect_device"
-        android:textColor="#FFCCCCCC" />
+        android:text="@string/button_connect_device" />
 
     <Button
         android:id="@+id/button_settings"
@@ -26,8 +25,7 @@
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:text="@string/button_settings"
-        android:textColor="#FFCCCCCC" />
+        android:text="@string/button_settings" />
 
     <Button
         android:id="@+id/button_about"
@@ -38,8 +36,7 @@
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:text="@string/button_about"
-        android:textColor="#FFCCCCCC" />
+        android:text="@string/button_about" />
 
     <Button
         android:id="@+id/button_historical_data"
@@ -50,7 +47,6 @@
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:text="@string/button_historical_data"
-        android:textColor="#FFCCCCCC" />
+        android:text="@string/button_historical_data" />
 
 </RelativeLayout>
