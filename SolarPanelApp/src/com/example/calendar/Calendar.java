@@ -24,6 +24,15 @@ public class Calendar {
 		generateRawEvents(rawEvents);
 	}
 	
+	public void removeEvent(String id){
+		for(int i = 0; i < rawEvents.size(); i++){
+			if(id.equals(rawEvents.get(i).getId())){
+				rawEvents.remove(i);
+				break;
+			}
+		}
+	}
+	
 	public HashMap<Date, ArrayList<Event>> getCalendar(){
 		generateCalendar();
 		return calendar;
