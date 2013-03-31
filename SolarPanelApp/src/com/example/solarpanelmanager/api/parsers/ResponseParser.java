@@ -113,10 +113,11 @@ public class ResponseParser {
 
 	private static Event parseEvent(JSONObject json) {
 		String id = (String) json.get(MessageKeys.EVENT_ID);
+		String name = (String) json.get(MessageKeys.EVENT_NAME);
 		long firstTime = getLong(json.get(MessageKeys.EVENT_FIRST_TIME));
 		long duration = getLong(json.get(MessageKeys.EVENT_DURATION));
 		long interval = getLong(json.get(MessageKeys.EVENT_INTERVAL));
-		return new Event(id, firstTime, duration, interval);
+		return new Event(id, name, firstTime, duration, interval);
 	}
 
 	private static long getLong(Object obj) {

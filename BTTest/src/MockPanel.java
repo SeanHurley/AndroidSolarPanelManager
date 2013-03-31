@@ -26,6 +26,7 @@ public class MockPanel {
 	private static Hashtable<String, Event> events;
 	private static int maxCharge;
 	private static int minCharge;
+	private static int currentEventID = 0;
 
 	public static void main(String[] args) {
 		for (int i = 0; i < args.length; i++) {
@@ -252,12 +253,14 @@ public class MockPanel {
 				if (testing) {
 					return ResponseCreator.buildDefaultOK(MessageTypes.SCHEDULE_EVENT_REPONSE);
 				} else {
-					String id = (String) json.get(MessageKeys.EVENT_ID);
+					String name = (String) json.get(MessageKeys.EVENT_NAME);
 					long firstRun = (Long) json.get(MessageKeys.EVENT_FIRST_TIME);
 					long duration = (Long) json.get(MessageKeys.EVENT_DURATION);
 					long interval = (Long) json.get(MessageKeys.EVENT_INTERVAL);
-
-					Event e = new Event(id, firstRun, duration, interval);
+					
+					String id = String.valueOf(++currentEventID);
+					
+					Event e = new Event(id, name, firstRun, duration, interval);
 					events.put(id, e);
 					return ResponseCreator.buildDefaultOK(MessageTypes.SCHEDULE_EVENT_REPONSE);
 				}
@@ -286,8 +289,8 @@ public class MockPanel {
 			try {
 				if (testing) {
 					ArrayList<Event> events = new ArrayList<Event>();
-					events.add(new Event("a", 1000, 2000, 3000));
-					events.add(new Event("a", 4000, 5000, 6000));
+					events.add(new Event("a", "Event 1", 1000, 2000, 3000));
+					events.add(new Event("a", "Event 2", 4000, 5000, 6000));
 					return ResponseCreator.buildEventsList(new EventsList(events));
 				} else {
 					ArrayList<Event> e = new ArrayList<Event>(events.values());
