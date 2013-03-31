@@ -19,6 +19,8 @@ public class LineGraph {
 	private static final String nameOfGraph = "Power Usage";
 	private static final String nameXAxis = "Time (seconds)";
 	private static final String nameYAxis = "Power (watts)";
+	private static final float sizeOfAxisTitleText = 20;
+	private static final float sizeOfLabelsText = 20;
 
 	public Intent getIntent(Context context, Collection<SnapshotResponse> history) {
 		// Convert our data into series object via TimeSeries
@@ -50,6 +52,12 @@ public class LineGraph {
 		XYSeriesRenderer renderer = new XYSeriesRenderer();
 		renderer.setColor(Color.RED);
 		mRenderer.addSeriesRenderer(renderer);
+		// Change axis title text size
+		mRenderer.setAxisTitleTextSize(sizeOfAxisTitleText);
+		// Change axis label text size
+		mRenderer.setLabelsTextSize(sizeOfLabelsText);
+		// Turn on/off grid
+		mRenderer.setShowGrid(true);
 
 		// Now we create out intent
 		Intent intent = ChartFactory.getLineChartIntent(context, mDataset, mRenderer);
