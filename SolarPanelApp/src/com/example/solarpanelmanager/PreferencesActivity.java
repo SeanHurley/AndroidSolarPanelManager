@@ -13,11 +13,12 @@ import com.example.Constants;
 
 public class PreferencesActivity extends SherlockPreferenceActivity {
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// TODO Should we use actionbarsherlock??
+		// TODO replace these old deprecated api calls with ABS calls
 		addPreferencesFromResource(R.layout.activity_preferences);
 
 		PreferenceManager.setDefaultValues(this, R.layout.activity_preferences, true);
