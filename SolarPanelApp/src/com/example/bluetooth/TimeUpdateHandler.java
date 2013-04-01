@@ -4,13 +4,14 @@ import net.minidev.json.JSONObject;
 
 import com.example.solarpanelmanager.api.parsers.MessageKeys;
 import com.example.solarpanelmanager.api.parsers.MessageTypes;
+import com.example.solarpanelmanager.api.responses.BaseResponse;
 
-public class TimeUpdateHandler extends CommunicationHandler {
-	
+public class TimeUpdateHandler extends BaseResponseHandler {
+
 	private long timestamp;
-	
-	public TimeUpdateHandler(Callback callback, long timestamp) {
-		super(callback);
+
+	public TimeUpdateHandler(Callback<BaseResponse> callback, String device, long timestamp) {
+		super(callback, device);
 		this.timestamp = timestamp;
 	}
 

@@ -4,13 +4,14 @@ import net.minidev.json.JSONObject;
 
 import com.example.solarpanelmanager.api.parsers.MessageKeys;
 import com.example.solarpanelmanager.api.parsers.MessageTypes;
+import com.example.solarpanelmanager.api.responses.BaseResponse;
 
-public class PINUpdateHandler extends CommunicationHandler {
+public class PINUpdateHandler extends BaseResponseHandler {
 
 	private String pin;
 
-	public PINUpdateHandler(Callback callback, String pin) {
-		super(callback);
+	public PINUpdateHandler(Callback<BaseResponse> callback, String device, String pin) {
+		super(callback, device);
 		this.pin = pin;
 	}
 

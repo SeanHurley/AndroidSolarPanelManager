@@ -1,16 +1,16 @@
 package com.example.bluetooth;
 
+import net.minidev.json.JSONObject;
+
 import com.example.solarpanelmanager.api.parsers.MessageKeys;
 import com.example.solarpanelmanager.api.parsers.MessageTypes;
 import com.example.solarpanelmanager.api.parsers.ResponseParser;
 import com.example.solarpanelmanager.api.responses.EventsResponse;
 
-import net.minidev.json.JSONObject;
+public class EventHandler extends CommunicationHandler<EventsResponse> {
 
-public class EventHandler extends CommunicationHandler {
-	
-	public EventHandler(Callback callback) {
-		super(callback);
+	public EventHandler(Callback<EventsResponse> callback, String device) {
+		super(callback, device);
 	}
 
 	@Override
@@ -19,7 +19,8 @@ public class EventHandler extends CommunicationHandler {
 		json.put(MessageKeys.MESSAGE_TYPE, MessageTypes.EVENTS);
 		return json.toJSONString();
 	}
-	
+
+	@Override
 	protected EventsResponse parseResponse(String data) {
 		return ResponseParser.parseEventsResponse(data);
 	}

@@ -2,7 +2,8 @@ package com.example.bluetooth;
 
 import com.example.solarpanelmanager.api.responses.BaseResponse;
 
-public interface Callback {
+public interface Callback<T extends BaseResponse> extends GenericCallback<T> {
 
-	public void onComplete(BaseResponse json);
+	@Override
+	public void onComplete(T response);
 }

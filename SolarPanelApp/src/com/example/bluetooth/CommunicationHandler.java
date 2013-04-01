@@ -12,7 +12,6 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.AsyncTask;
 
-import com.example.solarpanelmanager.api.parsers.ResponseParser;
 import com.example.solarpanelmanager.api.responses.BaseResponse;
 
 /**
@@ -24,8 +23,9 @@ import com.example.solarpanelmanager.api.responses.BaseResponse;
  *         bluetooth device which request it's sending in order to get all of
  *         the functionality.
  */
-public abstract class CommunicationHandler {
-	private Callback responseCallback;
+public abstract class CommunicationHandler<T extends BaseResponse> {
+	private Callback<T> responseCallback;
+	private String address;
 	private ServiceASyncTask task;
 
 	/**
@@ -34,11 +34,10 @@ public abstract class CommunicationHandler {
 	 */
 	abstract protected String getRequest();
 
-	protected BaseResponse parseResponse(String data) {
-		return ResponseParser.parseBasicResponse(data);
-	}
+	abstract protected T parseResponse(String data);
 
-	public CommunicationHandler(Callback callback) {
+	public CommunicationHandler(Callback<T> callback, String target) {
+		this.address = target;
 		this.responseCallback = callback;
 	}
 
@@ -67,7 +66,7 @@ public abstract class CommunicationHandler {
 	 * @author seanhurley This will actually serve as the asynchronous method by
 	 *         which we communicate with the device.
 	 */
-	private class ServiceASyncTask extends AsyncTask<Void, Void, BaseResponse> {
+	private class ServiceASyncTask extends AsyncTask<Void, Void, T> {
 
 		private BluetoothAdapter mBluetoothAdapter;
 
@@ -76,7 +75,7 @@ public abstract class CommunicationHandler {
 		}
 
 		@Override
-		protected BaseResponse doInBackground(Void... args) {
+		protected T doInBackground(Void... args) {
 
 			// TODO Fix the newline ending?
 			String request = getRequest() + "\n";
@@ -90,7 +89,9 @@ public abstract class CommunicationHandler {
 			// TODO Client knows the MAC address of server
 			// This should be passed along from the app to give them the which
 			// device address to talk to
-			BluetoothDevice mmDevice = mBluetoothAdapter.getRemoteDevice("14:10:9F:E7:CA:93");
+			System.out.println("checkpoint 1");
+			BluetoothDevice mmDevice = mBluetoothAdapter.getRemoteDevice(address);
+			System.out.println("checkpoint 2");
 			String data = "";
 			try {
 
@@ -100,7 +101,9 @@ public abstract class CommunicationHandler {
 
 				mBluetoothAdapter.cancelDiscovery(); // Cancel, discovery slows
 														// connection
+				System.out.println("but does get to here");
 				clientSocket.connect();
+				System.out.println("did get this far");
 				DataInputStream in = new DataInputStream(clientSocket.getInputStream());
 				DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
 
@@ -117,13 +120,12 @@ public abstract class CommunicationHandler {
 				clientSocket.close();
 			} catch (Exception e) {
 			}
-
-			BaseResponse response = parseResponse(data);
-			return response;
+			
+			return parseResponse(data);
 		}
 
 		@Override
-		protected void onPostExecute(BaseResponse result) {
+		protected void onPostExecute(T result) {
 			responseCallback.onComplete(result);
 		}
 

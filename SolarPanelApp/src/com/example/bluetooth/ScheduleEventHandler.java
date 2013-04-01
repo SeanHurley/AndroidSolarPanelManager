@@ -1,19 +1,21 @@
 package com.example.bluetooth;
 
-import com.example.solarpanelmanager.api.parsers.MessageKeys;
-import com.example.solarpanelmanager.api.parsers.MessageTypes;
-
 import net.minidev.json.JSONObject;
 
-public class ScheduleEventHandler extends CommunicationHandler {
-	
+import com.example.solarpanelmanager.api.parsers.MessageKeys;
+import com.example.solarpanelmanager.api.parsers.MessageTypes;
+import com.example.solarpanelmanager.api.responses.BaseResponse;
+
+public class ScheduleEventHandler extends BaseResponseHandler {
+
 	private String id;
 	private long firstRun;
 	private long duration;
 	private long interval;
-	
-	public ScheduleEventHandler(Callback callback, String id, long firstRun, long duration, long interval) {
-		super(callback);
+
+	public ScheduleEventHandler(Callback<BaseResponse> callback, String device, 
+			String id, long firstRun, long duration, long interval) {
+		super(callback, device);
 		this.firstRun = firstRun;
 		this.duration = duration;
 		this.interval = interval;
