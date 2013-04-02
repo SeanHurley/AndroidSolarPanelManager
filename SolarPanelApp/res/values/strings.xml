@@ -20,6 +20,11 @@
     <string name="battery_current">Current voltage</string>
     <string name="battery_max">Maximum voltage</string>
     <string name="battery_min">Minimum voltage</string>
+    <string name="Timestamp">Time Stamp</string>
+    <string name="battery_curr">Battery Current</string>
+    <string name="PV_voltage">PV Voltage</string>
+    <string name="PV_current">PV　Current</string>
+    <string name="battery_percent">Battery Percent</string>
     <string name="zero">0</string>
     <string name="button_bluetooth_settings">Pair Device</string>
     <string name="pairing_memo">You must pair with your installation controller before it can be added as a known device.</string>
