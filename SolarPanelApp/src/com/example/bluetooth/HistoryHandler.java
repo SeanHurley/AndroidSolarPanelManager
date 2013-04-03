@@ -15,8 +15,8 @@ import com.example.solarpanelmanager.api.responses.HistoryResponse;
  */
 public class HistoryHandler extends CommunicationHandler<HistoryResponse> {
 
-	public HistoryHandler(Callback<HistoryResponse> callback) {
-		super(callback);
+	public HistoryHandler(Callback<HistoryResponse> callback, String device) {
+		super(callback, device);
 	}
 
 	@Override

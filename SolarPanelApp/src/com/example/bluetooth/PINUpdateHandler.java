@@ -10,8 +10,8 @@ public class PINUpdateHandler extends BaseResponseHandler {
 
 	private String pin;
 
-	public PINUpdateHandler(Callback<BaseResponse> callback, String pin) {
-		super(callback);
+	public PINUpdateHandler(Callback<BaseResponse> callback, String device, String pin) {
+		super(callback, device);
 		this.pin = pin;
 	}
 

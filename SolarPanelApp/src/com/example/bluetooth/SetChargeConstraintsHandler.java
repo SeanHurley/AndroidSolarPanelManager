@@ -10,8 +10,8 @@ public class SetChargeConstraintsHandler extends BaseResponseHandler {
 	private int max;
 	private int min;
 
-	public SetChargeConstraintsHandler(Callback<BaseResponse> callback, int max, int min) {
-		super(callback);
+	public SetChargeConstraintsHandler(Callback<BaseResponse> callback, String device, int max, int min) {
+		super(callback, device);
 		this.max = max;
 		this.min = min;
 	}

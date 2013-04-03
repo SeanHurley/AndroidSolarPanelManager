@@ -9,8 +9,8 @@ import com.example.solarpanelmanager.api.responses.EventsResponse;
 
 public class EventHandler extends CommunicationHandler<EventsResponse> {
 
-	public EventHandler(Callback<EventsResponse> callback) {
-		super(callback);
+	public EventHandler(Callback<EventsResponse> callback, String device) {
+		super(callback, device);
 	}
 
 	@Override

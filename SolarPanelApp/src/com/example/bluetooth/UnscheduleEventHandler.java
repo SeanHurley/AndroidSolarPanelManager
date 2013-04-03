@@ -10,8 +10,8 @@ public class UnscheduleEventHandler extends BaseResponseHandler {
 
 	private String id;
 
-	public UnscheduleEventHandler(Callback<BaseResponse> callback, String id) {
-		super(callback);
+	public UnscheduleEventHandler(Callback<BaseResponse> callback, String device, String id) {
+		super(callback, device);
 		this.id = id;
 	}
 

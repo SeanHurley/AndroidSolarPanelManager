@@ -10,8 +10,8 @@ public class TimeUpdateHandler extends BaseResponseHandler {
 
 	private long timestamp;
 
-	public TimeUpdateHandler(Callback<BaseResponse> callback, long timestamp) {
-		super(callback);
+	public TimeUpdateHandler(Callback<BaseResponse> callback, String device, long timestamp) {
+		super(callback, device);
 		this.timestamp = timestamp;
 	}
 

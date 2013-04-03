@@ -8,9 +8,13 @@ public class EventsResponse extends BaseResponse {
 	
 	private List<Event> events;
 	
-	public EventsResponse(int result, List<Event> events) {
-		super(MessageTypes.EVENTS_RESPONSE, result);
+	public EventsResponse(int result, String message, List<Event> events) {
+		super(MessageTypes.EVENTS_RESPONSE, result, message);
 		this.events = events;
+	}
+	
+	public EventsResponse(int result, String message) {
+		super(MessageTypes.EVENTS_RESPONSE, result, message);
 	}
 	
 	public List<Event> getEvents() {

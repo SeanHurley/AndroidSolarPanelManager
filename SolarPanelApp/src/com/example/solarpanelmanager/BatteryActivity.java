@@ -1,15 +1,19 @@
 package com.example.solarpanelmanager;
 
-import android.app.Activity;
-import android.app.Notification;
+import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RemoteViews;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+import com.example.Constants;
 import com.example.bluetooth.Callback;
 import com.example.bluetooth.SetChargeConstraintsHandler;
 import com.example.bluetooth.SnapshotHandler;
@@ -18,7 +22,8 @@ import com.example.solarpanelmanager.api.responses.BaseResponse;
 import com.example.solarpanelmanager.api.responses.SnapshotResponse;
 import com.example.solarpanelmanager.api.responses.ViewChargeConstraintsResponse;
 
-public class BatteryActivity extends Activity {
+public class BatteryActivity extends SherlockActivity {
+
 	private int minVal;
 	private int maxVal;
 	private SeekBar min;
@@ -27,7 +32,12 @@ public class BatteryActivity extends Activity {
 	private TextView minvalue;
 	private TextView maxvalue;
 	private TextView snapshot;
+<<<<<<< HEAD
 	private BatteryLevel bl;
+=======
+	private ImageView battery_image;
+	private BatteryLevel batteryLevel;
+>>>>>>> 327a32eca6ff93ca48ac5e27ff3ede56592988e7
 	private double battery_voltage;
 	private double battery_current;
 	private double pvcurrent;
@@ -54,6 +64,7 @@ public class BatteryActivity extends Activity {
 		snapshot = (TextView) findViewById(R.id.snapshot);
 		min = (SeekBar) findViewById(R.id.minbar);
 		max = (SeekBar) findViewById(R.id.maxbar);
+<<<<<<< HEAD
 
 		ViewChargeConstraintsHandler i = new ViewChargeConstraintsHandler(
 				new Callback<ViewChargeConstraintsResponse>() {
@@ -61,6 +72,26 @@ public class BatteryActivity extends Activity {
 					@Override
 					public void onComplete(
 							ViewChargeConstraintsResponse response) {
+=======
+		battery_image = (ImageView) findViewById(R.id.currVoltage);
+
+		String deviceId = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.CURRENT_DEVICE, null);
+		if (deviceId == null) {
+			// TODO - Tell the user that something is wrong
+		}
+
+		// TODO use the deviceid when calling the handler
+		ViewChargeConstraintsHandler handler = new ViewChargeConstraintsHandler(
+				new Callback<ViewChargeConstraintsResponse>() {
+
+					@Override
+					public void onComplete(ViewChargeConstraintsResponse response) {
+						// TODO We are waiting on both the snapshot and the
+						// viewcharge
+						// constraints, so we need to add in the gui hiding code
+						// for
+						// both of these
+>>>>>>> 327a32eca6ff93ca48ac5e27ff3ede56592988e7
 						if (response.getResult() == 200) {
 							minVal = response.getMin();
 							maxVal = response.getMax();
@@ -79,11 +110,16 @@ public class BatteryActivity extends Activity {
 							v = findViewById(R.id.minbar);
 							v.setVisibility(View.VISIBLE);
 
+							battery_image.setVisibility(View.VISIBLE);
+							snapshot.setVisibility(View.VISIBLE);
+							maxvalue.setVisibility(View.VISIBLE);
+							minvalue.setVisibility(View.VISIBLE);
 						} else {
 							System.out.println("failure in communication");
 						}
 					}
 
+<<<<<<< HEAD
 				});
 
 		i.performAction();
@@ -120,6 +156,19 @@ public class BatteryActivity extends Activity {
 		bl.setLevel(level);
 		ImageView battery_image = (ImageView) findViewById(R.id.currVoltage);
 		battery_image.setImageBitmap(bl.getBitmap());
+=======
+				}, "14:10:9F:E7:CA:93");
+
+		handler.performAction();
+
+		minvalue.setText("Minimum Voltage:" + minVal);
+		maxvalue.setText("Maximum Voltage:" + maxVal);
+		snapshot.setText("Battery Voltage: " + battery_voltage + " Battery Current: " + battery_current
+				+ "\n PV Voltage: " + pvvoltage + " PV Current: " + pvcurrent + "\n Timestamp: " + timestamp);
+		batteryLevel = new BatteryLevel(getApplicationContext(), BatteryLevel.SIZE_NOTIFICATION);
+		batteryLevel.setLevel(level);
+		battery_image.setImageBitmap(batteryLevel.getBitmap());
+>>>>>>> 327a32eca6ff93ca48ac5e27ff3ede56592988e7
 
 		min.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			@Override
@@ -164,10 +213,37 @@ public class BatteryActivity extends Activity {
 				updateLevels();
 			}
 		});
+
+		SnapshotHandler s = new SnapshotHandler(new Callback<SnapshotResponse>() {
+
+			@Override
+			public void onComplete(SnapshotResponse response) {
+				// TODO We are waiting on both the snapshot and the viewcharge
+				// constraints, so we need to add in the gui hiding code for
+				// both of these
+				if (response.getResult() == 200) {
+					level = response.getBatteryPercent();
+					battery_voltage = response.getBatteryVoltage();
+					battery_current = response.getBatteryCurrent();
+					pvvoltage = response.getPVVoltage();
+					pvcurrent = response.getPVCurrent();
+					timestamp = response.getTimestamp();
+
+					batteryLevel.setLevel(level);
+					battery_image.setImageBitmap(batteryLevel.getBitmap());
+				} else {
+					System.out.println("failure in communication");
+				}
+			}
+
+		}, "14:10:9F:E7:CA:93");
+
+		s.performAction();
 	}
 
 	private void updateLevels() {
 
+<<<<<<< HEAD
 		SetChargeConstraintsHandler call = new SetChargeConstraintsHandler(
 				new Callback<BaseResponse>() {
 					@Override
@@ -175,8 +251,41 @@ public class BatteryActivity extends Activity {
 						// System.out.println(response.getResult());
 					}
 				}, maxVal, minVal);
+=======
+		SetChargeConstraintsHandler call = new SetChargeConstraintsHandler(new Callback<BaseResponse>() {
+			@Override
+			public void onComplete(BaseResponse response) {
+				// System.out.println(response.getResult());
+			}
+		}, "14:10:9F:E7:CA:93", maxVal, minVal);
+>>>>>>> 327a32eca6ff93ca48ac5e27ff3ede56592988e7
 
 		call.performAction();
 
 	}
+<<<<<<< HEAD
+=======
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getSupportMenuInflater();
+		inflater.inflate(R.menu.activity_battery_settings_menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.menu_change_device) {
+			Intent intent = new Intent(this, ConnectActivity.class);
+			startActivity(intent);
+		} else if (item.getItemId() == R.id.menu_settings) {
+			Intent intent = new Intent(this, PreferencesActivity.class);
+			startActivity(intent);
+		} else if (item.getItemId() == R.id.menu_history) {
+			Intent intent = new Intent(this, MainActivity.class);
+			startActivity(intent);
+		}
+		return super.onOptionsItemSelected(item);
+	}
+>>>>>>> 327a32eca6ff93ca48ac5e27ff3ede56592988e7
 }

@@ -1,12 +1,12 @@
 package com.example.solarpanelmanager.tests.async;
 
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 import junit.framework.TestCase;
 
 import com.example.bluetooth.Callback;
 import com.example.bluetooth.EventHandler;
-import com.example.solarpanelmanager.api.responses.BaseResponse;
 import com.example.solarpanelmanager.api.responses.Event;
 import com.example.solarpanelmanager.api.responses.EventsResponse;
 
@@ -17,18 +17,30 @@ public class TestGetEvents extends TestCase {
 
 	public void testGetEvents() {
 		final Container container = new Container();
-		EventHandler handler = new EventHandler(new Callback() {
+		final Semaphore sem = new Semaphore(1);
+		EventHandler handler = new EventHandler(new Callback<EventsResponse>() {
 
 			@Override
-			public void onComplete(BaseResponse json) {
-				container.response = (EventsResponse) json;
+			public void onComplete(EventsResponse json) {
+				container.response = json;
+				sem.release();
 			}
 
-		});
+		}, "14:10:9F:E7:CA:93");
+		try {
+			sem.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		handler.performAction();
 
 		handler.waitOnTask(5000);
 
+		try {
+			sem.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		List<Event> events = container.response.getEvents();
 		Event event1 = events.get(0);
 		Event event2 = events.get(1);

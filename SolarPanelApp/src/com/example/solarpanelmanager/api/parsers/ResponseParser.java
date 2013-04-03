@@ -17,17 +17,29 @@ import com.example.solarpanelmanager.api.responses.ViewChargeConstraintsResponse
 public class ResponseParser {
 
 	public static BaseResponse parseBasicResponse(String response) {
+		if (response == "") {
+			return new BaseResponse(null, 500, null);
+		}
+		
 		// Call the parse response for the basic map, and then create the proper
 		// response object
 		JSONObject json = (JSONObject) JSONValue.parse(response);
 		return new BaseResponse((String) json.get(MessageKeys.MESSAGE_TYPE),
-				(Integer) json.get(MessageKeys.RESPONSE_CODE));
+				(Integer) json.get(MessageKeys.RESPONSE_CODE), (String) json.get(MessageKeys.RESPONSE_MESSAGE));
 	}
 
 	public static HistoryResponse parseHistoryResponse(String response) {
 		// Call the parse response for the basic map, and then create the proper
 		// response object
 		JSONObject json = (JSONObject) JSONValue.parse(response);
+
+		int result = (Integer) json.get(MessageKeys.RESPONSE_CODE);
+		String message = (String) json.get(MessageKeys.RESPONSE_MESSAGE);
+
+		if (result != 200) {
+			return new HistoryResponse(result, message);
+		}
+
 		JSONArray snapshots = (JSONArray) json.get(MessageKeys.HISTORY_DATA);
 		ArrayList<SnapshotResponse> snapshotResponses = new ArrayList<SnapshotResponse>();
 		// SnapshotResponse[] snapshotResponses = new
@@ -39,16 +51,24 @@ public class ResponseParser {
 			snapshotResponses.add(parseSnapshotResponse(((JSONObject) snapshots.get(i)).toJSONString()));
 		}
 
-		int result = (Integer) json.get(MessageKeys.RESPONSE_CODE);
-		return new HistoryResponse(result, snapshotResponses);
+		return new HistoryResponse(result, message, snapshotResponses);
 	}
 
 	public static SnapshotResponse parseSnapshotResponse(String response) {
 		// Call the parse response for the basic map, and then create the proper
 		// response object
-		System.out.println(response);
 		JSONObject json = (JSONObject) (JSONValue.parse(response));
+
 		int result = 200;
+		if (json.containsKey(MessageKeys.RESPONSE_CODE)) {
+			result = (Integer) json.get(MessageKeys.RESPONSE_CODE);
+		}
+		String message = (String) json.get(MessageKeys.RESPONSE_MESSAGE);
+
+		if (result != 200) {
+			return new SnapshotResponse(result, message);
+		}
+
 		if (json.containsKey(MessageKeys.RESPONSE_CODE)) {
 			result = (Integer) json.get(MessageKeys.RESPONSE_CODE);
 		}
@@ -62,7 +82,7 @@ public class ResponseParser {
 
 		int percent = (Integer) json.get(MessageKeys.SNAPSHOT_BATTERY_PERCENT);
 
-		return new SnapshotResponse(result, longTimestamp, percent, batteryVoltage, PVCurrent, PVVoltage,
+		return new SnapshotResponse(result, message, longTimestamp, percent, batteryVoltage, PVCurrent, PVVoltage,
 				batteryCurrent);
 	}
 
@@ -77,7 +97,13 @@ public class ResponseParser {
 
 	public static EventsResponse parseEventsResponse(String response) {
 		JSONObject json = (JSONObject) (JSONValue.parse(response));
+
 		int result = (Integer) json.get(MessageKeys.RESPONSE_CODE);
+		String message = (String) json.get(MessageKeys.RESPONSE_MESSAGE);
+
+		if (result != 200) {
+			return new EventsResponse(result, message);
+		}
 
 		JSONArray eventsArray = (JSONArray) json.get(MessageKeys.EVENTS_DATA);
 		ArrayList<Event> events = new ArrayList<Event>();
@@ -86,7 +112,7 @@ public class ResponseParser {
 			events.add(parseEvent((JSONObject) eventsArray.get(i)));
 		}
 
-		return new EventsResponse(result, events);
+		return new EventsResponse(result, message, events);
 	}
 
 	private static Event parseEvent(JSONObject json) {
@@ -107,10 +133,17 @@ public class ResponseParser {
 
 	public static ViewChargeConstraintsResponse parseViewChargeConstraintsResponse(String response) {
 		JSONObject json = (JSONObject) (JSONValue.parse(response));
+
 		int result = (Integer) json.get(MessageKeys.RESPONSE_CODE);
+		String message = (String) json.get(MessageKeys.RESPONSE_MESSAGE);
+
+		if (result != 200) {
+			return new ViewChargeConstraintsResponse(result, message);
+		}
+
 		int max = (Integer) json.get(MessageKeys.CHARGE_MAX);
 		int min = (Integer) json.get(MessageKeys.CHARGE_MIN);
-		return new ViewChargeConstraintsResponse(result, max, min);
+		return new ViewChargeConstraintsResponse(result, message, max, min);
 	}
 
 }
