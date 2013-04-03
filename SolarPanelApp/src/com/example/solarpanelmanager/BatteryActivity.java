@@ -28,13 +28,12 @@ public class BatteryActivity extends Activity {
 	private TextView maxvalue;
 	private TextView snapshot;
 	private BatteryLevel bl;
-    private double battery_voltage;
+	private double battery_voltage;
 	private double battery_current;
 	private double pvcurrent;
 	private double pvvoltage;
 	private long timestamp;
-	
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
@@ -55,16 +54,18 @@ public class BatteryActivity extends Activity {
 		snapshot = (TextView) findViewById(R.id.snapshot);
 		min = (SeekBar) findViewById(R.id.minbar);
 		max = (SeekBar) findViewById(R.id.maxbar);
-        
+
 		ViewChargeConstraintsHandler i = new ViewChargeConstraintsHandler(
 				new Callback<ViewChargeConstraintsResponse>() {
 
 					@Override
-					public void onComplete(ViewChargeConstraintsResponse response) {
+					public void onComplete(
+							ViewChargeConstraintsResponse response) {
 						if (response.getResult() == 200) {
 							minVal = response.getMin();
 							maxVal = response.getMax();
-							System.out.println("start: " + minVal + ", " + maxVal);
+							System.out.println("start: " + minVal + ", "
+									+ maxVal);
 							min.setProgress(minVal);
 							min.refreshDrawableState();
 							max.setProgress(maxVal);
@@ -87,20 +88,19 @@ public class BatteryActivity extends Activity {
 
 		i.performAction();
 
-
 		SnapshotHandler s = new SnapshotHandler(
 				new Callback<SnapshotResponse>() {
 
 					@Override
 					public void onComplete(SnapshotResponse response) {
 						if (response.getResult() == 200) {
-						level = response.getBatteryPercent();
-						battery_voltage = response.getBatteryVoltage();
-						battery_current = response.getBatteryCurrent();
-						pvvoltage = response.getPVVoltage();
-						pvcurrent = response.getPVCurrent();
-						timestamp = response.getTimestamp();
-						}else {
+							level = response.getBatteryPercent();
+							battery_voltage = response.getBatteryVoltage();
+							battery_current = response.getBatteryCurrent();
+							pvvoltage = response.getPVVoltage();
+							pvcurrent = response.getPVCurrent();
+							timestamp = response.getTimestamp();
+						} else {
 							System.out.println("failure in communication");
 						}
 					}
@@ -108,19 +108,23 @@ public class BatteryActivity extends Activity {
 				});
 
 		s.performAction();
-		
+
 		minvalue.setText("Minimum Voltage:" + minVal);
 		maxvalue.setText("Maximum Voltage:" + maxVal);
-		snapshot.setText("Battery Voltage: " + battery_voltage + " Battery Current: " + battery_current 
-				+ "\n PV Voltage: " + pvvoltage + " PV Current: " + pvcurrent + "\n Timestamp: " + timestamp);
-		bl = new BatteryLevel(getApplicationContext(), BatteryLevel.SIZE_NOTIFICATION);
+		snapshot.setText("Battery Voltage: " + battery_voltage
+				+ " Battery Current: " + battery_current + "\n PV Voltage: "
+				+ pvvoltage + " PV Current: " + pvcurrent + "\n Timestamp: "
+				+ timestamp);
+		bl = new BatteryLevel(getApplicationContext(),
+				BatteryLevel.SIZE_NOTIFICATION);
 		bl.setLevel(level);
-        ImageView battery_image = (ImageView)findViewById(R.id.currVoltage);
-        battery_image.setImageBitmap(bl.getBitmap());
+		ImageView battery_image = (ImageView) findViewById(R.id.currVoltage);
+		battery_image.setImageBitmap(bl.getBitmap());
 
 		min.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			@Override
-			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {
 				// TODO Auto-generated method stub
 				minvalue.setText("Minimum: " + progress);
 				minVal = progress;
@@ -141,7 +145,8 @@ public class BatteryActivity extends Activity {
 
 		max.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			@Override
-			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {
 				// TODO Auto-generated method stub
 				maxvalue.setText("Maximum: " + progress);
 				maxVal = progress;
@@ -163,16 +168,15 @@ public class BatteryActivity extends Activity {
 
 	private void updateLevels() {
 
-		SetChargeConstraintsHandler call = new SetChargeConstraintsHandler(new Callback<BaseResponse>() {
-			@Override
-			public void onComplete(BaseResponse response) {
-				//System.out.println(response.getResult());
-			}
-		}, maxVal, minVal);
+		SetChargeConstraintsHandler call = new SetChargeConstraintsHandler(
+				new Callback<BaseResponse>() {
+					@Override
+					public void onComplete(BaseResponse response) {
+						// System.out.println(response.getResult());
+					}
+				}, maxVal, minVal);
 
 		call.performAction();
 
 	}
 }
-
-
