@@ -1,6 +1,8 @@
 package com.example.solarpanelmanager;
 
+import java.text.DateFormat;
 import java.util.Collection;
+import java.util.Date;
 
 import org.achartengine.ChartFactory;
 import org.achartengine.model.TimeSeries;
@@ -17,7 +19,7 @@ import com.example.solarpanelmanager.api.responses.SnapshotResponse;
 public class LineGraph {
 
 	private static final String nameOfGraph = "Power Usage";
-	private static final String nameXAxis = "Time (seconds)";
+	private static final String nameXAxis = "Time";
 	private static final String nameYAxis = "Power (watts)";
 	private static final float sizeOfAxisTitleText = 20;
 	private static final float sizeOfLabelsText = 20;
@@ -42,8 +44,6 @@ public class LineGraph {
 
 		// A graph may have multiple lines, so again same logic as previous
 		XYMultipleSeriesRenderer mRenderer = new XYMultipleSeriesRenderer();
-		mRenderer.setXTitle(nameXAxis);
-		mRenderer.setYTitle(nameYAxis);
 
 		// Properties for series
 		// Following gives a line its properties, thus you can customize this
@@ -58,6 +58,25 @@ public class LineGraph {
 		mRenderer.setLabelsTextSize(sizeOfLabelsText);
 		// Turn on/off grid
 		mRenderer.setShowGrid(true);
+		// Turn off Default XAxis label
+		mRenderer.setXLabels(0);
+		// XAxis Title
+		mRenderer.setXTitle(nameXAxis);
+		// YAxis Title
+		mRenderer.setYTitle(nameYAxis);
+		
+		// Covert timestamp into date and use this as new XAxis label
+		x = 1;
+		Date date;
+		for (SnapshotResponse sr : history) {
+			date = new Date(sr.getTimestamp());
+			DateFormat shortDf = DateFormat.getTimeInstance(DateFormat.SHORT);
+			// Only display 1 out of every 3 timestamps
+			if (x%3==0) {
+				mRenderer.addXTextLabel(x, shortDf.format(date));
+			}
+			x++;
+		}
 
 		// Now we create out intent
 		Intent intent = ChartFactory.getLineChartIntent(context, mDataset, mRenderer);
