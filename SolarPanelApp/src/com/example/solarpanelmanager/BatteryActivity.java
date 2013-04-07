@@ -29,20 +29,18 @@ public class BatteryActivity extends SherlockActivity {
 	private SeekBar min;
 	private SeekBar max;
 	private int level;
+	private View activityIndicator;
 	private TextView minvalue;
 	private TextView maxvalue;
 	private TextView snapshot;
-<<<<<<< HEAD
-	private BatteryLevel bl;
-=======
 	private ImageView battery_image;
 	private BatteryLevel batteryLevel;
->>>>>>> 327a32eca6ff93ca48ac5e27ff3ede56592988e7
 	private double battery_voltage;
 	private double battery_current;
 	private double pvcurrent;
 	private double pvvoltage;
 	private long timestamp;
+	private volatile int apiCallsRunning;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -58,122 +56,28 @@ public class BatteryActivity extends SherlockActivity {
 		pvcurrent = 0;
 		pvvoltage = 0;
 		timestamp = 0;
+		batteryLevel = new BatteryLevel(getApplicationContext(), BatteryLevel.SIZE_NOTIFICATION);
 
+		getUI();
+		setupUI();
+
+		getData();
+	}
+
+	private void getUI() {
+		activityIndicator = findViewById(R.id.activityIndicator);
 		minvalue = (TextView) findViewById(R.id.minView);
 		maxvalue = (TextView) findViewById(R.id.maxView);
 		snapshot = (TextView) findViewById(R.id.snapshot);
 		min = (SeekBar) findViewById(R.id.minbar);
 		max = (SeekBar) findViewById(R.id.maxbar);
-<<<<<<< HEAD
-
-		ViewChargeConstraintsHandler i = new ViewChargeConstraintsHandler(
-				new Callback<ViewChargeConstraintsResponse>() {
-
-					@Override
-					public void onComplete(
-							ViewChargeConstraintsResponse response) {
-=======
 		battery_image = (ImageView) findViewById(R.id.currVoltage);
+	}
 
-		String deviceId = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.CURRENT_DEVICE, null);
-		if (deviceId == null) {
-			// TODO - Tell the user that something is wrong
-		}
-
-		// TODO use the deviceid when calling the handler
-		ViewChargeConstraintsHandler handler = new ViewChargeConstraintsHandler(
-				new Callback<ViewChargeConstraintsResponse>() {
-
-					@Override
-					public void onComplete(ViewChargeConstraintsResponse response) {
-						// TODO We are waiting on both the snapshot and the
-						// viewcharge
-						// constraints, so we need to add in the gui hiding code
-						// for
-						// both of these
->>>>>>> 327a32eca6ff93ca48ac5e27ff3ede56592988e7
-						if (response.getResult() == 200) {
-							minVal = response.getMin();
-							maxVal = response.getMax();
-							System.out.println("start: " + minVal + ", "
-									+ maxVal);
-							min.setProgress(minVal);
-							min.refreshDrawableState();
-							max.setProgress(maxVal);
-							max.refreshDrawableState();
-							View v = findViewById(R.id.activityIndicator);
-							v.setVisibility(View.GONE);
-
-							v = findViewById(R.id.maxbar);
-							v.setVisibility(View.VISIBLE);
-
-							v = findViewById(R.id.minbar);
-							v.setVisibility(View.VISIBLE);
-
-							battery_image.setVisibility(View.VISIBLE);
-							snapshot.setVisibility(View.VISIBLE);
-							maxvalue.setVisibility(View.VISIBLE);
-							minvalue.setVisibility(View.VISIBLE);
-						} else {
-							System.out.println("failure in communication");
-						}
-					}
-
-<<<<<<< HEAD
-				});
-
-		i.performAction();
-
-		SnapshotHandler s = new SnapshotHandler(
-				new Callback<SnapshotResponse>() {
-
-					@Override
-					public void onComplete(SnapshotResponse response) {
-						if (response.getResult() == 200) {
-							level = response.getBatteryPercent();
-							battery_voltage = response.getBatteryVoltage();
-							battery_current = response.getBatteryCurrent();
-							pvvoltage = response.getPVVoltage();
-							pvcurrent = response.getPVCurrent();
-							timestamp = response.getTimestamp();
-						} else {
-							System.out.println("failure in communication");
-						}
-					}
-
-				});
-
-		s.performAction();
-
-		minvalue.setText("Minimum Voltage:" + minVal);
-		maxvalue.setText("Maximum Voltage:" + maxVal);
-		snapshot.setText("Battery Voltage: " + battery_voltage
-				+ " Battery Current: " + battery_current + "\n PV Voltage: "
-				+ pvvoltage + " PV Current: " + pvcurrent + "\n Timestamp: "
-				+ timestamp);
-		bl = new BatteryLevel(getApplicationContext(),
-				BatteryLevel.SIZE_NOTIFICATION);
-		bl.setLevel(level);
-		ImageView battery_image = (ImageView) findViewById(R.id.currVoltage);
-		battery_image.setImageBitmap(bl.getBitmap());
-=======
-				}, "14:10:9F:E7:CA:93");
-
-		handler.performAction();
-
-		minvalue.setText("Minimum Voltage:" + minVal);
-		maxvalue.setText("Maximum Voltage:" + maxVal);
-		snapshot.setText("Battery Voltage: " + battery_voltage + " Battery Current: " + battery_current
-				+ "\n PV Voltage: " + pvvoltage + " PV Current: " + pvcurrent + "\n Timestamp: " + timestamp);
-		batteryLevel = new BatteryLevel(getApplicationContext(), BatteryLevel.SIZE_NOTIFICATION);
-		batteryLevel.setLevel(level);
-		battery_image.setImageBitmap(batteryLevel.getBitmap());
->>>>>>> 327a32eca6ff93ca48ac5e27ff3ede56592988e7
-
+	private void setupUI() {
 		min.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			@Override
-			public void onProgressChanged(SeekBar seekBar, int progress,
-					boolean fromUser) {
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 				// TODO Auto-generated method stub
 				minvalue.setText("Minimum: " + progress);
 				minVal = progress;
@@ -194,8 +98,7 @@ public class BatteryActivity extends SherlockActivity {
 
 		max.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			@Override
-			public void onProgressChanged(SeekBar seekBar, int progress,
-					boolean fromUser) {
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 				// TODO Auto-generated method stub
 				maxvalue.setText("Maximum: " + progress);
 				maxVal = progress;
@@ -213,14 +116,71 @@ public class BatteryActivity extends SherlockActivity {
 				updateLevels();
 			}
 		});
+	}
 
-		SnapshotHandler s = new SnapshotHandler(new Callback<SnapshotResponse>() {
+	private void showUI() {
+		min.setVisibility(View.VISIBLE);
+		max.setVisibility(View.VISIBLE);
+		activityIndicator.setVisibility(View.GONE);
+		battery_image.setVisibility(View.VISIBLE);
+		snapshot.setVisibility(View.VISIBLE);
+		maxvalue.setVisibility(View.VISIBLE);
+		minvalue.setVisibility(View.VISIBLE);
+	}
+
+	private void hideUI() {
+		activityIndicator.setVisibility(View.VISIBLE);
+
+		min.setVisibility(View.INVISIBLE);
+		max.setVisibility(View.INVISIBLE);
+		battery_image.setVisibility(View.INVISIBLE);
+		snapshot.setVisibility(View.INVISIBLE);
+		maxvalue.setVisibility(View.INVISIBLE);
+		minvalue.setVisibility(View.INVISIBLE);
+	}
+
+	private void getData() {
+		String deviceId = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.CURRENT_DEVICE, null);
+		if (deviceId == null) {
+			// TODO - Tell the user that something is wrong
+		}
+
+		hideUI();
+		apiCallsRunning = 2;
+		// TODO use the deviceid when calling the handler
+		ViewChargeConstraintsHandler handler = new ViewChargeConstraintsHandler(
+				new Callback<ViewChargeConstraintsResponse>() {
+
+					@Override
+					public void onComplete(ViewChargeConstraintsResponse response) {
+						apiCallsRunning--;
+						if (apiCallsRunning == 0) {
+							showUI();
+						}
+
+						if (response.getResult() == 200) {
+							minVal = response.getMin();
+							maxVal = response.getMax();
+							System.out.println("start: " + minVal + ", " + maxVal);
+							min.setProgress(minVal);
+							min.refreshDrawableState();
+							max.setProgress(maxVal);
+							max.refreshDrawableState();
+						} else {
+							System.out.println("failure in communication");
+						}
+					}
+
+				}, deviceId);
+		SnapshotHandler snapshotHandler = new SnapshotHandler(new Callback<SnapshotResponse>() {
 
 			@Override
 			public void onComplete(SnapshotResponse response) {
-				// TODO We are waiting on both the snapshot and the viewcharge
-				// constraints, so we need to add in the gui hiding code for
-				// both of these
+				apiCallsRunning--;
+				if (apiCallsRunning == 0) {
+					showUI();
+				}
+
 				if (response.getResult() == 200) {
 					level = response.getBatteryPercent();
 					battery_voltage = response.getBatteryVoltage();
@@ -231,40 +191,35 @@ public class BatteryActivity extends SherlockActivity {
 
 					batteryLevel.setLevel(level);
 					battery_image.setImageBitmap(batteryLevel.getBitmap());
+					// TODO Don't use raw strings here
+					minvalue.setText("Minimum Voltage:" + minVal);
+					maxvalue.setText("Maximum Voltage:" + maxVal);
+					snapshot.setText("Battery Voltage: " + battery_voltage + " Battery Current: " + battery_current
+							+ "\n PV Voltage: " + pvvoltage + " PV Current: " + pvcurrent + "\n Timestamp: "
+							+ timestamp);
+					batteryLevel.setLevel(level);
+					battery_image.setImageBitmap(batteryLevel.getBitmap());
 				} else {
 					System.out.println("failure in communication");
 				}
 			}
 
-		}, "14:10:9F:E7:CA:93");
+		}, deviceId);
 
-		s.performAction();
+		snapshotHandler.performAction();
+		handler.performAction();
+
 	}
 
 	private void updateLevels() {
-
-<<<<<<< HEAD
-		SetChargeConstraintsHandler call = new SetChargeConstraintsHandler(
-				new Callback<BaseResponse>() {
-					@Override
-					public void onComplete(BaseResponse response) {
-						// System.out.println(response.getResult());
-					}
-				}, maxVal, minVal);
-=======
 		SetChargeConstraintsHandler call = new SetChargeConstraintsHandler(new Callback<BaseResponse>() {
 			@Override
 			public void onComplete(BaseResponse response) {
 				// System.out.println(response.getResult());
 			}
 		}, "14:10:9F:E7:CA:93", maxVal, minVal);
->>>>>>> 327a32eca6ff93ca48ac5e27ff3ede56592988e7
-
 		call.performAction();
-
 	}
-<<<<<<< HEAD
-=======
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -287,5 +242,4 @@ public class BatteryActivity extends SherlockActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
->>>>>>> 327a32eca6ff93ca48ac5e27ff3ede56592988e7
 }
