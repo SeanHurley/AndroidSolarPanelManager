@@ -46,8 +46,8 @@ public class ConnectActivity extends SherlockActivity {
 				final String device = ((BluetoothDeviceWrapper) parent.getItemAtPosition(position)).address;
 
 				final ProgressDialog dialog = new ProgressDialog(ConnectActivity.this);
-				dialog.setTitle("Loading");
-				dialog.setMessage("Communicating with device");
+				dialog.setTitle(getResources().getString(R.string.Loading));
+				dialog.setMessage(getResources().getString(R.string.Communicating));
 				dialog.show();
 
 				BaseResponseHandler handler = new HandshakeHandler(new Callback<BaseResponse>() {
@@ -66,9 +66,9 @@ public class ConnectActivity extends SherlockActivity {
 							startActivity(intent);
 							ConnectActivity.this.finish();
 						} else {
-							new AlertDialog.Builder(ConnectActivity.this).setTitle("Communication Failed")
-									.setMessage("Could not connect to this device")
-									.setNeutralButton("ok", new DialogInterface.OnClickListener() {
+							new AlertDialog.Builder(ConnectActivity.this).setTitle(R.string.failed_communication)
+									.setMessage(R.string.connection_error))
+									.setNeutralButton(R.string.ok), new DialogInterface.OnClickListener() {
 
 										@Override
 										public void onClick(DialogInterface arg0, int arg1) {
@@ -137,7 +137,7 @@ public class ConnectActivity extends SherlockActivity {
 		if (code == BluetoothScanner.BLUETOOTH_READY) {
 			scanner.scan();
 		} else if (code == BluetoothScanner.BLUETOOTH_DISABLED) {
-			Toast.makeText(this, "bluetooth not enabled; cannot continue", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, R.string.bluetooth_warning, Toast.LENGTH_SHORT).show();
 		}
 	}
 

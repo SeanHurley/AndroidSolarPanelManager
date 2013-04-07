@@ -108,10 +108,10 @@ public class BatteryActivity extends SherlockActivity {
 
 		handler.performAction();
 
-		minvalue.setText("Minimum Voltage:" + minVal);
-		maxvalue.setText("Maximum Voltage:" + maxVal);
-		snapshot.setText("Battery Voltage: " + battery_voltage + " Battery Current: " + battery_current
-				+ "\n PV Voltage: " + pvvoltage + " PV Current: " + pvcurrent + "\n Timestamp: " + timestamp);
+		minvalue.setText(R.string.battery_min + ":" + minVal);
+		maxvalue.setText(R.string.battery_max + ":"+ maxVal);
+		snapshot.setText(R.string.battery_voltage+ ":" + battery_voltage + R.string.battery_curr+ ":" + battery_current
+				+ "\n"+ R.string.PV_voltage + ":" + pvvoltage + R.string.PV_current + pvcurrent + "\n"+ R.string.Timestamp+ ":" + timestamp);
 		batteryLevel = new BatteryLevel(getApplicationContext(), BatteryLevel.SIZE_NOTIFICATION);
 		batteryLevel.setLevel(level);
 		battery_image.setImageBitmap(batteryLevel.getBitmap());
@@ -120,7 +120,7 @@ public class BatteryActivity extends SherlockActivity {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 				// TODO Auto-generated method stub
-				minvalue.setText("Minimum: " + progress);
+				minvalue.setText(R.string.min +":" + progress);
 				minVal = progress;
 			}
 
@@ -141,7 +141,7 @@ public class BatteryActivity extends SherlockActivity {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 				// TODO Auto-generated method stub
-				maxvalue.setText("Maximum: " + progress);
+				maxvalue.setText(R.string.max+ ":" + progress);
 				maxVal = progress;
 			}
 
