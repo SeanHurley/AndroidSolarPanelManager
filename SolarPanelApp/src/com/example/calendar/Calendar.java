@@ -11,8 +11,8 @@ import com.example.solarpanelmanager.api.responses.Event;
 
 @SuppressWarnings("deprecation") 
 public class Calendar {
-	private static final long DAILY = (new Date(0, 0, 2)).getTime() - (new Date(0, 0, 1)).getTime();
-	private static final long WEEKLY = DAILY * 7;
+	public static final long DAILY = (new Date(0, 0, 2)).getTime() - (new Date(0, 0, 1)).getTime();
+	public static final long WEEKLY = DAILY * 7;
 	private static final long ONCE = Long.MAX_VALUE;
 	
 	private Map<Date, List<Event>> calendar;
@@ -39,7 +39,7 @@ public class Calendar {
 			for(Event oldEvent : expandedEvents){
 				long oldStart = oldEvent.getFirstTime();
 				long oldEnd = oldEvent.getFirstTime() + newEvent.getDuration();
-				if((newStart > oldStart && newStart < oldEnd) || (newEnd > oldStart && newEnd < oldEnd))
+				if((newStart >= oldStart && newStart < oldEnd) || (newEnd >= oldStart && newEnd < oldEnd))
 					conflict = true;
 			}
 		}
