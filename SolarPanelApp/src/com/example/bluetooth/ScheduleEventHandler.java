@@ -13,23 +13,23 @@ public class ScheduleEventHandler extends BaseResponseHandler {
 	private long duration;
 	private long interval;
 
-	public ScheduleEventHandler(Callback<BaseResponse> callback, String device, 
-			String id, long firstRun, long duration, long interval) {
-		super(callback, device);
+	public ScheduleEventHandler(Callback<BaseResponse> callback, String device, String pass, String id, long firstRun,
+			long duration, long interval) {
+		super(callback, device, pass);
 		this.firstRun = firstRun;
 		this.duration = duration;
 		this.interval = interval;
 	}
 
 	@Override
-	protected String getRequest() {
+	protected JSONObject getRequest() {
 		JSONObject json = new JSONObject();
 		json.put(MessageKeys.MESSAGE_TYPE, MessageTypes.SCHEDULE_EVENT);
 		json.put(MessageKeys.EVENT_ID, id);
 		json.put(MessageKeys.EVENT_FIRST_TIME, firstRun);
 		json.put(MessageKeys.EVENT_DURATION, duration);
 		json.put(MessageKeys.EVENT_INTERVAL, interval);
-		return json.toJSONString();
+		return json;
 	}
 
 }

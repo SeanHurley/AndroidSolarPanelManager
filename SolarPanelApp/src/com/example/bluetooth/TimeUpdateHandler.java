@@ -10,16 +10,16 @@ public class TimeUpdateHandler extends BaseResponseHandler {
 
 	private long timestamp;
 
-	public TimeUpdateHandler(Callback<BaseResponse> callback, String device, long timestamp) {
-		super(callback, device);
+	public TimeUpdateHandler(Callback<BaseResponse> callback, String device, String pass, long timestamp) {
+		super(callback, device, pass);
 		this.timestamp = timestamp;
 	}
 
 	@Override
-	protected String getRequest() {
+	protected JSONObject getRequest() {
 		JSONObject json = new JSONObject();
 		json.put(MessageKeys.MESSAGE_TYPE, MessageTypes.TIME_UPDATE);
 		json.put(MessageKeys.TIME_TIME, this.timestamp);
-		return json.toJSONString();
+		return json;
 	}
 }

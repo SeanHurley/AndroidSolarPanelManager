@@ -15,15 +15,15 @@ import com.example.solarpanelmanager.api.responses.SnapshotResponse;
  */
 public class SnapshotHandler extends CommunicationHandler<SnapshotResponse> {
 
-	public SnapshotHandler(Callback<SnapshotResponse> callback, String device) {
-		super(callback, device);
+	public SnapshotHandler(Callback<SnapshotResponse> callback, String device, String pass) {
+		super(callback, device, pass);
 	}
 
 	@Override
-	protected String getRequest() {
+	protected JSONObject getRequest() {
 		JSONObject json = new JSONObject();
 		json.put(MessageKeys.MESSAGE_TYPE, MessageTypes.SNAPSHOT);
-		return json.toJSONString();
+		return json;
 	}
 
 	@Override

@@ -61,6 +61,8 @@ public class MainActivity extends SherlockActivity {
 					// TODO - Tell the user that something is wrong
 				}
 
+				String pass = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getString(
+						Constants.PASS_PHRASE_PREFERENCE, null);
 				// TODO use the deviceid when calling the handler
 				HistoryHandler call = new HistoryHandler(new Callback<HistoryResponse>() {
 
@@ -80,7 +82,7 @@ public class MainActivity extends SherlockActivity {
 						startActivity(lineGraphIntent);
 					}
 
-				}, "14:10:9F:E7:CA:93");
+				}, deviceId, pass);
 				call.performAction();
 			}
 		});

@@ -25,7 +25,7 @@ public class TestGetChargeConstraints extends TestCase {
 						sem.release();
 					}
 
-				}, "14:10:9F:E7:CA:93");
+				}, "14:10:9F:E7:CA:93", null);
 		try {
 			sem.acquire();
 		} catch (InterruptedException e) {

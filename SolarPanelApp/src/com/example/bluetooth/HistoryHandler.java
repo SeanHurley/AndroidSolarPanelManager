@@ -15,15 +15,15 @@ import com.example.solarpanelmanager.api.responses.HistoryResponse;
  */
 public class HistoryHandler extends CommunicationHandler<HistoryResponse> {
 
-	public HistoryHandler(Callback<HistoryResponse> callback, String device) {
-		super(callback, device);
+	public HistoryHandler(Callback<HistoryResponse> callback, String device, String pass) {
+		super(callback, device, pass);
 	}
 
 	@Override
-	protected String getRequest() {
+	protected JSONObject getRequest() {
 		JSONObject json = new JSONObject();
 		json.put(MessageKeys.MESSAGE_TYPE, MessageTypes.HISTORY);
-		return json.toJSONString();
+		return json;
 	}
 
 	@Override
