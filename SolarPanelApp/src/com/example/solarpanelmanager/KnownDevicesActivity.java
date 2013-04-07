@@ -1,5 +1,5 @@
 package com.example.solarpanelmanager;
-
+import com.example.solarpanelmanager.R;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;

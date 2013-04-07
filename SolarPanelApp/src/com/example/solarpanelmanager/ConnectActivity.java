@@ -1,4 +1,6 @@
 package com.example.solarpanelmanager;
+import com.example.solarpanelmanager.R;
+
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -46,7 +48,7 @@ public class ConnectActivity extends SherlockActivity {
 				final String device = ((BluetoothDeviceWrapper) parent.getItemAtPosition(position)).address;
 
 				final ProgressDialog dialog = new ProgressDialog(ConnectActivity.this);
-				dialog.setTitle(getResources().getString(R.string.Loading));
+				dialog.setTitle(R.string.Loading);
 				dialog.setMessage(getResources().getString(R.string.Communicating));
 				dialog.show();
 

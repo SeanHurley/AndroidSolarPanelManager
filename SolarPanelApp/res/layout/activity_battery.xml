@@ -38,7 +38,7 @@
         android:layout_below="@+id/top"
         android:visibility="gone"
         android:layout_marginTop="17dp"
-        android:text="@string/battery_current" />
+        android:text="@string/battery_voltage" />
 
     <ImageView
         android:id="@+id/currVoltage"
