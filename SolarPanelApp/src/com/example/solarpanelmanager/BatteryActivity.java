@@ -153,6 +153,9 @@ public class BatteryActivity extends SherlockActivity {
 		} else if (item.getItemId() == R.id.menu_settings) {
 			Intent intent = new Intent(this, PreferencesActivity.class);
 			startActivity(intent);
+		} else if (item.getItemId() == R.id.menu_history) {
+			Intent intent = new Intent(this, MainActivity.class);
+			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
 	}

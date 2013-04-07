@@ -22,6 +22,10 @@ public class ViewChargeConstraintsHandler extends CommunicationHandler<ViewCharg
 
 	@Override
 	protected ViewChargeConstraintsResponse parseResponse(String data) {
+		if (data == "") {
+			return new ViewChargeConstraintsResponse(500, null, -1, -1);
+		}
+		
 		return ResponseParser.parseViewChargeConstraintsResponse(data);
 	}
 

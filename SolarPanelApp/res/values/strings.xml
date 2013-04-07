@@ -32,5 +32,7 @@
     <string name="confirm">Yes</string>
     <string name="cancel">Cancel</string>
     <string name="title_activity_calendar">CalendarActivity</string>
-
+    <string name="confirm">Yes</string> 
+    <string name="cancel">Cancel</string>
+    <string name="menu_history">History</string>    
 </resources>
