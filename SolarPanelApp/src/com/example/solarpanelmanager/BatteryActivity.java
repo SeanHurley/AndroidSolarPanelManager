@@ -212,12 +212,17 @@ public class BatteryActivity extends SherlockActivity {
 	}
 
 	private void updateLevels() {
+		String deviceId = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.CURRENT_DEVICE, null);
+		if (deviceId == null) {
+			// TODO - Tell the user that something is wrong
+		}
+
 		SetChargeConstraintsHandler call = new SetChargeConstraintsHandler(new Callback<BaseResponse>() {
 			@Override
 			public void onComplete(BaseResponse response) {
 				// System.out.println(response.getResult());
 			}
-		}, "14:10:9F:E7:CA:93", maxVal, minVal);
+		}, deviceId, maxVal, minVal);
 		call.performAction();
 	}
 

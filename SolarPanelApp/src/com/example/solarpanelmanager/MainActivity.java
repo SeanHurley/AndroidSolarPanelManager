@@ -80,7 +80,7 @@ public class MainActivity extends SherlockActivity {
 						startActivity(lineGraphIntent);
 					}
 
-				}, "14:10:9F:E7:CA:93");
+				}, deviceId);
 				call.performAction();
 			}
 		});
