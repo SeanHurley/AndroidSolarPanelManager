@@ -22,6 +22,11 @@ public class Calendar {
 		generateRawEvents(events);
 	}
 	
+	public void addEvent(String id, String name, Date start, Date end, long interval){
+		Event event = new Event(id, name, start.getTime(), end.getTime() - start.getTime(), interval);
+		addEvent(event);
+	}
+	
 	public void addEvent(Event event){
 		ArrayList<Event> expandedEvents = expandEvents(rawEvents, System.currentTimeMillis() + 5 * WEEKLY);
 		ArrayList<Event> newExpanded = new ArrayList<Event>();
