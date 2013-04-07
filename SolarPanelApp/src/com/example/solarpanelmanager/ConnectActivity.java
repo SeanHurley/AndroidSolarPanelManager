@@ -50,6 +50,8 @@ public class ConnectActivity extends SherlockActivity {
 				dialog.setMessage("Communicating with device");
 				dialog.show();
 
+				String pass = PreferenceManager.getDefaultSharedPreferences(ConnectActivity.this).getString(
+						Constants.PASS_PHRASE_PREFERENCE, null);
 				BaseResponseHandler handler = new HandshakeHandler(new Callback<BaseResponse>() {
 
 					@Override
@@ -79,7 +81,7 @@ public class ConnectActivity extends SherlockActivity {
 						}
 					}
 
-				}, device);
+				}, device, pass);
 				handler.performAction();
 
 			}

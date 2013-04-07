@@ -10,16 +10,16 @@ public class PINUpdateHandler extends BaseResponseHandler {
 
 	private String pin;
 
-	public PINUpdateHandler(Callback<BaseResponse> callback, String device, String pin) {
-		super(callback, device);
+	public PINUpdateHandler(Callback<BaseResponse> callback, String device, String pass, String pin) {
+		super(callback, device, pass);
 		this.pin = pin;
 	}
 
 	@Override
-	protected String getRequest() {
+	protected JSONObject getRequest() {
 		JSONObject json = new JSONObject();
 		json.put(MessageKeys.MESSAGE_TYPE, MessageTypes.PIN_UPDATE);
-		json.put(MessageKeys.PIN_PASSWORD, pin);
-		return json.toJSONString();
+		json.put(MessageKeys.NEW_PIN_PASSWORD, pin);
+		return json;
 	}
 }

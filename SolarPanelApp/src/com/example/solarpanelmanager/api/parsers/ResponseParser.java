@@ -20,7 +20,7 @@ public class ResponseParser {
 		if (response == "") {
 			return new BaseResponse(null, 500, null);
 		}
-		
+
 		// Call the parse response for the basic map, and then create the proper
 		// response object
 		JSONObject json = (JSONObject) JSONValue.parse(response);
@@ -58,7 +58,7 @@ public class ResponseParser {
 		// Call the parse response for the basic map, and then create the proper
 		// response object
 		JSONObject json = (JSONObject) (JSONValue.parse(response));
-
+		System.out.println(response);
 		int result = 200;
 		if (json.containsKey(MessageKeys.RESPONSE_CODE)) {
 			result = (Integer) json.get(MessageKeys.RESPONSE_CODE);
@@ -132,6 +132,7 @@ public class ResponseParser {
 	}
 
 	public static ViewChargeConstraintsResponse parseViewChargeConstraintsResponse(String response) {
+		System.out.println(response);
 		JSONObject json = (JSONObject) (JSONValue.parse(response));
 
 		int result = (Integer) json.get(MessageKeys.RESPONSE_CODE);

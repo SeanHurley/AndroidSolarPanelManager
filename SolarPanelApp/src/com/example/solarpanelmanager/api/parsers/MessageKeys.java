@@ -6,6 +6,7 @@ public class MessageKeys {
 	public static final String RESPONSE_MESSAGE = "message";
 
 	public static final String PIN_PASSWORD = "pin";
+	public static final String NEW_PIN_PASSWORD = "new_pin";
 
 	public static final String TIME_TIME = "timestamp";
 

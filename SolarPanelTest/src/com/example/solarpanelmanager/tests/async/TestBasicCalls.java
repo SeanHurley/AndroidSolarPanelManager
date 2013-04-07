@@ -53,32 +53,34 @@ public class TestBasicCalls extends TestCase {
 	}
 
 	public void testLocationUpdate() {
-		LocationUpdateHandler handler = new LocationUpdateHandler(callback, "14:10:9F:E7:CA:93", 90, 90);
+		LocationUpdateHandler handler = new LocationUpdateHandler(callback, "14:10:9F:E7:CA:93", null, 90, 90);
 		testHandler(handler);
 	}
 
 	public void testPinHandler() {
-		PINUpdateHandler handler = new PINUpdateHandler(callback, "14:10:9F:E7:CA:93", "1234");
+		PINUpdateHandler handler = new PINUpdateHandler(callback, "14:10:9F:E7:CA:93", null, "1234");
 		testHandler(handler);
 	}
 
 	public void testScheduleEventHandler() {
-		ScheduleEventHandler handler = new ScheduleEventHandler(callback, "14:10:9F:E7:CA:93", "a", 1000, 2000, 3000);
+		ScheduleEventHandler handler = new ScheduleEventHandler(callback, "14:10:9F:E7:CA:93", null, "a", 1000, 2000,
+				3000);
 		testHandler(handler);
 	}
 
 	public void testSetChargeContraintsHandler() {
-		SetChargeConstraintsHandler handler = new SetChargeConstraintsHandler(callback, "14:10:9F:E7:CA:93", 90, 10);
+		SetChargeConstraintsHandler handler = new SetChargeConstraintsHandler(callback, "14:10:9F:E7:CA:93", null, 90,
+				10);
 		testHandler(handler);
 	}
 
 	public void testTimeUpdateHandler() {
-		TimeUpdateHandler handler = new TimeUpdateHandler(callback, "14:10:9F:E7:CA:93", 1000);
+		TimeUpdateHandler handler = new TimeUpdateHandler(callback, "14:10:9F:E7:CA:93", null, 1000);
 		testHandler(handler);
 	}
 
 	public void testUnscheduleEventHandler() {
-		UnscheduleEventHandler handler = new UnscheduleEventHandler(callback, "14:10:9F:E7:CA:93", "a");
+		UnscheduleEventHandler handler = new UnscheduleEventHandler(callback, "14:10:9F:E7:CA:93", null, "a");
 		testHandler(handler);
 	}
 }

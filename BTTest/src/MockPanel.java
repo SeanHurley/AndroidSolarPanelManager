@@ -18,7 +18,7 @@ import net.minidev.json.JSONValue;
 public class MockPanel {
 	private static boolean testing = false;
 
-	private static String pin;
+	private static String SECURITY_PIN;
 	private static Queue<Snapshot> historyData = new LinkedList<Snapshot>();
 	private static float time;
 	private static float latitude;
@@ -104,19 +104,19 @@ public class MockPanel {
 			} else if (MessageTypes.LOCATION_UPDATE.equals(type)) {
 				response = handleLocationUpdate(json);
 			} else if (MessageTypes.SNAPSHOT.equals(type)) {
-				response = handleSnapshot();
+				response = handleSnapshot(json);
 			} else if (MessageTypes.HISTORY.equals(type)) {
-				response = handleHistory();
+				response = handleHistory(json);
 			} else if (MessageTypes.SCHEDULE_EVENT.equals(type)) {
 				response = handleScheduleEvent(json);
 			} else if (MessageTypes.UNSCHEDULE_EVENT.equals(type)) {
 				response = handleUnscheduleEvent(json);
 			} else if (MessageTypes.EVENTS.equals(type)) {
-				response = handleViewEvents();
+				response = handleViewEvents(json);
 			} else if (MessageTypes.SET_CHARGE_CONSTRAINTS.equals(type)) {
 				response = handleSetChargeConstraints(json);
 			} else if (MessageTypes.VIEW_CHARGE_CONSTRAINTS.equals(type)) {
-				response = handleViewChargeConstraints();
+				response = handleViewChargeConstraints(json);
 			} else if (MessageTypes.PIN_UPDATE.equals(type)) {
 				response = handlePinUpdate(json);
 			} else {
@@ -165,13 +165,25 @@ public class MockPanel {
 			}
 		}
 
+		private boolean checkPin(JSONObject json) {
+			if (SECURITY_PIN == null) {
+				return true;
+			}
+			String pin = (String) json.get(MessageKeys.PIN_PASSWORD);
+			return pin.equals(SECURITY_PIN);
+		}
+
 		private String handlePinUpdate(JSONObject json) {
 			try {
+				boolean pass = checkPin(json);
+				if (!pass) {
+					return ResponseCreator.buildDefaultPermissionDenied(MessageTypes.PIN_UPDATE_RESPONSE);
+				}
 				if (testing) {
 					return ResponseCreator.buildDefaultOK(MessageTypes.PIN_UPDATE_RESPONSE);
 				} else {
-					String p = (String) json.get(MessageKeys.PIN_PASSWORD);
-					pin = p;
+					String p = (String) json.get(MessageKeys.NEW_PIN_PASSWORD);
+					SECURITY_PIN = p;
 					return ResponseCreator.buildDefaultOK(MessageTypes.PIN_UPDATE_RESPONSE);
 				}
 			} catch (Exception e) {
@@ -182,6 +194,10 @@ public class MockPanel {
 
 		private String handleTimeUpdate(JSONObject json) {
 			try {
+				boolean pass = checkPin(json);
+				if (!pass) {
+					return ResponseCreator.buildDefaultPermissionDenied(MessageTypes.TIME_UPDATE_RESPONSE);
+				}
 				if (testing) {
 					return ResponseCreator.buildDefaultOK(MessageTypes.LOCATION_UPDATE_RESPONSE);
 				} else {
@@ -197,6 +213,10 @@ public class MockPanel {
 
 		private String handleLocationUpdate(JSONObject json) {
 			try {
+				boolean pass = checkPin(json);
+				if (!pass) {
+					return ResponseCreator.buildDefaultPermissionDenied(MessageTypes.LOCATION_UPDATE_RESPONSE);
+				}
 				if (testing) {
 					return ResponseCreator.buildDefaultOK(MessageTypes.LOCATION_UPDATE_RESPONSE);
 				} else {
@@ -212,8 +232,12 @@ public class MockPanel {
 			}
 		}
 
-		private String handleSnapshot() {
+		private String handleSnapshot(JSONObject json) {
 			try {
+				boolean pass = checkPin(json);
+				if (!pass) {
+					return ResponseCreator.buildDefaultPermissionDenied(MessageTypes.SNAPSHOT_RESPONSE);
+				}
 				Snapshot snap;
 				if (testing) {
 					snap = new Snapshot(System.currentTimeMillis(), 50, 0.5, 0.5, 0.5, 0.5);
@@ -228,8 +252,12 @@ public class MockPanel {
 			}
 		}
 
-		private String handleHistory() {
+		private String handleHistory(JSONObject json) {
 			try {
+				boolean pass = checkPin(json);
+				if (!pass) {
+					return ResponseCreator.buildDefaultPermissionDenied(MessageTypes.HISTORY_RESPONSE);
+				}
 				ArrayList<Snapshot> snaps;
 				if (!testing) {
 					snaps = new ArrayList<Snapshot>(historyData);
@@ -249,6 +277,10 @@ public class MockPanel {
 
 		private String handleScheduleEvent(JSONObject json) {
 			try {
+				boolean pass = checkPin(json);
+				if (!pass) {
+					return ResponseCreator.buildDefaultPermissionDenied(MessageTypes.SCHEDULE_EVENT_REPONSE);
+				}
 				if (testing) {
 					return ResponseCreator.buildDefaultOK(MessageTypes.SCHEDULE_EVENT_REPONSE);
 				} else {
@@ -269,6 +301,10 @@ public class MockPanel {
 
 		private String handleUnscheduleEvent(JSONObject json) {
 			try {
+				boolean pass = checkPin(json);
+				if (!pass) {
+					return ResponseCreator.buildDefaultPermissionDenied(MessageTypes.UNSCHEDULE_EVENT_REPONSE);
+				}
 				if (testing) {
 					return ResponseCreator.buildDefaultOK(MessageTypes.UNSCHEDULE_EVENT_REPONSE);
 				} else {
@@ -282,8 +318,12 @@ public class MockPanel {
 			}
 		}
 
-		private String handleViewEvents() {
+		private String handleViewEvents(JSONObject json) {
 			try {
+				boolean pass = checkPin(json);
+				if (!pass) {
+					return ResponseCreator.buildDefaultPermissionDenied(MessageTypes.VIEW_CHARGE_CONSTRAINTS_RESPONSE);
+				}
 				if (testing) {
 					ArrayList<Event> events = new ArrayList<Event>();
 					events.add(new Event("a", 1000, 2000, 3000));
@@ -302,6 +342,10 @@ public class MockPanel {
 
 		private String handleSetChargeConstraints(JSONObject json) {
 			try {
+				boolean pass = checkPin(json);
+				if (!pass) {
+					return ResponseCreator.buildDefaultPermissionDenied(MessageTypes.SET_CHARGE_CONSTRAINTS_RESPONSE);
+				}
 				if (testing) {
 					return ResponseCreator.buildDefaultOK(MessageTypes.SET_CHARGE_CONSTRAINTS_RESPONSE);
 				} else {
@@ -315,8 +359,12 @@ public class MockPanel {
 			}
 		}
 
-		private String handleViewChargeConstraints() {
+		private String handleViewChargeConstraints(JSONObject json) {
 			try {
+				boolean pass = checkPin(json);
+				if (!pass) {
+					return ResponseCreator.buildDefaultPermissionDenied(MessageTypes.VIEW_CHARGE_CONSTRAINTS_RESPONSE);
+				}
 				if (testing) {
 					return ResponseCreator.buildViewChargeConstraints(90, 10);
 				} else {

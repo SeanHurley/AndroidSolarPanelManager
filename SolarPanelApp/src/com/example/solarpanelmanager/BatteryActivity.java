@@ -1,5 +1,7 @@
 package com.example.solarpanelmanager;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -41,6 +43,7 @@ public class BatteryActivity extends SherlockActivity {
 	private double pvvoltage;
 	private long timestamp;
 	private volatile int apiCallsRunning;
+	private boolean dialogShowing = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -122,7 +125,7 @@ public class BatteryActivity extends SherlockActivity {
 	protected void onResume() {
 		super.onResume();
 		if (apiCallsRunning == 0) {
-			showUI();
+			getData();
 		}
 	}
 
@@ -161,6 +164,8 @@ public class BatteryActivity extends SherlockActivity {
 	}
 
 	private void getData() {
+		String pass = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.PASS_PHRASE_PREFERENCE,
+				null);
 		String deviceId = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.CURRENT_DEVICE, null);
 		if (deviceId == null) {
 			// TODO - Tell the user that something is wrong
@@ -187,12 +192,14 @@ public class BatteryActivity extends SherlockActivity {
 							min.refreshDrawableState();
 							max.setProgress(maxVal);
 							max.refreshDrawableState();
+						} else if (response.getResult() == 403) {
+							showForbiddenErrorDialog();
 						} else {
 							System.out.println("failure in communication");
 						}
 					}
 
-				}, deviceId);
+				}, deviceId, pass);
 		SnapshotHandler snapshotHandler = new SnapshotHandler(new Callback<SnapshotResponse>() {
 
 			@Override
@@ -220,12 +227,14 @@ public class BatteryActivity extends SherlockActivity {
 							+ timestamp);
 					batteryLevel.setLevel(level);
 					battery_image.setImageBitmap(batteryLevel.getBitmap());
+				} else if (response.getResult() == 403) {
+					showForbiddenErrorDialog();
 				} else {
 					System.out.println("failure in communication");
 				}
 			}
 
-		}, deviceId);
+		}, deviceId, pass);
 
 		snapshotHandler.performAction();
 		handler.performAction();
@@ -233,6 +242,8 @@ public class BatteryActivity extends SherlockActivity {
 	}
 
 	private void updateLevels() {
+		String pass = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.PASS_PHRASE_PREFERENCE,
+				null);
 		String deviceId = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.CURRENT_DEVICE, null);
 		if (deviceId == null) {
 			// TODO - Tell the user that something is wrong
@@ -241,10 +252,34 @@ public class BatteryActivity extends SherlockActivity {
 		SetChargeConstraintsHandler call = new SetChargeConstraintsHandler(new Callback<BaseResponse>() {
 			@Override
 			public void onComplete(BaseResponse response) {
+				if (response.getResult() == 403) {
+					showForbiddenErrorDialog();
+				}
 				// System.out.println(response.getResult());
 			}
-		}, deviceId, maxVal, minVal);
+		}, deviceId, pass, maxVal, minVal);
 		call.performAction();
+	}
+
+	private void showForbiddenErrorDialog() {
+		if (!dialogShowing) {
+			dialogShowing = true;
+			new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert)
+					.setTitle(R.string.forbidden_error_title).setMessage(R.string.forbidden_error)
+					.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dialogShowing = false;
+						}
+
+					}).setOnCancelListener(new DialogInterface.OnCancelListener() {
+						@Override
+						public void onCancel(DialogInterface dialog) {
+							dialogShowing = false;
+						}
+					}).show();
+		}
 	}
 
 	@Override

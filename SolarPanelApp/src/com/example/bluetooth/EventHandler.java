@@ -9,15 +9,15 @@ import com.example.solarpanelmanager.api.responses.EventsResponse;
 
 public class EventHandler extends CommunicationHandler<EventsResponse> {
 
-	public EventHandler(Callback<EventsResponse> callback, String device) {
-		super(callback, device);
+	public EventHandler(Callback<EventsResponse> callback, String device, String pass) {
+		super(callback, device, pass);
 	}
 
 	@Override
-	protected String getRequest() {
+	protected JSONObject getRequest() {
 		JSONObject json = new JSONObject();
 		json.put(MessageKeys.MESSAGE_TYPE, MessageTypes.EVENTS);
-		return json.toJSONString();
+		return json;
 	}
 
 	@Override
