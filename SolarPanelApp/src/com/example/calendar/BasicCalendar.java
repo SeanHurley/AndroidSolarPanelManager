@@ -8,8 +8,8 @@ import com.example.solarpanelmanager.api.responses.Event;
 
 public class BasicCalendar {
 	private Map<String, Event> calendar = new TreeMap<String, Event>();
+	private static final long DAY_MILLIS = 24 * 60 * 60 * 1000;
 	
-	@SuppressWarnings("deprecation")
 	public boolean addEvent(Event event) {
 		for (Event e : calendar.values()) {
 			if (isOverlap(event, e))
@@ -34,12 +34,12 @@ public class BasicCalendar {
 	
 	private static boolean isOverlap(Event e1, Event e2) {
 		Date newDay = new Date(e1.getFirstTime());
-		long newStart = newDay.getHours() * 60 + newDay.getMinutes();
-		long newEnd = newStart + e1.getDuration();
+		long newStart = (newDay.getHours() * 60 + newDay.getMinutes()) * 60 * 1000;
+		long newEnd = (newStart + e1.getDuration()) % DAY_MILLIS;
 		
 		Date oldDay = new Date(e2.getFirstTime());
-		long oldStart = oldDay.getHours() * 60 + oldDay.getMinutes();
-		long oldEnd = oldStart + e2.getDuration();
+		long oldStart = (oldDay.getHours() * 60 + oldDay.getMinutes()) * 60 * 1000;
+		long oldEnd = (oldStart + e2.getDuration()) % DAY_MILLIS;
 		
 		return !(newEnd < oldStart && newStart > oldEnd);
 	}
