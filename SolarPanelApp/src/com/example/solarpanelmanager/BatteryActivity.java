@@ -118,14 +118,35 @@ public class BatteryActivity extends SherlockActivity {
 		});
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (apiCallsRunning == 0) {
+			showUI();
+		}
+	}
+
 	private void showUI() {
-		min.setVisibility(View.VISIBLE);
-		max.setVisibility(View.VISIBLE);
-		activityIndicator.setVisibility(View.GONE);
-		battery_image.setVisibility(View.VISIBLE);
-		snapshot.setVisibility(View.VISIBLE);
-		maxvalue.setVisibility(View.VISIBLE);
-		minvalue.setVisibility(View.VISIBLE);
+		boolean powerUserEnabled = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
+				Constants.POWER_USER_PREFERENCE, false);
+
+		if (!powerUserEnabled) {
+			min.setVisibility(View.INVISIBLE);
+			max.setVisibility(View.INVISIBLE);
+			activityIndicator.setVisibility(View.GONE);
+			battery_image.setVisibility(View.VISIBLE);
+			snapshot.setVisibility(View.INVISIBLE);
+			maxvalue.setVisibility(View.INVISIBLE);
+			minvalue.setVisibility(View.INVISIBLE);
+		} else {
+			min.setVisibility(View.VISIBLE);
+			max.setVisibility(View.VISIBLE);
+			activityIndicator.setVisibility(View.GONE);
+			battery_image.setVisibility(View.VISIBLE);
+			snapshot.setVisibility(View.VISIBLE);
+			maxvalue.setVisibility(View.VISIBLE);
+			minvalue.setVisibility(View.VISIBLE);
+		}
 	}
 
 	private void hideUI() {
