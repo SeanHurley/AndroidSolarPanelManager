@@ -29,6 +29,8 @@
     <string name="power_user_mode">Power User Mode Enabled</string>
     <string name="power_user_message_title">Enable Power User Mode?</string>
     <string name="power_user_warning">Are you sure that you would like to enable power user mode? Some of these setting could be dangerous to the solar panel.</string>
-    <string name="confirm">Yes</string> 
-    <string name="cancel">Cancel</string>    
+    <string name="confirm">Yes</string>
+    <string name="cancel">Cancel</string>
+    <string name="title_activity_calendar">CalendarActivity</string>
+
 </resources>

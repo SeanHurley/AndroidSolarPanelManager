@@ -1,8 +1,11 @@
 package com.example.calendar;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import com.example.solarpanelmanager.api.responses.Event;
 
@@ -12,10 +15,10 @@ public class Calendar {
 	private static final long WEEKLY = DAILY * 7;
 	private static final long ONCE = Long.MAX_VALUE;
 	
-	private HashMap<Date, ArrayList<Event>> calendar;
+	private Map<Date, List<Event>> calendar;
 	private ArrayList<Event> rawEvents;
 	
-	public Calendar(ArrayList<Event> events){
+	public Calendar(Collection<Event> events){
 		generateRawEvents(events);
 	}
 	
@@ -50,7 +53,7 @@ public class Calendar {
 		}
 	}
 	
-	public HashMap<Date, ArrayList<Event>> getCalendar(){
+	public Map<Date, List<Event>> getCalendar(){
 		generateCalendar();
 		return calendar;
 	}
@@ -59,7 +62,7 @@ public class Calendar {
 		return rawEvents;
 	}
 	
-	private void generateRawEvents(ArrayList<Event> events){
+	private void generateRawEvents(Collection<Event> events){
 		// updates events so that start times are after the current time
 		ArrayList<Event> updatedEvents = new ArrayList<Event>();
 		for(Event event : events){
@@ -78,7 +81,7 @@ public class Calendar {
 	}
 	
 	private void generateCalendar(){
-		calendar = new HashMap<Date, ArrayList<Event>>();
+		calendar = new TreeMap<Date, List<Event>>();
 		ArrayList<Event> expandedEvents = expandEvents(rawEvents, System.currentTimeMillis() + 5 * WEEKLY);
 		for(Event event : expandedEvents){
 			// calendar maps midnight of a day to all the events that occur on that day

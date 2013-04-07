@@ -46,9 +46,13 @@
             android:name="com.example.solarpanelmanager.KnownDevicesActivity"
             android:label="@string/title_activity_known_devices" >
         </activity>
-        <activity android:name="ConnectActivity" >
+        <activity android:name="com.example.solarpanelmanager.ConnectActivity" >
         </activity>
-        <activity android:name="PreferencesActivity" >
+        <activity android:name="com.example.solarpanelmanager.PreferencesActivity" >
+        </activity>
+        <activity
+            android:name="com.example.solarpanelmanager.CalendarActivity"
+            android:label="@string/title_activity_calendar" >
         </activity>
     </application>
 
