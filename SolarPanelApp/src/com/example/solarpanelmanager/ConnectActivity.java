@@ -49,7 +49,7 @@ public class ConnectActivity extends SherlockActivity {
 
 				final ProgressDialog dialog = new ProgressDialog(ConnectActivity.this);
 				dialog.setTitle(R.string.Loading);
-				dialog.setMessage(R.string.Communicating);
+				dialog.setMessage(getString(R.string.Communicating));
 				dialog.show();
 
 				BaseResponseHandler handler = new HandshakeHandler(new Callback<BaseResponse>() {
@@ -69,8 +69,8 @@ public class ConnectActivity extends SherlockActivity {
 							ConnectActivity.this.finish();
 						} else {
 							new AlertDialog.Builder(ConnectActivity.this).setTitle(R.string.failed_communication)
-									.setMessage(R.string.connection_error))
-									.setNeutralButton(R.string.ok), new DialogInterface.OnClickListener() {
+									.setMessage(getString(R.string.connection_error))
+									.setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
 
 										@Override
 										public void onClick(DialogInterface arg0, int arg1) {

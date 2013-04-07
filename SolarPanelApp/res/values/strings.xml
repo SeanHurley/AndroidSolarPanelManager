@@ -27,7 +27,7 @@
     <string name ="max">Maximum</string>
     <string name ="Loading">Loading</string>
     <string name = "Communicating">Communicating with device</string>
-    <string name = "failed_communicaton">Communication Failed</string>
+    <string name = "failed_communication">Communication Failed</string>
     <string name = "connection_error">Could not connect to this device</string>
     <string name = "ok">OK</string>
     <string name = "bluetooth_warning">bluetooth not enabled; cannot continue</string>
