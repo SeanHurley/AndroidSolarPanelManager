@@ -49,7 +49,7 @@ public class ConnectActivity extends SherlockActivity {
 
 				final ProgressDialog dialog = new ProgressDialog(ConnectActivity.this);
 				dialog.setTitle(R.string.Loading);
-				dialog.setMessage(getResources().getString(R.string.Communicating));
+				dialog.setMessage(R.string.Communicating);
 				dialog.show();
 
 				BaseResponseHandler handler = new HandshakeHandler(new Callback<BaseResponse>() {
