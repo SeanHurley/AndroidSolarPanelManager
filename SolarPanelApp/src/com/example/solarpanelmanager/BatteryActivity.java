@@ -3,6 +3,7 @@ package com.example.solarpanelmanager;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -82,7 +83,7 @@ public class BatteryActivity extends SherlockActivity {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 				// TODO Auto-generated method stub
-				minvalue.setText(R.string.min +":" + progress);
+				minvalue.setText(R.string.min + ":" + progress);
 				minVal = progress;
 			}
 
@@ -103,7 +104,7 @@ public class BatteryActivity extends SherlockActivity {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 				// TODO Auto-generated method stub
-				maxvalue.setText(R.string.max +":" + progress);
+				maxvalue.setText(R.string.max + ":" + progress);
 				maxVal = progress;
 			}
 
@@ -220,10 +221,15 @@ public class BatteryActivity extends SherlockActivity {
 					batteryLevel.setLevel(level);
 					battery_image.setImageBitmap(batteryLevel.getBitmap());
 					// TODO Don't use raw strings here
-					minvalue.setText(R.string.battery_min + ":" + minVal);
-					maxvalue.setText(R.string.battery_max + ":"+ maxVal);
-					snapshot.setText(R.string.battery_voltage+ ":" + battery_voltage + R.string.battery_curr+ ":" + battery_current
-							+ "\n"+ R.string.PV_voltage + ":" + pvvoltage + R.string.PV_current + pvcurrent + "\n"+ R.string.Timestamp+ ":" + timestamp);
+
+					Resources res = getResources();
+
+					minvalue.setText(res.getString(R.string.battery_min) + ":" + minVal);
+					maxvalue.setText(res.getString(R.string.battery_max) + ":" + maxVal);
+					snapshot.setText(res.getString(R.string.battery_voltage) + ":" + battery_voltage
+							+ res.getString(R.string.battery_curr) + ":" + battery_current + "\n"
+							+ res.getString(R.string.PV_voltage) + ":" + pvvoltage + res.getString(R.string.PV_current)
+							+ pvcurrent + "\n" + res.getString(R.string.Timestamp) + ":" + timestamp);
 					batteryLevel.setLevel(level);
 					battery_image.setImageBitmap(batteryLevel.getBitmap());
 				} else if (response.getResult() == 403) {

@@ -57,8 +57,8 @@ public class ResponseParser {
 	public static SnapshotResponse parseSnapshotResponse(String response) {
 		// Call the parse response for the basic map, and then create the proper
 		// response object
-		JSONObject json = (JSONObject) (JSONValue.parse(response));
 		System.out.println(response);
+		JSONObject json = (JSONObject) (JSONValue.parse(response));
 		int result = 200;
 		if (json.containsKey(MessageKeys.RESPONSE_CODE)) {
 			result = (Integer) json.get(MessageKeys.RESPONSE_CODE);
