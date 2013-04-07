@@ -40,4 +40,6 @@
     <string name="confirm">Yes</string> 
     <string name="cancel">Cancel</string>
     <string name="menu_history">History</string>    
+    <string name="menu_calendar">Calendar</string>
+    <string name="calendar_main">Scheduled Events</string>
 </resources>

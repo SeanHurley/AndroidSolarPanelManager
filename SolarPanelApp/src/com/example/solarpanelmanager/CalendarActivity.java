@@ -1,5 +1,8 @@
 package com.example.solarpanelmanager;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map.Entry;
@@ -39,7 +42,20 @@ public class CalendarActivity extends Activity {
 			@Override
 			public void onComplete(EventsResponse response) {
 				Calendar calendar = new Calendar(response.getEvents());
+				
+				Date start = null, end = null;
+				try {
+					DateFormat df = new SimpleDateFormat();
+					start = df.parse("04/10/2013 4:5 PM, CST");
+					end = df.parse("04/10/2013 4:6 PM, CST");
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				calendar.addEvent("some event", "event name", start, end, 86400 * 1000);
+				
 				for (Entry<Date, List<Event>> entry : calendar.getCalendar().entrySet()) {
+					// probably will need to do something with the Date
 					for (Event ev : entry.getValue()) {
 						arrayAdapter.add(ev);
 					}
