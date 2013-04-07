@@ -46,6 +46,11 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
 								public void onClick(DialogInterface dialog, int which) {
 									pref.setChecked(false);
 								}
+							}).setOnCancelListener(new DialogInterface.OnCancelListener() {
+								@Override
+								public void onCancel(DialogInterface dialog) {
+									pref.setChecked(false);
+								}
 							}).show();
 				}
 				return false;
