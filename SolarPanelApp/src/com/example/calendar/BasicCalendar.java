@@ -1,6 +1,6 @@
 package com.example.calendar;
 
-import java.util.Date;
+import java.util.Calendar;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -28,17 +28,20 @@ public class BasicCalendar {
 	}
 	
 	private static String eventToKey(Event e) {
-		Date day = new Date(e.getFirstTime());
-		return day.getHours() + ":" + day.getMinutes();
+		Calendar day = Calendar.getInstance();
+		day.setTimeInMillis(e.getFirstTime());
+		return day.get(Calendar.HOUR) + ":" + day.get(Calendar.MINUTE);
 	}
 	
 	private static boolean isOverlap(Event e1, Event e2) {
-		Date newDay = new Date(e1.getFirstTime());
-		long newStart = (newDay.getHours() * 60 + newDay.getMinutes()) * 60 * 1000;
+		Calendar newDay = Calendar.getInstance();
+		newDay.setTimeInMillis(e1.getFirstTime());
+		long newStart = (newDay.get(Calendar.HOUR) * 60 + newDay.get(Calendar.MINUTE)) * 60 * 1000;
 		long newEnd = (newStart + e1.getDuration()) % DAY_MILLIS;
 		
-		Date oldDay = new Date(e2.getFirstTime());
-		long oldStart = (oldDay.getHours() * 60 + oldDay.getMinutes()) * 60 * 1000;
+		Calendar oldDay = Calendar.getInstance();
+		oldDay.setTimeInMillis(e2.getFirstTime());
+		long oldStart = (oldDay.get(Calendar.HOUR) + oldDay.get(Calendar.MINUTE)) * 60 * 1000;
 		long oldEnd = (oldStart + e2.getDuration()) % DAY_MILLIS;
 		
 		return !(newEnd < oldStart && newStart > oldEnd);
