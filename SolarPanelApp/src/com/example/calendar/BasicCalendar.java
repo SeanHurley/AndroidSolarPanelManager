@@ -40,13 +40,13 @@ public class BasicCalendar {
 	
 	private static boolean isOverlap(Event e1, Event e2) {
 		Date newDay = new Date(e1.getFirstTime());
-		long newStart = (newDay.getHours() * 60 + newDay.getMinutes()) * 60 * 1000;
+		long newStart = ((newDay.getHours() * 60 + newDay.getMinutes()) * 60 * 1000) % DAY_MILLIS;
 		long newEnd = (newStart + e1.getDuration()) % DAY_MILLIS;
 		
 		Date oldDay = new Date(e2.getFirstTime());
-		long oldStart = (oldDay.getHours() * 60 + oldDay.getMinutes()) * 60 * 1000;
+		long oldStart = ((oldDay.getHours() * 60 + oldDay.getMinutes()) * 60 * 1000) % DAY_MILLIS;
 		long oldEnd = (oldStart + e2.getDuration()) % DAY_MILLIS;
 		
-		return !(newEnd < oldStart && newStart > oldEnd);
+		return (newStart >= oldStart && newStart < oldEnd) || (newEnd <= oldEnd && newEnd > oldStart);
 	}
 }
