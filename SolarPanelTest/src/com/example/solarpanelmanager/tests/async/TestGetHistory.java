@@ -22,8 +22,6 @@ public class TestGetHistory extends TestCase {
 
 			@Override
 			public void onComplete(HistoryResponse json) {
-				System.out.println("in hook");
-				System.out.println(json);
 				container.response = json;
 				sem.release();
 			}
