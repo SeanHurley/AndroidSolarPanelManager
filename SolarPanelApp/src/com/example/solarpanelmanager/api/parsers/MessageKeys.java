@@ -18,6 +18,8 @@ public class MessageKeys {
 	public static final String SNAPSHOT_BATTERY_CURRENT = "battery-current";
 	public static final String SNAPSHOT_BATTERY_PERCENT = "battery-percent";
 	public static final String SNAPSHOT_PANEL_VOLTAGE = "panel-voltage";
+	public static final String SNAPSHOT_INTAKE = "intake";
+	public static final String SNAPSHOT_OUTTAKE = "outtake";
 	public static final String SNAPSHOT_PANEL_CURRENT = "panel-current";
 
 	public static final String HISTORY_DATA = "history-data";

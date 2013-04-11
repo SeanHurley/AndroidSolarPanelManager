@@ -79,11 +79,13 @@ public class ResponseParser {
 		double batteryCurrent = getDouble(json.get(MessageKeys.SNAPSHOT_BATTERY_CURRENT));
 		double PVVoltage = getDouble(json.get(MessageKeys.SNAPSHOT_PANEL_VOLTAGE));
 		double PVCurrent = getDouble(json.get(MessageKeys.SNAPSHOT_PANEL_CURRENT));
+		double intake = getDouble(json.get(MessageKeys.SNAPSHOT_INTAKE));
+		double outtake = getDouble(json.get(MessageKeys.SNAPSHOT_OUTTAKE));
 
 		int percent = (Integer) json.get(MessageKeys.SNAPSHOT_BATTERY_PERCENT);
 
 		return new SnapshotResponse(result, message, longTimestamp, percent, batteryVoltage, PVCurrent, PVVoltage,
-				batteryCurrent);
+				batteryCurrent, intake, outtake);
 	}
 
 	private static double getDouble(Object obj) {

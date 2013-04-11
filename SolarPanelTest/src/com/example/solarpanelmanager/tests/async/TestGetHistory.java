@@ -53,10 +53,14 @@ public class TestGetHistory extends TestCase {
 		assertEquals(.1, response1.getPVVoltage());
 		assertEquals(.2, response1.getPVCurrent());
 		assertEquals(25, response1.getBatteryPercent());
+		assertEquals(.5, response1.getIntakeRate());
+		assertEquals(.6, response1.getOuttakeRate());
 		assertEquals(.8, response2.getBatteryVoltage());
 		assertEquals(.9, response2.getBatteryCurrent());
 		assertEquals(.6, response2.getPVVoltage());
 		assertEquals(.7, response2.getPVCurrent());
 		assertEquals(30, response2.getBatteryPercent());
+		assertEquals(.11, response2.getIntakeRate());
+		assertEquals(.22, response2.getOuttakeRate());
 	}
 }

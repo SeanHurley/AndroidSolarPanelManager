@@ -22,6 +22,8 @@ public class ResponseCreator {
 		json.put(MessageKeys.SNAPSHOT_BATTERY_PERCENT, snap.getPercent());
 		json.put(MessageKeys.SNAPSHOT_PANEL_VOLTAGE, snap.getPanelV());
 		json.put(MessageKeys.SNAPSHOT_PANEL_CURRENT, snap.getPanelI());
+		json.put(MessageKeys.SNAPSHOT_INTAKE, snap.getIntake());
+		json.put(MessageKeys.SNAPSHOT_OUTTAKE, snap.getOutake());
 		return json;
 	}
 
@@ -101,8 +103,7 @@ public class ResponseCreator {
 
 	public static String buildViewChargeConstraints(int max, int min) {
 		JSONObject json = new JSONObject();
-		json.put(MessageKeys.MESSAGE_TYPE,
-				MessageTypes.VIEW_CHARGE_CONSTRAINTS_RESPONSE);
+		json.put(MessageKeys.MESSAGE_TYPE, MessageTypes.VIEW_CHARGE_CONSTRAINTS_RESPONSE);
 		json.put(MessageKeys.RESPONSE_CODE, RESULT_OK);
 		json.put(MessageKeys.RESPONSE_MESSAGE, OK_MESSAGE);
 		json.put(MessageKeys.CHARGE_MAX, max);

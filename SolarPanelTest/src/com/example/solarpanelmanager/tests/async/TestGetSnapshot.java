@@ -44,6 +44,8 @@ public class TestGetSnapshot extends TestCase {
 		assertEquals(.5, container.response.getBatteryCurrent());
 		assertEquals(.5, container.response.getPVVoltage());
 		assertEquals(.5, container.response.getPVCurrent());
+		assertEquals(.5, container.response.getIntakeRate());
+		assertEquals(.5, container.response.getOuttakeRate());
 		assertEquals(50, container.response.getBatteryPercent());
 	}
 }
