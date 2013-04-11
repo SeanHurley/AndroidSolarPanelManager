@@ -79,6 +79,14 @@ public class BatteryActivity extends SherlockActivity {
 	}
 
 	private void setupUI() {
+		battery_image.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				Intent intent = new Intent(BatteryActivity.this, DevicePreferencesActivity.class);
+				startActivity(intent);
+			}
+		});
 		min.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -165,9 +173,9 @@ public class BatteryActivity extends SherlockActivity {
 	}
 
 	private void getData() {
-		String pass = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.PASS_PHRASE_PREFERENCE,
-				null);
 		String deviceId = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.CURRENT_DEVICE, null);
+		String pass = PreferenceManager.getDefaultSharedPreferences(this).getString(
+				Constants.PASS_PHRASE_PREFERENCE + deviceId, null);
 		if (deviceId == null) {
 			// TODO - Tell the user that something is wrong
 		}
@@ -247,9 +255,9 @@ public class BatteryActivity extends SherlockActivity {
 	}
 
 	private void updateLevels() {
-		String pass = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.PASS_PHRASE_PREFERENCE,
-				null);
 		String deviceId = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.CURRENT_DEVICE, null);
+		String pass = PreferenceManager.getDefaultSharedPreferences(this).getString(
+				Constants.PASS_PHRASE_PREFERENCE + deviceId, null);
 		if (deviceId == null) {
 			// TODO - Tell the user that something is wrong
 		}

@@ -1,0 +1,46 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:padding="5dp"
+    tools:context=".BatteryActivity" >
+
+    <LinearLayout
+        android:id="@+id/range_seek_area"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/text_min_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/range_seek_area"
+        android:text="@string/min_label" />
+
+    <TextView
+        android:id="@+id/min_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/range_seek_area"
+        android:layout_toRightOf="@id/text_min_label"
+        android:textIsSelectable="false" />
+
+    <TextView
+        android:id="@+id/max_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/range_seek_area"
+        android:textIsSelectable="false" />
+
+    <TextView
+        android:id="@+id/text_max_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/range_seek_area"
+        android:layout_toLeftOf="@id/max_value"
+        android:text="@string/max_label" />
+
+</RelativeLayout>

@@ -126,7 +126,6 @@ public abstract class CommunicationHandler<T extends BaseResponse> {
 				clientSocket.close();
 			} catch (Exception e) {
 			}
-
 			return parseResponse(data);
 		}
 

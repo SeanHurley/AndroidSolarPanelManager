@@ -10,15 +10,5 @@
             android:key="power_user"
             android:title="@string/power_user_mode" />
     </PreferenceCategory>
-    <PreferenceCategory
-        android:summary="@string/power_settings"
-        android:title="@string/power_settings_label" >
-
-        <EditTextPreference
-            android:defaultValue=""
-            android:key="pass_phrase"
-            android:dependency="power_user"
-            android:title="@string/pass_phrase" />
-    </PreferenceCategory>
 
 </PreferenceScreen>

@@ -96,9 +96,6 @@ public class MockPanel {
 			String type = (String) json.get("type");
 
 			String response = "{}";
-			if (MessageTypes.PIN_UPDATE.equals(type)) {
-				response = handlePinUpdate(json);
-			}
 			if (MessageTypes.TIME_UPDATE.equals(type)) {
 				response = handleTimeUpdate(json);
 			} else if (MessageTypes.LOCATION_UPDATE.equals(type)) {
@@ -166,9 +163,10 @@ public class MockPanel {
 		}
 
 		private boolean checkPin(JSONObject json) {
-			if (SECURITY_PIN == null) {
+			if (SECURITY_PIN == null || SECURITY_PIN.equals("")) {
 				return true;
 			}
+
 			String pin = (String) json.get(MessageKeys.PIN_PASSWORD);
 			return pin.equals(SECURITY_PIN);
 		}
