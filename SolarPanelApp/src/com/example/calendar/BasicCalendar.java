@@ -1,5 +1,8 @@
 package com.example.calendar;
 
+
+import java.util.Collection;
+import java.util.Date;
 import java.util.Calendar;
 import java.util.Map;
 import java.util.TreeMap;
@@ -9,6 +12,11 @@ import com.example.solarpanelmanager.api.responses.Event;
 public class BasicCalendar {
 	private Map<String, Event> calendar = new TreeMap<String, Event>();
 	private static final long DAY_MILLIS = 24 * 60 * 60 * 1000;
+	
+	public BasicCalendar(Collection<Event> events) {
+		for (Event e : events)
+			addEvent(e);
+	}
 	
 	public boolean addEvent(Event event) {
 		for (Event e : calendar.values()) {
