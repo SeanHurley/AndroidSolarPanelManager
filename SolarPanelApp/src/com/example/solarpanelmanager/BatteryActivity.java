@@ -79,14 +79,6 @@ public class BatteryActivity extends SherlockActivity {
 	}
 
 	private void setupUI() {
-		battery_image.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				Intent intent = new Intent(BatteryActivity.this, DevicePreferencesActivity.class);
-				startActivity(intent);
-			}
-		});
 		min.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
