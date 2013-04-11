@@ -23,7 +23,7 @@ public class MockPanel {
 	private static float time;
 	private static float latitude;
 	private static float longitude;
-	private static Hashtable<String, Event> events;
+	private static Hashtable<String, Event> events = new Hashtable<String, Event>();
 	private static int maxCharge;
 	private static int minCharge;
 	private static int currentEventID = 0;

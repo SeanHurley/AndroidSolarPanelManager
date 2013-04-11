@@ -2,6 +2,8 @@ package com.example.bluetooth;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -101,9 +103,17 @@ public abstract class CommunicationHandler<T extends BaseResponse> {
 
 				mBluetoothAdapter.cancelDiscovery(); // Cancel, discovery slows
 														// connection
-				System.out.println("but does get to here");
-				clientSocket.connect();
-				System.out.println("did get this far");
+
+				try {
+					clientSocket.connect();
+				} catch (IOException e) {
+					// sad little hack from here:
+					// http://stackoverflow.com/questions/3397071/service-discovery-failed-exception-using-bluetooth-on-android
+					Method m = mmDevice.getClass().getMethod("createRfcommSocket", new Class[] {int.class});
+			        clientSocket = (BluetoothSocket) m.invoke(mmDevice, 1);
+			        clientSocket.connect();
+				}
+
 				DataInputStream in = new DataInputStream(clientSocket.getInputStream());
 				DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
 
@@ -119,6 +129,7 @@ public abstract class CommunicationHandler<T extends BaseResponse> {
 				out.close();
 				clientSocket.close();
 			} catch (Exception e) {
+				e.printStackTrace();
 			}
 			
 			return parseResponse(data);

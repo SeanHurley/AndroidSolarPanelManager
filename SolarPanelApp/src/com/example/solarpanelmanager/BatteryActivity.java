@@ -197,6 +197,10 @@ public class BatteryActivity extends SherlockActivity {
 
 			@Override
 			public void onComplete(SnapshotResponse response) {
+				if (response == null) {
+					return;
+				}
+				
 				apiCallsRunning--;
 				if (apiCallsRunning == 0) {
 					showUI();

@@ -101,7 +101,10 @@ public class ResponseParser {
 
 	public static EventsResponse parseEventsResponse(String response) {
 		if (response == "") {
+			System.out.println("bad news");
 			return new EventsResponse(500, null);
+		} else {
+			System.out.println(response);
 		}
 		
 		JSONObject json = (JSONObject) (JSONValue.parse(response));
