@@ -15,6 +15,12 @@
     <string name="button_add_device">Add a new device</string>
     <string name="button_settings">Battery settings</string>
     <string name="set_min_max_title">Set Min/Max Charge Levels</string>
+    <string name="set_time_update">Set Device Time</string>
+    <string name="set_location_update">Set Device Location</string>
+    <string name="set_location_update_title">Set Device Location</string>
+    <string name="set_location_update_message">Are you sure you\'d like to update the device\'s current location?</string>
+    <string name="set_time_title">Set Device Time</string>
+    <string name="set_time_message">Are you sure you\'d like to update the device\'s current time?</string>
     <string name="set_pass_phrase_title">Set Pass Phrase</string>
     <string name="set_pass_phrase_message">Enter a new pass phrase.</string>
     <string name="set_min_max_row">Set Min/Max Charge Levels</string>

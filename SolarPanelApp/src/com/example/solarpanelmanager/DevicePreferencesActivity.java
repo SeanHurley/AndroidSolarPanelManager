@@ -14,8 +14,10 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.example.Constants;
 import com.example.bluetooth.Callback;
+import com.example.bluetooth.LocationUpdateHandler;
 import com.example.bluetooth.PINUpdateHandler;
 import com.example.bluetooth.SetChargeConstraintsHandler;
+import com.example.bluetooth.TimeUpdateHandler;
 import com.example.bluetooth.ViewChargeConstraintsHandler;
 import com.example.solarpanelmanager.RangeSeekBar.OnRangeSeekBarChangeListener;
 import com.example.solarpanelmanager.api.responses.BaseResponse;
@@ -25,6 +27,8 @@ public class DevicePreferencesActivity extends SherlockActivity {
 
 	private View passRow;
 	private View minMaxRow;
+	private View timeRow;
+	private View locationRow;
 	private View activityIndicator;
 	private View scroller;
 	private int minValue = 0;
@@ -45,6 +49,8 @@ public class DevicePreferencesActivity extends SherlockActivity {
 	private void getUI() {
 		activityIndicator = findViewById(R.id.activityIndicator);
 		passRow = findViewById(R.id.row_password_pref);
+		timeRow = findViewById(R.id.row_time_update);
+		locationRow = findViewById(R.id.row_location_update);
 		minMaxRow = findViewById(R.id.row_min_max_values);
 		scroller = findViewById(R.id.scroll_view);
 	}
@@ -162,6 +168,88 @@ public class DevicePreferencesActivity extends SherlockActivity {
 				});
 				builder.setView(dialoglayout);
 				builder.show();
+			}
+		});
+
+		timeRow.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(DevicePreferencesActivity.this);
+				builder.setTitle(R.string.set_time_title);
+				builder.setMessage(R.string.set_time_message);
+				builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						TimeUpdateHandler handler = new TimeUpdateHandler(new Callback<BaseResponse>() {
+
+							@Override
+							public void onComplete(BaseResponse response) {
+								hideLoadingSpinner();
+								if (response.getResult() != 200) {
+									// TODO Tell the user
+								}
+							}
+						}, deviceId, oldPassPhrase, System.currentTimeMillis());
+						showLoadingSpinner();
+						handler.performAction();
+					}
+				});
+				builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+
+					}
+				});
+				builder.create().show();
+			}
+		});
+
+		locationRow.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(DevicePreferencesActivity.this);
+				builder.setTitle(R.string.set_location_update_title);
+				builder.setMessage(R.string.set_location_update_message);
+				builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						LocationUpdateHandler handler = new LocationUpdateHandler(new Callback<BaseResponse>() {
+
+							@Override
+							public void onComplete(BaseResponse response) {
+								hideLoadingSpinner();
+								if (response.getResult() != 200) {
+									// TODO Tell the user
+								}
+							}
+							// TODO Get the real values
+						}, deviceId, oldPassPhrase, 0, 0);
+						showLoadingSpinner();
+						handler.performAction();
+					}
+				});
+				builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+
+					}
+				});
+				builder.create().show();
+			}
+		});
+
+		locationRow.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
 			}
 		});
 	}
