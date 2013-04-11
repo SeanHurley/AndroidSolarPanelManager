@@ -42,16 +42,14 @@ public class BasicCalendar {
 	}
 	
 	private static boolean isOverlap(Event e1, Event e2) {
-		Calendar newDay = Calendar.getInstance();
-		newDay.setTimeInMillis(e1.getFirstTime());
-		long newStart = (newDay.get(Calendar.HOUR) * 60 + newDay.get(Calendar.MINUTE)) * 60 * 1000;
+		Date newDay = new Date(e1.getFirstTime());
+		long newStart = ((newDay.getHours() * 60 + newDay.getMinutes()) * 60 * 1000) % DAY_MILLIS;
 		long newEnd = (newStart + e1.getDuration()) % DAY_MILLIS;
 		
-		Calendar oldDay = Calendar.getInstance();
-		oldDay.setTimeInMillis(e2.getFirstTime());
-		long oldStart = (oldDay.get(Calendar.HOUR) + oldDay.get(Calendar.MINUTE)) * 60 * 1000;
+		Date oldDay = new Date(e2.getFirstTime());
+		long oldStart = ((oldDay.getHours() * 60 + oldDay.getMinutes()) * 60 * 1000) % DAY_MILLIS;
 		long oldEnd = (oldStart + e2.getDuration()) % DAY_MILLIS;
 		
-		return !(newEnd < oldStart && newStart > oldEnd);
+		return (newStart >= oldStart && newStart < oldEnd) || (newEnd <= oldEnd && newEnd > oldStart);
 	}
 }
