@@ -156,6 +156,7 @@ public class MockPanel {
 					out.close();
 					din.close();
 					out.close();
+					conn.close();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

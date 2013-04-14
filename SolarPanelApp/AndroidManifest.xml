@@ -47,11 +47,16 @@
             android:name="com.example.solarpanelmanager.KnownDevicesActivity"
             android:label="@string/title_activity_known_devices" >
         </activity>
-        <activity android:name="ConnectActivity" >
+        <activity android:name="com.example.solarpanelmanager.ConnectActivity" >
         </activity>
-        <activity android:name="PreferencesActivity" >
+        <activity android:name="com.example.solarpanelmanager.PreferencesActivity" >
         </activity>
-        <activity android:name="DevicePreferencesActivity"></activity>
+        <activity android:name="com.example.solarpanelmanager.DevicePreferencesActivity" >
+        </activity>
+        <activity
+            android:name="com.example.solarpanelmanager.HistoryGraphActivity"
+            android:label="@string/title_activity_history_graph" >
+        </activity>
     </application>
 
 </manifest>

@@ -309,7 +309,7 @@ public class BatteryActivity extends SherlockActivity {
 		
 		switch (item.getItemId()) {
 		case R.id.menu_history:
-			intent = new Intent(this, MainActivity.class);
+			intent = new Intent(this, HistoryGraphActivity.class);
 			startActivity(intent);
 			return true;
 		case R.id.menu_schedule:

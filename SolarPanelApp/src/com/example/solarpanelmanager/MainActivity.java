@@ -83,8 +83,8 @@ public class MainActivity extends SherlockActivity {
 						 * TODO: Pass a collection of SnapshotResponses to
 						 * display in our graph
 						 */
-						Intent lineGraphIntent = lineGraph.getIntent(MainActivity.this, response.getHistoryData());
-						startActivity(lineGraphIntent);
+						//Intent lineGraphIntent = lineGraph.getView(MainActivity.this, response.getHistoryData());
+						//startActivity(lineGraphIntent);
 					}
 
 				}, deviceId, pass);

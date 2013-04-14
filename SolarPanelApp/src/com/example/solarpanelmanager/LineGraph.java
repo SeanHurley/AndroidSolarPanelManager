@@ -11,9 +11,10 @@ import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
+import android.view.View;
 
+import com.example.solarpanelmanager.HistoryGraphActivity.GraphLabelEnum;
 import com.example.solarpanelmanager.api.responses.SnapshotResponse;
 
 public class LineGraph {
@@ -24,9 +25,11 @@ public class LineGraph {
 	private static final float sizeOfAxisTitleText = 20;
 	private static final float sizeOfLabelsText = 20;
 
-	public Intent getIntent(Context context, Collection<SnapshotResponse> history) {
+	public View getView(Context context, Collection<SnapshotResponse> history,
+			GraphLabelEnum graphLabel) {
 		// Convert our data into series object via TimeSeries
 		// Creates a line called "Line 1"
+		
 		TimeSeries series = new TimeSeries(nameOfGraph);
 
 		// TODO fix the labels
@@ -64,23 +67,33 @@ public class LineGraph {
 		mRenderer.setXTitle(nameXAxis);
 		// YAxis Title
 		mRenderer.setYTitle(nameYAxis);
-		
+
 		// Covert timestamp into date and use this as new XAxis label
 		x = 1;
 		Date date;
 		for (SnapshotResponse sr : history) {
 			date = new Date(sr.getTimestamp());
-			DateFormat shortDf = DateFormat.getTimeInstance(DateFormat.SHORT);
 			// Only display 1 out of every 3 timestamps
-			if (x%3==0) {
-				mRenderer.addXTextLabel(x, shortDf.format(date));
+			if (x % 3 == 0) {
+				switch (graphLabel) {
+				case MONTH:
+					DateFormat shortDf = DateFormat.getDateInstance(DateFormat.SHORT);
+					mRenderer.addXTextLabel(x, shortDf.format(date));
+				case DATE:
+					DateFormat mediumDf = DateFormat.getDateInstance(DateFormat.MEDIUM);
+					mRenderer.addXTextLabel(x, mediumDf.format(date));
+				case TIME:
+					DateFormat longDf = DateFormat.getTimeInstance(DateFormat.LONG);
+					mRenderer.addXTextLabel(x, longDf.format(date));
+				}
 			}
 			x++;
 		}
 
-		// Now we create out intent
-		Intent intent = ChartFactory.getLineChartIntent(context, mDataset, mRenderer);
+		// Embeds graph in Activity Gives you view, linearLayout.view
+		View mChartView = ChartFactory.getLineChartView(context, mDataset,
+				mRenderer);
 
-		return intent;
+		return mChartView;
 	}
 }
