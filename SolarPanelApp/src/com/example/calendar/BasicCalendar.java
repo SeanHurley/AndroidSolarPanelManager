@@ -30,6 +30,15 @@ public class BasicCalendar {
 		calendar.remove(eventToKey(event));
 	}
 	
+	public void removeEvent(String id) {
+		for (Event e : calendar.values()) {
+			if (e.getId() == id) {
+				removeEvent(e);
+				break;
+			}
+		}
+	}
+	
 	public Map<String, Event> getCalendar() {
 		return calendar;
 	}
