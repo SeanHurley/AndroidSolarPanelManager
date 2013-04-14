@@ -2,6 +2,7 @@ package com.example.solarpanelmanager.api.parsers;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
@@ -117,7 +118,7 @@ public class ResponseParser {
 		}
 
 		JSONArray eventsArray = (JSONArray) json.get(MessageKeys.EVENTS_DATA);
-		ArrayList<Event> events = new ArrayList<Event>();
+		List<Event> events = new ArrayList<Event>();
 
 		for (int i = 0; i < eventsArray.size(); i++) {
 			events.add(parseEvent((JSONObject) eventsArray.get(i)));

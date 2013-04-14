@@ -13,8 +13,9 @@ public class BasicCalendar {
 	private static final long DAY_MILLIS = 24 * 60 * 60 * 1000;
 	
 	public BasicCalendar(Collection<Event> events) {
-		for (Event e : events)
-			addEvent(e);
+		for (Event e : events) {
+			addEvent(e);				
+		}
 	}
 	
 	public boolean addEvent(Event event) {
@@ -46,7 +47,7 @@ public class BasicCalendar {
 	private static String eventToKey(Event e) {
 		Calendar day = Calendar.getInstance();
 		day.setTimeInMillis(e.getFirstTime());
-		return day.get(Calendar.HOUR) + ":" + day.get(Calendar.MINUTE);
+		return String.format("%d:%02d", day.get(Calendar.HOUR), day.get(Calendar.MINUTE));
 	}
 	
 	private static boolean isOverlap(Event e1, Event e2) {

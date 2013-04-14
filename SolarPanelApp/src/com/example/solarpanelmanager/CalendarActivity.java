@@ -21,7 +21,6 @@ import com.example.bluetooth.Callback;
 import com.example.bluetooth.EventHandler;
 import com.example.bluetooth.UnscheduleEventHandler;
 import com.example.calendar.BasicCalendar;
-import com.example.solarpanelmanager.api.parsers.MessageTypes;
 import com.example.solarpanelmanager.api.responses.BaseResponse;
 import com.example.solarpanelmanager.api.responses.Event;
 import com.example.solarpanelmanager.api.responses.EventsResponse;
@@ -73,7 +72,7 @@ public class CalendarActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> lis, View arg1, int position,
 					long arg3) {
-				EventDisplay disp = (EventDisplay) lis.getItemAtPosition(position);
+				final EventDisplay disp = (EventDisplay) lis.getItemAtPosition(position);
 				final String id = disp.event.getId();
 				(new UnscheduleEventHandler(new Callback<BaseResponse>() {
 
@@ -81,6 +80,7 @@ public class CalendarActivity extends Activity {
 					public void onComplete(BaseResponse response) {
 						if (response.getResult() == 200) {
 							calendar.removeEvent(id);
+							arrayAdapter.remove(disp);
 						} else {
 							Toast.makeText(CalendarActivity.this, "Could not remove event", Toast.LENGTH_SHORT).show();
 						}

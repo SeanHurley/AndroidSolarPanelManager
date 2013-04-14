@@ -3,6 +3,7 @@ import java.io.DataOutputStream;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 import javax.bluetooth.DiscoveryAgent;
@@ -16,7 +17,7 @@ import net.minidev.json.JSONObject;
 import net.minidev.json.JSONValue;
 
 public class MockPanel {
-	private static boolean testing = false;
+	private static boolean testing = true;
 
 	private static String pin;
 	private static Queue<Snapshot> historyData = new LinkedList<Snapshot>();
@@ -288,14 +289,13 @@ public class MockPanel {
 		private String handleViewEvents() {
 			try {
 				if (testing) {
-					ArrayList<Event> events = new ArrayList<Event>();
-					events.add(new Event("a", "Event 1", 1000, 2000, 3000));
-					events.add(new Event("a", "Event 2", 4000, 5000, 6000));
-					return ResponseCreator.buildEventsList(new EventsList(events));
+					List<Event> events = new ArrayList<Event>();
+					events.add(new Event("a", "Event 1", 1000, 1000000, 3000000));
+					events.add(new Event("b", "Event 2", 3000000, 1000000, 3000000));
+					return ResponseCreator.buildEventsList(events);
 				} else {
-					ArrayList<Event> e = new ArrayList<Event>(events.values());
-					EventsList ev = new EventsList(e);
-					return ResponseCreator.buildEventsList(ev);
+					List<Event> evs = new ArrayList<Event>(events.values());
+					return ResponseCreator.buildEventsList(evs);
 				}
 			} catch (Exception e) {
 				return ResponseCreator.buildDefaultInternalError(MessageTypes.EVENTS_RESPONSE, "View events error: "
