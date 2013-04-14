@@ -1,9 +1,5 @@
 package com.example.solarpanelmanager;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map.Entry;
 
 import android.app.Activity;
@@ -14,9 +10,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -113,6 +111,16 @@ public class CalendarActivity extends Activity {
 					}
 				}).show();
 
+			}
+			
+		});
+		
+		((Button) findViewById(R.id.calendar_add_event_button)).setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				Intent i = new Intent(CalendarActivity.this, AddEventActivity.class);
+				startActivity(i);
 			}
 			
 		});
