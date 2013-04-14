@@ -12,6 +12,7 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -64,6 +65,7 @@ public class BatteryActivity extends SherlockActivity {
 
 		getUI();
 		setupUI();
+		setupActionBar();
 
 		getData();
 	}
@@ -151,6 +153,13 @@ public class BatteryActivity extends SherlockActivity {
 			maxvalue.setVisibility(View.VISIBLE);
 			minvalue.setVisibility(View.VISIBLE);
 		}
+	}
+	
+	private void setupActionBar() {
+		ActionBar actionBar = getSupportActionBar();
+		
+		String deviceName = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.CURRENT_DEVICE_NAME, "Unknown Device");
+		actionBar.setSubtitle(deviceName);
 	}
 
 	private void hideUI() {
@@ -296,16 +305,32 @@ public class BatteryActivity extends SherlockActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.menu_change_device) {
-			Intent intent = new Intent(this, ConnectActivity.class);
+		Intent intent;
+		
+		switch (item.getItemId()) {
+		case R.id.menu_history:
+			intent = new Intent(this, MainActivity.class);
 			startActivity(intent);
-		} else if (item.getItemId() == R.id.menu_settings) {
-			Intent intent = new Intent(this, PreferencesActivity.class);
+			return true;
+		case R.id.menu_schedule:
+			//TODO: start schedule activity
+			return true;
+		case R.id.menu_device_settings:
+			//TODO: start device settings activity
+			return true;
+		case R.id.menu_change_device:
+			intent = new Intent(this, ConnectActivity.class);
 			startActivity(intent);
-		} else if (item.getItemId() == R.id.menu_history) {
-			Intent intent = new Intent(this, MainActivity.class);
+			return true;
+		case R.id.menu_settings:
+			intent = new Intent(this, PreferencesActivity.class);
 			startActivity(intent);
+			return true;
+		case android.R.id.home:
+			onBackPressed();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
 		}
-		return super.onOptionsItemSelected(item);
 	}
 }

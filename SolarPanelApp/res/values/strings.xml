@@ -58,6 +58,8 @@
     <string name="confirm">Yes</string>
     <string name="cancel">Cancel</string>
     <string name="menu_history">History</string>
+    <string name="menu_schedule">Schedule</string>
+    <string name="menu_device_settings">Device Settings</string>
     <string name="power_settings">Power User Settings</string>
     <string name="power_settings_label">Power User Options</string>
     <string name="pass_phrase">Security Passphrase</string>

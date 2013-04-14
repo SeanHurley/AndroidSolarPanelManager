@@ -19,7 +19,9 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.example.Constants;
 import com.example.bluetooth.BaseResponseHandler;
 import com.example.bluetooth.BluetoothScanner;
@@ -36,6 +38,8 @@ public class ConnectActivity extends SherlockActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_connect);
+		
+		setupActionBar();
 
 		final ArrayAdapter<BluetoothDeviceWrapper> arrayAdapter = new ArrayAdapter<BluetoothDeviceWrapper>(this,
 				android.R.layout.simple_list_item_1);
@@ -46,6 +50,7 @@ public class ConnectActivity extends SherlockActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 				final String device = ((BluetoothDeviceWrapper) parent.getItemAtPosition(position)).address;
+				final String deviceName = ((BluetoothDeviceWrapper) parent.getItemAtPosition(position)).name;
 
 				final ProgressDialog dialog = new ProgressDialog(ConnectActivity.this);
 				dialog.setTitle(R.string.Loading);
@@ -65,6 +70,7 @@ public class ConnectActivity extends SherlockActivity {
 							SharedPreferences prefs = PreferenceManager
 									.getDefaultSharedPreferences(ConnectActivity.this);
 							prefs.edit().putString(Constants.CURRENT_DEVICE, device).commit();
+							prefs.edit().putString(Constants.CURRENT_DEVICE_NAME, deviceName).commit();
 
 							Intent intent = new Intent(ConnectActivity.this, BatteryActivity.class);
 							startActivity(intent);
@@ -128,6 +134,15 @@ public class ConnectActivity extends SherlockActivity {
 
 		scanner.scan();
 	}
+	
+	private void setupActionBar() {
+		String deviceId = PreferenceManager.getDefaultSharedPreferences(ConnectActivity.this).getString(
+				Constants.CURRENT_DEVICE, null);
+		if (deviceId != null) {	
+			ActionBar actionBar = getSupportActionBar();
+			actionBar.setDisplayHomeAsUpEnabled(true);
+		}
+	}
 
 	@Override
 	protected void onDestroy() {
@@ -142,6 +157,40 @@ public class ConnectActivity extends SherlockActivity {
 			scanner.scan();
 		} else if (code == BluetoothScanner.BLUETOOTH_DISABLED) {
 			Toast.makeText(this, R.string.bluetooth_warning, Toast.LENGTH_SHORT).show();
+		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent intent;
+		
+		switch (item.getItemId()) {
+		case R.id.menu_history:
+			intent = new Intent(this, MainActivity.class);
+			startActivity(intent);
+			return true;
+		case R.id.menu_schedule:
+			//TODO: start schedule activity
+			return true;
+		case R.id.menu_device_settings:
+			//TODO: start device settings activity
+			return true;
+		case R.id.menu_change_device:
+			intent = new Intent(this, ConnectActivity.class);
+			startActivity(intent);
+			return true;
+		case R.id.menu_settings:
+			intent = new Intent(this, PreferencesActivity.class);
+			startActivity(intent);
+			return true;
+		case android.R.id.home:
+			onBackPressed();
+//			intent = new Intent(this, BatteryActivity.class);
+//			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//			startActivity(intent);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
 		}
 	}
 

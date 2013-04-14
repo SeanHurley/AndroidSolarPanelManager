@@ -18,10 +18,12 @@ public class BluetoothScanner {
 	public class BluetoothDeviceWrapper {
 		private final BluetoothDevice device;
 		public final String address;
+		public final String name;
 
 		public BluetoothDeviceWrapper(BluetoothDevice d) {
 			this.device = d;
 			this.address = device.getAddress();
+			this.name = device.getName();
 		}
 
 		@Override
