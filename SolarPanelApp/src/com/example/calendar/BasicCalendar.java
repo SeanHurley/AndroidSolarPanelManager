@@ -13,8 +13,9 @@ public class BasicCalendar {
 	private static final long DAY_MILLIS = 24 * 60 * 60 * 1000;
 	
 	public BasicCalendar(Collection<Event> events) {
-		for (Event e : events)
-			addEvent(e);
+		for (Event e : events) {
+			addEvent(e);				
+		}
 	}
 	
 	public boolean addEvent(Event event) {
@@ -30,6 +31,15 @@ public class BasicCalendar {
 		calendar.remove(eventToKey(event));
 	}
 	
+	public void removeEvent(String id) {
+		for (Event e : calendar.values()) {
+			if (e.getId() == id) {
+				removeEvent(e);
+				break;
+			}
+		}
+	}
+	
 	public Map<String, Event> getCalendar() {
 		return calendar;
 	}
@@ -37,18 +47,14 @@ public class BasicCalendar {
 	private static String eventToKey(Event e) {
 		Calendar day = Calendar.getInstance();
 		day.setTimeInMillis(e.getFirstTime());
-		return day.get(Calendar.HOUR) + ":" + day.get(Calendar.MINUTE);
+		return String.format("%d:%02d", day.get(Calendar.HOUR), day.get(Calendar.MINUTE));
 	}
 	
 	private static boolean isOverlap(Event e1, Event e2) {
-		Calendar newDay = Calendar.getInstance();
-		newDay.setTimeInMillis(e1.getFirstTime());
-		long newStart = newDay.getTimeInMillis() % DAY_MILLIS;
+		long newStart = e1.getFirstTime() % DAY_MILLIS;
 		long newEnd = (newStart + e1.getDuration()) % DAY_MILLIS;
 		
-		Calendar oldDay = Calendar.getInstance();
-		oldDay.setTimeInMillis(e2.getFirstTime());
-		long oldStart = oldDay.getTimeInMillis() % DAY_MILLIS;
+		long oldStart = e2.getFirstTime() % DAY_MILLIS;
 		long oldEnd = (oldStart + e2.getDuration()) % DAY_MILLIS;
 		
 		return (newStart >= oldStart && newStart < oldEnd) || (newEnd <= oldEnd && newEnd > oldStart);

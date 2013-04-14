@@ -1,3 +1,5 @@
+import java.util.List;
+
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
@@ -28,6 +30,7 @@ public class ResponseCreator {
 	private static JSONObject event(Event e) {
 		JSONObject json = new JSONObject();
 		json.put(MessageKeys.EVENT_ID, e.getId());
+		json.put(MessageKeys.EVENT_NAME, e.getName());
 		json.put(MessageKeys.EVENT_FIRST_TIME, e.getFirstTime());
 		json.put(MessageKeys.EVENT_DURATION, e.getDuration());
 		json.put(MessageKeys.EVENT_INTERVAL, e.getInterval());
@@ -86,13 +89,13 @@ public class ResponseCreator {
 		return json.toJSONString();
 	}
 
-	public static String buildEventsList(EventsList events) {
+	public static String buildEventsList(List<Event> events) {
 		JSONObject json = new JSONObject();
 		json.put(MessageKeys.MESSAGE_TYPE, MessageTypes.EVENTS_RESPONSE);
 		json.put(MessageKeys.RESPONSE_CODE, RESULT_OK);
 		json.put(MessageKeys.RESPONSE_MESSAGE, OK_MESSAGE);
 		JSONArray array = new JSONArray();
-		for (Event e : events.getEvents()) {
+		for (Event e : events) {
 			array.add(event(e));
 		}
 		json.put(MessageKeys.EVENTS_DATA, array);
