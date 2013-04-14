@@ -51,4 +51,5 @@
     <string name="calendar_add_interval">Interval</string>
     <string name="calendar_add_name">Name</string>
     <string name="calendar_add">Add</string>
+    <string name="calendar_add_event_button">Add Event</string>
 </resources>
