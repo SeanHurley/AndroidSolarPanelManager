@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.example.Constants;
 import com.example.bluetooth.Callback;
 import com.example.bluetooth.EventHandler;
+import com.example.bluetooth.ScheduleEventHandler;
 import com.example.bluetooth.UnscheduleEventHandler;
 import com.example.calendar.BasicCalendar;
 import com.example.solarpanelmanager.api.responses.BaseResponse;
@@ -29,18 +30,20 @@ import com.example.solarpanelmanager.api.responses.EventsResponse;
 
 public class CalendarActivity extends Activity {
 	BasicCalendar calendar;
+	String deviceId;
+	ArrayAdapter<EventDisplay> arrayAdapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_calendar);
 		
-		final String deviceId = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.CURRENT_DEVICE, null);
+		deviceId = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.CURRENT_DEVICE, null);
 		if (deviceId == null) {
 			// TODO - Tell the user that something is wrong
 		}
 		
-		final ArrayAdapter<EventDisplay> arrayAdapter = new ArrayAdapter<EventDisplay>(this,
+		arrayAdapter = new ArrayAdapter<EventDisplay>(this,
 				android.R.layout.simple_list_item_1);
 		ListView eventListView = (ListView) findViewById(R.id.calendar_event_list);
 		eventListView.setAdapter(arrayAdapter);
@@ -132,7 +135,29 @@ public class CalendarActivity extends Activity {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK){
 			Bundle bundle = data.getExtras();
-			Event e = (Event) bundle.get(Constants.EVENT_RESULT_CODE);
+			final Event e = (Event) bundle.get(Constants.EVENT_RESULT_CODE);
+
+			final ProgressDialog dialog = new ProgressDialog(CalendarActivity.this);
+			dialog.setTitle("Loading");
+			dialog.setMessage("Communicating with device");
+			dialog.show();
+			
+			(new ScheduleEventHandler(new Callback<BaseResponse>() {
+
+				@Override
+				public void onComplete(BaseResponse response) {
+					dialog.dismiss();
+					if (response.getResult() == 200) {
+						String id = response.getMessage();
+						Event toAdd = new Event(id, e.getName(), e.getFirstTime(), e.getDuration(), e.getInterval());
+					} else {
+						Toast.makeText(CalendarActivity.this, "Could not remove event", Toast.LENGTH_SHORT).show();
+					}
+				}
+				
+			}, deviceId, e.getName(), e.getFirstTime(), e.getDuration(), e.getInterval())).performAction();	
+			
+			
 			if (!calendar.addEvent(e)){
 				Toast.makeText(CalendarActivity.this, "Could not add event", Toast.LENGTH_SHORT).show();
 			}

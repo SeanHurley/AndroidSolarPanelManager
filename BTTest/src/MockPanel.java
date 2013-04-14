@@ -270,7 +270,7 @@ public class MockPanel {
 					
 					Event e = new Event(id, name, firstRun, duration, interval);
 					events.put(id, e);
-					return ResponseCreator.buildDefaultOK(MessageTypes.SCHEDULE_EVENT_REPONSE);
+					return ResponseCreator.buildEventCreated(id);
 				}
 			} catch (Exception e) {
 				return ResponseCreator.buildDefaultInternalError(MessageTypes.SCHEDULE_EVENT_REPONSE,

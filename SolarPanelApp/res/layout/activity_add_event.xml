@@ -19,7 +19,7 @@
         android:id="@+id/StartTime"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:inputType="time" />
+        android:inputType="text" />
     
     <TextView
         android:layout_width="fill_parent"
@@ -31,7 +31,7 @@
         android:id="@+id/Duration"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:inputType="time"  />
+        android:inputType="text"  />
     
     <TextView
         android:layout_width="fill_parent"
@@ -43,7 +43,7 @@
         android:id="@+id/Interval"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:inputType="time"  />
+        android:inputType="text"  />
     
     <TextView
         android:layout_width="fill_parent"

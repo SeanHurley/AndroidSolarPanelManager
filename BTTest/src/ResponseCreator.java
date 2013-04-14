@@ -44,6 +44,14 @@ public class ResponseCreator {
 		json.put(MessageKeys.RESPONSE_MESSAGE, OK_MESSAGE);
 		return json.toJSONString();
 	}
+	
+	public static String buildEventCreated(String id) {
+		JSONObject json = new JSONObject();
+		json.put(MessageKeys.MESSAGE_TYPE, MessageTypes.SCHEDULE_EVENT_REPONSE);
+		json.put(MessageKeys.RESPONSE_CODE, RESULT_OK);
+		json.put(MessageKeys.RESPONSE_MESSAGE, id);
+		return json.toJSONString();
+	}
 
 	public static String buildDefaultNotFound() {
 		JSONObject json = new JSONObject();
