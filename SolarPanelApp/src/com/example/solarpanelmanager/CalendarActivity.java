@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -115,6 +116,19 @@ public class CalendarActivity extends Activity {
 			}
 			
 		});
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == RESULT_OK){
+			Bundle bundle = data.getExtras();
+			Event e = (Event) bundle.get(Constants.EVENT_RESULT_CODE);
+			if (!calendar.addEvent(e)){
+				Toast.makeText(CalendarActivity.this, "Could not add event", Toast.LENGTH_SHORT).show();
+			}
+		}
 	}
 	
 	private static class EventDisplay {
