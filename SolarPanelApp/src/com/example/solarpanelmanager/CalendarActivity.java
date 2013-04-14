@@ -7,6 +7,9 @@ import java.util.Date;
 import java.util.Map.Entry;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -43,24 +46,18 @@ public class CalendarActivity extends Activity {
 		ListView eventListView = (ListView) findViewById(R.id.calendar_event_list);
 		eventListView.setAdapter(arrayAdapter);
 		
+		final ProgressDialog loadDialog = new ProgressDialog(CalendarActivity.this);
+		loadDialog.setTitle("Loading");
+		loadDialog.setMessage("Loading events");
+		loadDialog.show();
+		
 		(new EventHandler(new Callback<EventsResponse>() {
 
 			@Override
 			public void onComplete(EventsResponse response) {
+				loadDialog.dismiss();
+				
 				calendar = new BasicCalendar(response.getEvents());
-				
-				Date start = null, end = null;
-				try {
-					DateFormat df = new SimpleDateFormat();
-					start = df.parse("04/10/2013 4:5 PM, CST");
-					end = df.parse("04/10/2013 4:6 PM, CST");
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				Event e = new Event("some event", "event name", start.getTime(), start.getTime() - end.getTime(), 86400 * 1000);
-				calendar.addEvent(e);
-				
 				for (Entry<String, Event> entry : calendar.getCalendar().entrySet())
 					arrayAdapter.add(new EventDisplay(entry.getValue(), entry.getKey()));
 			}
@@ -70,28 +67,56 @@ public class CalendarActivity extends Activity {
 		eventListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> lis, View arg1, int position,
+			public void onItemClick(final AdapterView<?> lis, View arg1, final int position,
 					long arg3) {
-				final EventDisplay disp = (EventDisplay) lis.getItemAtPosition(position);
-				final String id = disp.event.getId();
-				(new UnscheduleEventHandler(new Callback<BaseResponse>() {
+				new AlertDialog.Builder(CalendarActivity.this).setIcon(android.R.drawable.ic_dialog_alert)
+				.setTitle(R.string.events_delete_confirm_title).setMessage(R.string.events_delete_confirm_message)
+				.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
 
 					@Override
-					public void onComplete(BaseResponse response) {
-						if (response.getResult() == 200) {
-							calendar.removeEvent(id);
-							arrayAdapter.remove(disp);
-						} else {
-							Toast.makeText(CalendarActivity.this, "Could not remove event", Toast.LENGTH_SHORT).show();
-						}
+					public void onClick(DialogInterface d, int which) {
+						final EventDisplay disp = (EventDisplay) lis.getItemAtPosition(position);
+						final String id = disp.event.getId();
+						
+						final ProgressDialog dialog = new ProgressDialog(CalendarActivity.this);
+						dialog.setTitle("Loading");
+						dialog.setMessage("Communicating with device");
+						dialog.show();
+						
+						(new UnscheduleEventHandler(new Callback<BaseResponse>() {
+
+							@Override
+							public void onComplete(BaseResponse response) {
+								dialog.dismiss();
+								if (response.getResult() == 200) {
+									calendar.removeEvent(id);
+									arrayAdapter.remove(disp);
+								} else {
+									Toast.makeText(CalendarActivity.this, "Could not remove event", Toast.LENGTH_SHORT).show();
+								}
+							}
+							
+						}, deviceId, id)).performAction();		
 					}
-					
-				}, deviceId, id)).performAction();
+
+				}).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// do nothing
+					}
+				}).setOnCancelListener(new DialogInterface.OnCancelListener() {
+					@Override
+					public void onCancel(DialogInterface dialog) {
+						// do nothing
+					}
+				}).show();
+
 			}
 			
 		});
 	}
-
+	
 	private static class EventDisplay {
 		public Event event;
 		public String time;

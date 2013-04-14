@@ -1,9 +1,10 @@
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 
 import javax.bluetooth.DiscoveryAgent;
@@ -17,14 +18,19 @@ import net.minidev.json.JSONObject;
 import net.minidev.json.JSONValue;
 
 public class MockPanel {
-	private static boolean testing = true;
+	private static boolean testing = false;
 
 	private static String pin;
 	private static Queue<Snapshot> historyData = new LinkedList<Snapshot>();
 	private static float time;
 	private static float latitude;
 	private static float longitude;
-	private static Hashtable<String, Event> events = new Hashtable<String, Event>();
+	private static Map<String, Event> events = new HashMap<String, Event>();
+	static {
+		events.put("a", new Event("a", "Event 1", 1000, 1000000, 3000000));
+		events.put("b", new Event("b", "Event 2", 3000000, 1000000, 3000000));
+	}
+	
 	private static int maxCharge;
 	private static int minCharge;
 	private static int currentEventID = 0;
@@ -161,6 +167,7 @@ public class MockPanel {
 					out.close();
 					din.close();
 					out.close();
+					conn.close();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -289,10 +296,10 @@ public class MockPanel {
 		private String handleViewEvents() {
 			try {
 				if (testing) {
-					List<Event> events = new ArrayList<Event>();
-					events.add(new Event("a", "Event 1", 1000, 1000000, 3000000));
-					events.add(new Event("b", "Event 2", 3000000, 1000000, 3000000));
-					return ResponseCreator.buildEventsList(events);
+					List<Event> evs = new ArrayList<Event>();
+					evs.add(new Event("a", "Event 1", 1000, 1000000, 3000000));
+					evs.add(new Event("b", "Event 2", 3000000, 1000000, 3000000));
+					return ResponseCreator.buildEventsList(evs);
 				} else {
 					List<Event> evs = new ArrayList<Event>(events.values());
 					return ResponseCreator.buildEventsList(evs);
