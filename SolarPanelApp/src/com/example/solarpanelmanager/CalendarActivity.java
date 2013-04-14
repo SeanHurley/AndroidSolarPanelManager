@@ -127,7 +127,8 @@ public class CalendarActivity extends Activity {
 		}
 		
 		public String toString() {
-			return String.format("%s at %s", event.getName(), time);
+			long duration = event.getDuration() / (1000 * 60);
+			return String.format("%s at %s for %d minutes", event.getName(), time, duration);
 		}
 	}
 	
