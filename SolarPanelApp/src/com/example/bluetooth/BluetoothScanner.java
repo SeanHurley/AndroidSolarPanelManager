@@ -13,6 +13,10 @@ import android.content.IntentFilter;
 
 import com.example.solarpanelmanager.api.responses.BaseResponse;
 
+/**
+ * @author mikecandido
+ * 
+ */
 public class BluetoothScanner {
 
 	public class BluetoothDeviceWrapper {

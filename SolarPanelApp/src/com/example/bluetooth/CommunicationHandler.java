@@ -32,13 +32,28 @@ public abstract class CommunicationHandler<T extends BaseResponse> {
 	private ServiceASyncTask task;
 
 	/**
-	 * @return A JSON formatted string which will tell the bluetooth device
-	 *         which type of request this is.
+	 * @return A JSONObject which will tell the bluetooth device which type of
+	 *         request this is.
 	 */
 	abstract protected JSONObject getRequest();
 
+	/**
+	 * @param data
+	 *            - The raw string data which is received from the solar panel
+	 * @return The T which is the appropriate type of response for this handler
+	 */
 	abstract protected T parseResponse(String data);
 
+	/**
+	 * @param callback
+	 *            The Callback which will be called back in the main thread
+	 *            after the communication is complete
+	 * @param target
+	 *            This is the MAC address of the BT device you would like to
+	 *            commnuicate with
+	 * @param pass
+	 *            The passphrase that has been set for the device
+	 */
 	public CommunicationHandler(Callback<T> callback, String target, String pass) {
 		this.address = target;
 		this.pass = pass;
@@ -54,6 +69,10 @@ public abstract class CommunicationHandler<T extends BaseResponse> {
 		task.execute();
 	}
 
+	/**
+	 * @param millis
+	 *            - How long to wait (in milliseconds) before continuing
+	 */
 	public void waitOnTask(long millis) {
 		try {
 			task.get(millis, TimeUnit.MILLISECONDS);
@@ -96,9 +115,6 @@ public abstract class CommunicationHandler<T extends BaseResponse> {
 				return null;
 			}
 
-			// TODO Client knows the MAC address of server
-			// This should be passed along from the app to give them the which
-			// device address to talk to
 			BluetoothDevice mmDevice = mBluetoothAdapter.getRemoteDevice(address);
 			String data = "";
 			try {

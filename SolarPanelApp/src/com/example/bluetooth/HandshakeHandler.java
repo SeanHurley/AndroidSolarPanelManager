@@ -4,6 +4,10 @@ import net.minidev.json.JSONObject;
 
 import com.example.solarpanelmanager.api.responses.BaseResponse;
 
+/**
+ * @author mikecandido
+ * 
+ */
 public class HandshakeHandler extends BaseResponseHandler {
 
 	public HandshakeHandler(Callback<BaseResponse> callback, String target, String pass) {

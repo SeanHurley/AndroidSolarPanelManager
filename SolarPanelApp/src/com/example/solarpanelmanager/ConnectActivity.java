@@ -1,6 +1,4 @@
 package com.example.solarpanelmanager;
-import com.example.solarpanelmanager.R;
-
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -31,6 +29,10 @@ import com.example.bluetooth.GenericCallback;
 import com.example.bluetooth.HandshakeHandler;
 import com.example.solarpanelmanager.api.responses.BaseResponse;
 
+/**
+ * @author mikecandido
+ * 
+ */
 public class ConnectActivity extends SherlockActivity {
 	private BluetoothScanner scanner;
 
@@ -38,7 +40,7 @@ public class ConnectActivity extends SherlockActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_connect);
-		
+
 		setupActionBar();
 
 		final ArrayAdapter<BluetoothDeviceWrapper> arrayAdapter = new ArrayAdapter<BluetoothDeviceWrapper>(this,
@@ -134,11 +136,11 @@ public class ConnectActivity extends SherlockActivity {
 
 		scanner.scan();
 	}
-	
+
 	private void setupActionBar() {
 		String deviceId = PreferenceManager.getDefaultSharedPreferences(ConnectActivity.this).getString(
 				Constants.CURRENT_DEVICE, null);
-		if (deviceId != null) {	
+		if (deviceId != null) {
 			ActionBar actionBar = getSupportActionBar();
 			actionBar.setDisplayHomeAsUpEnabled(true);
 		}
@@ -163,17 +165,17 @@ public class ConnectActivity extends SherlockActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent;
-		
+
 		switch (item.getItemId()) {
 		case R.id.menu_history:
 			intent = new Intent(this, MainActivity.class);
 			startActivity(intent);
 			return true;
 		case R.id.menu_schedule:
-			//TODO: start schedule activity
+			// TODO: start schedule activity
 			return true;
 		case R.id.menu_device_settings:
-			//TODO: start device settings activity
+			// TODO: start device settings activity
 			return true;
 		case R.id.menu_change_device:
 			intent = new Intent(this, ConnectActivity.class);
@@ -185,9 +187,9 @@ public class ConnectActivity extends SherlockActivity {
 			return true;
 		case android.R.id.home:
 			onBackPressed();
-//			intent = new Intent(this, BatteryActivity.class);
-//			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//			startActivity(intent);
+			// intent = new Intent(this, BatteryActivity.class);
+			// intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			// startActivity(intent);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

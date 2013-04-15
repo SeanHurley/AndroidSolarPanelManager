@@ -42,12 +42,8 @@ public class ResponseParser {
 
 		JSONArray snapshots = (JSONArray) json.get(MessageKeys.HISTORY_DATA);
 		ArrayList<SnapshotResponse> snapshotResponses = new ArrayList<SnapshotResponse>();
-		// SnapshotResponse[] snapshotResponses = new
-		// SnapshotResponse[snapshots.size()];
 
 		for (int i = 0; i < snapshots.size(); i++) {
-			// snapshotResponses[i] = parseSnapshotResponse(((JSONObject)
-			// snapshots.get(i)).toJSONString());
 			snapshotResponses.add(parseSnapshotResponse(((JSONObject) snapshots.get(i)).toJSONString()));
 		}
 
@@ -57,7 +53,6 @@ public class ResponseParser {
 	public static SnapshotResponse parseSnapshotResponse(String response) {
 		// Call the parse response for the basic map, and then create the proper
 		// response object
-		System.out.println(response);
 		JSONObject json = (JSONObject) (JSONValue.parse(response));
 		int result = 200;
 		if (json.containsKey(MessageKeys.RESPONSE_CODE)) {
@@ -134,7 +129,10 @@ public class ResponseParser {
 	}
 
 	public static ViewChargeConstraintsResponse parseViewChargeConstraintsResponse(String response) {
-		System.out.println(response);
+		if (response == "") {
+			return new ViewChargeConstraintsResponse(500, null, -1, -1);
+		}
+
 		JSONObject json = (JSONObject) (JSONValue.parse(response));
 
 		int result = (Integer) json.get(MessageKeys.RESPONSE_CODE);

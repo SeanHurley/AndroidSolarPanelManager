@@ -7,6 +7,12 @@ import com.example.solarpanelmanager.api.parsers.MessageTypes;
 import com.example.solarpanelmanager.api.parsers.ResponseParser;
 import com.example.solarpanelmanager.api.responses.ViewChargeConstraintsResponse;
 
+/**
+ * @author seanhurley
+ * 
+ *         This is the handler which will manage the communication for getting
+ *         the current charge constraints.
+ */
 public class ViewChargeConstraintsHandler extends CommunicationHandler<ViewChargeConstraintsResponse> {
 
 	public ViewChargeConstraintsHandler(Callback<ViewChargeConstraintsResponse> callback, String device, String pass) {
@@ -22,10 +28,6 @@ public class ViewChargeConstraintsHandler extends CommunicationHandler<ViewCharg
 
 	@Override
 	protected ViewChargeConstraintsResponse parseResponse(String data) {
-		if (data == "") {
-			return new ViewChargeConstraintsResponse(500, null, -1, -1);
-		}
-
 		return ResponseParser.parseViewChargeConstraintsResponse(data);
 	}
 
