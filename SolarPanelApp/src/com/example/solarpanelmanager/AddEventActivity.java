@@ -1,8 +1,8 @@
 package com.example.solarpanelmanager;
 
-import java.util.Date;
-import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -39,7 +39,7 @@ public class AddEventActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
+				SimpleDateFormat df = new SimpleDateFormat("hh:mm");
 				String start = startTime.getText().toString();
 				String duration = durationText.getText().toString();
 				String interval = intervalText.getText().toString();
