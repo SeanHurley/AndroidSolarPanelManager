@@ -34,6 +34,8 @@ public class TestGetSnapshot extends TestCase {
 
 		handler.waitOnTask(5000);
 
+		// We need to make sure that the callback has completed before finishing
+		// the test and doing the asserts
 		try {
 			sem.acquire();
 		} catch (InterruptedException e) {
