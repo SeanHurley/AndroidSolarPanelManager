@@ -23,6 +23,12 @@ import com.example.solarpanelmanager.RangeSeekBar.OnRangeSeekBarChangeListener;
 import com.example.solarpanelmanager.api.responses.BaseResponse;
 import com.example.solarpanelmanager.api.responses.ViewChargeConstraintsResponse;
 
+/**
+ * @author seanhurley
+ * 
+ *         This activity will be used to allow the user to set device specific
+ *         activities
+ */
 public class DevicePreferencesActivity extends SherlockActivity {
 
 	private View passRow;
