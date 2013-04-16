@@ -17,7 +17,7 @@ import com.example.solarpanelmanager.api.responses.Event;
 
 public class AddEventActivity extends Activity {
 	
-	
+	private static final long DAY_INTERVAL = 24 * 60 * 60 * 1000;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +26,6 @@ public class AddEventActivity extends Activity {
 		
 		final EditText startTime = (EditText) findViewById(R.id.StartTime);
 		final EditText durationText = (EditText) findViewById(R.id.Duration);
-		final EditText intervalText = (EditText) findViewById(R.id.Interval);
 		final EditText nameText = (EditText) findViewById(R.id.Name);
 		Button addButton = (Button) findViewById(R.id.AddButton);
 		
@@ -39,10 +38,9 @@ public class AddEventActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				SimpleDateFormat df = new SimpleDateFormat("hh:mm");
+				SimpleDateFormat df = new SimpleDateFormat("HH:mm");
 				String start = startTime.getText().toString();
 				String duration = durationText.getText().toString();
-				String interval = intervalText.getText().toString();
 				String name = nameText.getText().toString();
 				
 				Date startTime = null;
@@ -53,23 +51,20 @@ public class AddEventActivity extends Activity {
 					e1.printStackTrace();
 				}
 				
-				Date durationLength = null;
+				Date durationDate = null;
 				try {
-					durationLength = df.parse(duration);
+					durationDate = df.parse(duration);
 				} catch (ParseException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+
+				Date stopTime = new Date(startTime.getTime());
+				stopTime.setHours(stopTime.getHours() + durationDate.getHours());
+				stopTime.setMinutes(startTime.getMinutes() + durationDate.getMinutes());
+				long durationLength = stopTime.getTime() - startTime.getTime();
 				
-				Date intervalTime = null;
-				try {
-					intervalTime = df.parse(interval);
-				} catch (ParseException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
-				Event e = new Event("some id", name, startTime.getTime(), durationLength.getTime(), intervalTime.getTime());
+				Event e = new Event("temporary", name, startTime.getTime(), durationLength, DAY_INTERVAL);
 				Intent i = new Intent();
 				i.putExtra(Constants.EVENT_RESULT_CODE, e);
 				setResult(RESULT_OK, i);

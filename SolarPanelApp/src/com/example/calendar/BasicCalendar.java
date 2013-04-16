@@ -44,7 +44,7 @@ public class BasicCalendar {
 		return calendar;
 	}
 	
-	private static String eventToKey(Event e) {
+	public static String eventToKey(Event e) {
 		Calendar day = Calendar.getInstance();
 		day.setTimeInMillis(e.getFirstTime());
 		return String.format("%d:%02d", day.get(Calendar.HOUR), day.get(Calendar.MINUTE));

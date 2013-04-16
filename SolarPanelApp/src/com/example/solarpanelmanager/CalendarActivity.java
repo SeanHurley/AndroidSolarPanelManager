@@ -29,6 +29,9 @@ import com.example.solarpanelmanager.api.responses.Event;
 import com.example.solarpanelmanager.api.responses.EventsResponse;
 
 public class CalendarActivity extends Activity {
+
+	private static final int ADD_EVENT_CODE = 2048;
+	
 	BasicCalendar calendar;
 	String deviceId;
 	ArrayAdapter<EventDisplay> arrayAdapter;
@@ -123,7 +126,7 @@ public class CalendarActivity extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				Intent i = new Intent(CalendarActivity.this, AddEventActivity.class);
-				startActivity(i);
+				startActivityForResult(i, ADD_EVENT_CODE);
 			}
 			
 		});
@@ -133,7 +136,7 @@ public class CalendarActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == RESULT_OK){
+		if (requestCode == ADD_EVENT_CODE && resultCode == RESULT_OK){
 			Bundle bundle = data.getExtras();
 			final Event e = (Event) bundle.get(Constants.EVENT_RESULT_CODE);
 
@@ -149,18 +152,20 @@ public class CalendarActivity extends Activity {
 					dialog.dismiss();
 					if (response.getResult() == 200) {
 						String id = response.getMessage();
+						// TODO: replace event data with data from the message instead of
+						// assuming it's the same.
 						Event toAdd = new Event(id, e.getName(), e.getFirstTime(), e.getDuration(), e.getInterval());
+						if (!calendar.addEvent(toAdd)) {
+							Toast.makeText(CalendarActivity.this, "Event conflicts with another event", Toast.LENGTH_SHORT).show();
+						} else {
+							arrayAdapter.add(new EventDisplay(e, BasicCalendar.eventToKey(e)));
+						}
 					} else {
-						Toast.makeText(CalendarActivity.this, "Could not remove event", Toast.LENGTH_SHORT).show();
+						Toast.makeText(CalendarActivity.this, "Could not add event", Toast.LENGTH_SHORT).show();
 					}
 				}
 				
-			}, deviceId, e.getName(), e.getFirstTime(), e.getDuration(), e.getInterval())).performAction();	
-			
-			
-			if (!calendar.addEvent(e)){
-				Toast.makeText(CalendarActivity.this, "Could not add event", Toast.LENGTH_SHORT).show();
-			}
+			}, deviceId, e.getName(), e.getFirstTime(), e.getDuration(), e.getInterval())).performAction();
 		}
 	}
 	

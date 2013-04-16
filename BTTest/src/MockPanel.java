@@ -262,10 +262,22 @@ public class MockPanel {
 					return ResponseCreator.buildDefaultOK(MessageTypes.SCHEDULE_EVENT_REPONSE);
 				} else {
 					String name = (String) json.get(MessageKeys.EVENT_NAME);
-					long firstRun = (Long) json.get(MessageKeys.EVENT_FIRST_TIME);
-					long duration = (Long) json.get(MessageKeys.EVENT_DURATION);
-					long interval = (Long) json.get(MessageKeys.EVENT_INTERVAL);
-					
+					long firstRun = 0, duration = 0, interval = 0;
+					try {
+						firstRun = (Long) json.get(MessageKeys.EVENT_FIRST_TIME);
+					} catch (ClassCastException e) {
+						firstRun = (Integer) json.get(MessageKeys.EVENT_FIRST_TIME);
+					}
+					try {
+						duration = (Long) json.get(MessageKeys.EVENT_DURATION);
+					} catch (ClassCastException e) {
+						duration = (Integer) json.get(MessageKeys.EVENT_DURATION);
+					}
+					try {
+						interval = (Long) json.get(MessageKeys.EVENT_INTERVAL);
+					} catch (ClassCastException e) {
+						interval = (Integer) json.get(MessageKeys.EVENT_INTERVAL);
+					}
 					String id = String.valueOf(++currentEventID);
 					
 					Event e = new Event(id, name, firstRun, duration, interval);
