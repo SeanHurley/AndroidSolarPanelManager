@@ -32,6 +32,9 @@
     <string name="battery_voltage">Battery voltage</string>
     <string name="battery_max">Maximum voltage</string>
     <string name="battery_min">Minimum voltage</string>
+    <string name="battery_in">In</string>
+    <string name="battery_out">Out</string>
+    <string name="battery_estimatedtime">Estimated Time</string>
     <string name="Timestamp">Time Stamp</string>
     <string name="battery_curr">Battery Current</string>
     <string name="min">Minimum</string>

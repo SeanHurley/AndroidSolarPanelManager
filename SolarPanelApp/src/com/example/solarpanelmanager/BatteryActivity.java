@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -37,6 +39,8 @@ public class BatteryActivity extends SherlockActivity {
 	private TextView minvalue;
 	private TextView maxvalue;
 	private TextView snapshot;
+	private TextView snapshot_powered;
+	private TextView batteryleveltext;
 	private ImageView battery_image;
 	private BatteryLevel batteryLevel;
 	private double battery_voltage;
@@ -46,6 +50,7 @@ public class BatteryActivity extends SherlockActivity {
 	private long timestamp;
 	private volatile int apiCallsRunning;
 	private boolean dialogShowing = false;
+	private boolean powerUserEnabled;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +70,7 @@ public class BatteryActivity extends SherlockActivity {
 
 		getUI();
 		setupUI();
+		// was a conflict here. Might be fishy
 		setupActionBar();
 
 		getData();
@@ -75,6 +81,8 @@ public class BatteryActivity extends SherlockActivity {
 		minvalue = (TextView) findViewById(R.id.minView);
 		maxvalue = (TextView) findViewById(R.id.maxView);
 		snapshot = (TextView) findViewById(R.id.snapshot);
+		snapshot_powered = (TextView) findViewById(R.id.snapshot_powered);
+		batteryleveltext = (TextView) findViewById(R.id.currVoltageText);
 		min = (SeekBar) findViewById(R.id.minbar);
 		max = (SeekBar) findViewById(R.id.maxbar);
 		battery_image = (ImageView) findViewById(R.id.currVoltage);
@@ -127,31 +135,35 @@ public class BatteryActivity extends SherlockActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (apiCallsRunning == 0) {
-			getData();
-		}
+		getData();
 	}
 
 	private void showUI() {
-		boolean powerUserEnabled = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
+		powerUserEnabled = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
 				Constants.POWER_USER_PREFERENCE, false);
+		Log.d("show", "show");
+
+		activityIndicator.setVisibility(View.GONE);
+		battery_image.setVisibility(View.VISIBLE);
+		batteryleveltext.setVisibility(View.VISIBLE);
+
+		// TODO remove these completely
+		maxvalue.setVisibility(View.INVISIBLE);
+		minvalue.setVisibility(View.INVISIBLE);
 
 		if (!powerUserEnabled) {
-			min.setVisibility(View.INVISIBLE);
-			max.setVisibility(View.INVISIBLE);
-			activityIndicator.setVisibility(View.GONE);
-			battery_image.setVisibility(View.VISIBLE);
-			snapshot.setVisibility(View.INVISIBLE);
-			maxvalue.setVisibility(View.INVISIBLE);
-			minvalue.setVisibility(View.INVISIBLE);
-		} else {
-			min.setVisibility(View.VISIBLE);
-			max.setVisibility(View.VISIBLE);
-			activityIndicator.setVisibility(View.GONE);
-			battery_image.setVisibility(View.VISIBLE);
+			RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+					RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+			battery_image.setLayoutParams(params);
 			snapshot.setVisibility(View.VISIBLE);
-			maxvalue.setVisibility(View.VISIBLE);
-			minvalue.setVisibility(View.VISIBLE);
+			snapshot_powered.setVisibility(View.INVISIBLE);
+
+		} else {
+			RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+					RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+			battery_image.setLayoutParams(params);
+			snapshot.setVisibility(View.VISIBLE);
+			snapshot_powered.setVisibility(View.VISIBLE);
 		}
 	}
 	
@@ -168,12 +180,16 @@ public class BatteryActivity extends SherlockActivity {
 		min.setVisibility(View.INVISIBLE);
 		max.setVisibility(View.INVISIBLE);
 		battery_image.setVisibility(View.INVISIBLE);
+		batteryleveltext.setVisibility(View.INVISIBLE);
+		snapshot_powered.setVisibility(View.INVISIBLE);
 		snapshot.setVisibility(View.INVISIBLE);
 		maxvalue.setVisibility(View.INVISIBLE);
 		minvalue.setVisibility(View.INVISIBLE);
 	}
 
 	private void getData() {
+		powerUserEnabled = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
+				Constants.POWER_USER_PREFERENCE, false);
 		String deviceId = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.CURRENT_DEVICE, null);
 		String pass = PreferenceManager.getDefaultSharedPreferences(this).getString(
 				Constants.PASS_PHRASE_PREFERENCE + deviceId, null);
@@ -224,6 +240,7 @@ public class BatteryActivity extends SherlockActivity {
 				}
 
 				if (response.getResult() == 200) {
+
 					level = response.getBatteryPercent();
 					battery_voltage = response.getBatteryVoltage();
 					battery_current = response.getBatteryCurrent();
@@ -239,11 +256,22 @@ public class BatteryActivity extends SherlockActivity {
 
 					minvalue.setText(res.getString(R.string.battery_min) + ":" + minVal);
 					maxvalue.setText(res.getString(R.string.battery_max) + ":" + maxVal);
-					snapshot.setText(res.getString(R.string.battery_voltage) + ":" + battery_voltage
-							+ res.getString(R.string.battery_curr) + ":" + battery_current + "\n"
-							+ res.getString(R.string.PV_voltage) + ":" + pvvoltage + res.getString(R.string.PV_current)
-							+ pvcurrent + "\n" + res.getString(R.string.Timestamp) + ":" + timestamp);
-					batteryLevel.setLevel(level);
+					snapshot_powered.setText(res.getString(R.string.battery_in) + "\n"
+							+ res.getString(R.string.battery_out) + "\n"
+							+ res.getString(R.string.battery_estimatedtime));
+
+					if (!powerUserEnabled) {
+						snapshot.setText(res.getString(R.string.battery_in) + "\n"
+								+ res.getString(R.string.battery_out) + "\n"
+								+ res.getString(R.string.battery_estimatedtime));
+					} else {
+						snapshot.setText(res.getString(R.string.battery_voltage) + ":" + round(battery_voltage, 2)
+								+ "\n" + res.getString(R.string.battery_curr) + ":" + round(battery_current, 2) + "\n"
+								+ res.getString(R.string.PV_voltage) + ":" + round(pvvoltage, 2) + "\n"
+								+ res.getString(R.string.PV_current) + ":" + round(pvcurrent, 2) + "\n"
+								+ res.getString(R.string.Timestamp) + ":" + round(timestamp, 2));
+					}
+					batteryleveltext.setText("" + level);
 					battery_image.setImageBitmap(batteryLevel.getBitmap());
 				} else if (response.getResult() == 403) {
 					showForbiddenErrorDialog();
@@ -267,6 +295,7 @@ public class BatteryActivity extends SherlockActivity {
 			// TODO - Tell the user that something is wrong
 		}
 
+		// TODO - Show spinner and whatnot
 		SetChargeConstraintsHandler call = new SetChargeConstraintsHandler(new Callback<BaseResponse>() {
 			@Override
 			public void onComplete(BaseResponse response) {
@@ -339,5 +368,16 @@ public class BatteryActivity extends SherlockActivity {
 			return super.onOptionsItemSelected(item);
 			
 		}
+	}
+
+	public static double round(double value, int places) {
+		if (places < 0) {
+			throw new IllegalArgumentException();
+		}
+
+		long factor = (long) Math.pow(10, places);
+		value = value * factor;
+		long tmp = Math.round(value);
+		return (double) tmp / factor;
 	}
 }
