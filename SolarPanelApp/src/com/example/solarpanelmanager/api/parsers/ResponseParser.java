@@ -2,6 +2,7 @@ package com.example.solarpanelmanager.api.parsers;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
@@ -51,6 +52,10 @@ public class ResponseParser {
 	}
 
 	public static SnapshotResponse parseSnapshotResponse(String response) {
+		if (response == "") {
+			return new SnapshotResponse(500, null);
+		}
+		
 		// Call the parse response for the basic map, and then create the proper
 		// response object
 		JSONObject json = (JSONObject) (JSONValue.parse(response));
@@ -93,6 +98,13 @@ public class ResponseParser {
 	}
 
 	public static EventsResponse parseEventsResponse(String response) {
+		if (response == "") {
+			System.out.println("bad news");
+			return new EventsResponse(500, null);
+		} else {
+			System.out.println(response);
+		}
+		
 		JSONObject json = (JSONObject) (JSONValue.parse(response));
 
 		int result = (Integer) json.get(MessageKeys.RESPONSE_CODE);
@@ -103,7 +115,7 @@ public class ResponseParser {
 		}
 
 		JSONArray eventsArray = (JSONArray) json.get(MessageKeys.EVENTS_DATA);
-		ArrayList<Event> events = new ArrayList<Event>();
+		List<Event> events = new ArrayList<Event>();
 
 		for (int i = 0; i < eventsArray.size(); i++) {
 			events.add(parseEvent((JSONObject) eventsArray.get(i)));
@@ -114,10 +126,11 @@ public class ResponseParser {
 
 	private static Event parseEvent(JSONObject json) {
 		String id = (String) json.get(MessageKeys.EVENT_ID);
+		String name = (String) json.get(MessageKeys.EVENT_NAME);
 		long firstTime = getLong(json.get(MessageKeys.EVENT_FIRST_TIME));
 		long duration = getLong(json.get(MessageKeys.EVENT_DURATION));
 		long interval = getLong(json.get(MessageKeys.EVENT_INTERVAL));
-		return new Event(id, firstTime, duration, interval);
+		return new Event(id, name, firstTime, duration, interval);
 	}
 
 	private static long getLong(Object obj) {

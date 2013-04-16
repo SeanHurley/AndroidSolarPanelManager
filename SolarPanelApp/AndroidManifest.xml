@@ -57,6 +57,14 @@
             android:name="com.example.solarpanelmanager.HistoryGraphActivity"
             android:label="@string/title_activity_history_graph" >
         </activity>
+        <activity
+            android:name="com.example.solarpanelmanager.CalendarActivity"
+            android:label="@string/title_activity_calendar" >
+        </activity>
+        <activity
+            android:name="com.example.solarpanelmanager.AddEventActivity"
+            android:label="@string/title_activity_add_event" >
+        </activity>
     </application>
 
 </manifest>

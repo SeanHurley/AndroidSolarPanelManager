@@ -214,6 +214,10 @@ public class BatteryActivity extends SherlockActivity {
 
 			@Override
 			public void onComplete(SnapshotResponse response) {
+				if (response == null) {
+					return;
+				}
+				
 				apiCallsRunning--;
 				if (apiCallsRunning == 0) {
 					showUI();
@@ -313,7 +317,8 @@ public class BatteryActivity extends SherlockActivity {
 			startActivity(intent);
 			return true;
 		case R.id.menu_schedule:
-			//TODO: start schedule activity
+			intent = new Intent(this, CalendarActivity.class);
+			startActivity(intent);
 			return true;
 		case R.id.menu_device_settings:
 			//TODO: start device settings activity
@@ -329,8 +334,10 @@ public class BatteryActivity extends SherlockActivity {
 		case android.R.id.home:
 			onBackPressed();
 			return true;
+					
 		default:
 			return super.onOptionsItemSelected(item);
+			
 		}
 	}
 }

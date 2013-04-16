@@ -1,14 +1,14 @@
-import java.util.ArrayList;
+import java.util.List;
 
 
 public class EventsList {
-	private ArrayList<Event> events;
+	private List<Event> events;
 	
-	public EventsList(ArrayList<Event> events) {
+	public EventsList(List<Event> events) {
 		this.events = events;
 	}
 
-	public ArrayList<Event> getEvents() {
+	public List<Event> getEvents() {
 		return events;
 	}
 }

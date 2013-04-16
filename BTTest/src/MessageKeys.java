@@ -23,6 +23,7 @@ public class MessageKeys {
 	public static final String HISTORY_DATA = "history-data";
 
 	public static final String EVENT_ID = "id";
+	public static final String EVENT_NAME = "name";
 	public static final String EVENT_FIRST_TIME = "first-run";
 	public static final String EVENT_DURATION = "duration";
 	public static final String EVENT_INTERVAL = "interval";
