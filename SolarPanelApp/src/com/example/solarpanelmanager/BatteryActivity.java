@@ -72,8 +72,6 @@ public class BatteryActivity extends SherlockActivity {
 		setupUI();
 		// was a conflict here. Might be fishy
 		setupActionBar();
-
-		getData();
 	}
 
 	private void getUI() {
@@ -166,11 +164,12 @@ public class BatteryActivity extends SherlockActivity {
 			snapshot_powered.setVisibility(View.VISIBLE);
 		}
 	}
-	
+
 	private void setupActionBar() {
 		ActionBar actionBar = getSupportActionBar();
-		
-		String deviceName = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.CURRENT_DEVICE_NAME, "Unknown Device");
+
+		String deviceName = PreferenceManager.getDefaultSharedPreferences(this).getString(
+				Constants.CURRENT_DEVICE_NAME, "Unknown Device");
 		actionBar.setSubtitle(deviceName);
 	}
 
@@ -233,7 +232,7 @@ public class BatteryActivity extends SherlockActivity {
 				if (response == null) {
 					return;
 				}
-				
+
 				apiCallsRunning--;
 				if (apiCallsRunning == 0) {
 					showUI();
@@ -339,7 +338,7 @@ public class BatteryActivity extends SherlockActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent;
-		
+
 		switch (item.getItemId()) {
 		case R.id.menu_history:
 			intent = new Intent(this, HistoryGraphActivity.class);
@@ -350,7 +349,7 @@ public class BatteryActivity extends SherlockActivity {
 			startActivity(intent);
 			return true;
 		case R.id.menu_device_settings:
-			//TODO: start device settings activity
+			// TODO: start device settings activity
 			return true;
 		case R.id.menu_change_device:
 			intent = new Intent(this, ConnectActivity.class);
@@ -363,10 +362,10 @@ public class BatteryActivity extends SherlockActivity {
 		case android.R.id.home:
 			onBackPressed();
 			return true;
-					
+
 		default:
 			return super.onOptionsItemSelected(item);
-			
+
 		}
 	}
 
