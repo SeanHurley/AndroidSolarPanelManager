@@ -81,4 +81,6 @@
     <string name="calendar_add_name">Name</string>
     <string name="calendar_add">Add</string>
     <string name="calendar_add_event_button">Add Event</string>
+    <string name="recover_device">Recover Device Passphrase</string>
+    <string name="error_setting_password">Error Setting Password</string>
 </resources>

@@ -1,15 +1,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 
     <ScrollView
         android:id="@+id/scroll_view"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
         <LinearLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingLeft="10dp"
@@ -17,7 +17,7 @@
 
             <RelativeLayout
                 android:id="@+id/row_password_pref"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="50dp" >
 
                 <TextView
@@ -31,13 +31,13 @@
             </RelativeLayout>
 
             <View
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#444444" />
 
             <RelativeLayout
                 android:id="@+id/row_min_max_values"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="50dp" >
 
                 <TextView
@@ -51,13 +51,13 @@
             </RelativeLayout>
 
             <View
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#444444" />
 
             <RelativeLayout
                 android:id="@+id/row_time_update"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="50dp" >
 
                 <TextView
@@ -71,13 +71,13 @@
             </RelativeLayout>
 
             <View
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#444444" />
 
             <RelativeLayout
                 android:id="@+id/row_location_update"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="50dp" >
 
                 <TextView
@@ -91,7 +91,27 @@
             </RelativeLayout>
 
             <View
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#444444" />
+
+            <RelativeLayout
+                android:id="@+id/row_recover"
+                android:layout_width="match_parent"
+                android:layout_height="50dp" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/recover_device"
+                    android:textSize="20sp" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#444444" />
         </LinearLayout>
@@ -99,8 +119,8 @@
 
     <RelativeLayout
         android:id="@+id/activityIndicator"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="#CC000000" >
 
         <ProgressBar

@@ -349,7 +349,8 @@ public class BatteryActivity extends SherlockActivity {
 			startActivity(intent);
 			return true;
 		case R.id.menu_device_settings:
-			// TODO: start device settings activity
+			intent = new Intent(this, DevicePreferencesActivity.class);
+			startActivity(intent);
 			return true;
 		case R.id.menu_change_device:
 			intent = new Intent(this, ConnectActivity.class);
