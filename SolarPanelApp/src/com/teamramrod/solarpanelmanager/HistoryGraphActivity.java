@@ -8,14 +8,12 @@ import com.teamramrod.solarpanelmanager.api.responses.HistoryResponse;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-public class HistoryGraphActivity extends Activity {
+public class HistoryGraphActivity extends BaseActivity {
 
 	private Button dateButton;
 	private Button monthButton;
@@ -67,7 +65,7 @@ public class HistoryGraphActivity extends Activity {
 			}
 		});
 
-		// BUTTON: Month
+		// BUTTON: Date
 		dateButton = (Button) findViewById(R.id.button_date);
 		dateButton.setOnClickListener(new View.OnClickListener() {
 
@@ -86,6 +84,8 @@ public class HistoryGraphActivity extends Activity {
 				showGraph(GraphLabelEnum.TIME);
 			}
 		});
+		
+		showGraph(GraphLabelEnum.MONTH);
 
 	}
 
@@ -108,36 +108,32 @@ public class HistoryGraphActivity extends Activity {
 					@Override
 					public void onComplete(HistoryResponse response) {
 						if (response == null) {
-							// TODO Something went wrong Alert the user
+							showDeviceNotAvailable();
 							return;
+						} else if (response.getResult() == 403) {
+							showForbiddenErrorDialog();
+						} else if (response.getResult() == 200) {
+							LineGraph lineGraph = new LineGraph();
+							/**
+							 * TODO: Pass a collection of SnapshotResponses to
+							 * display in our graph
+							 */
+							View lineGraphView = lineGraph.getView(
+									HistoryGraphActivity.this,
+									response.getHistoryData(), graphLabel);
+							// Whenever they hit a button, call removeAllViews
+							graphView.removeAllViews();
+							graphView.addView(lineGraphView);
+
+							// When you actually get all the data and create the
+							// dialog, remove the dialog
+							showUI();
+						} else {
+							System.out.println("failure in communication");
 						}
-
-						LineGraph lineGraph = new LineGraph();
-						/**
-						 * TODO: Pass a collection of SnapshotResponses to
-						 * display in our graph
-						 */
-						View lineGraphView = lineGraph.getView(
-								HistoryGraphActivity.this,
-								response.getHistoryData(), graphLabel);
-						// Whenever they hit a button, call removeAllViews
-						graphView.removeAllViews();
-						graphView.addView(lineGraphView);
-
-						// When you actually get all the data and create the
-						// dialog, remove the dialog
-						showUI();
 					}
 
 				}, deviceId, pass);
 		call.performAction();
 	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_history_graph, menu);
-		return true;
-	}
-
 }
