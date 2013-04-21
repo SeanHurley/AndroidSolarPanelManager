@@ -23,16 +23,6 @@ public class Event implements Serializable, Comparable<Event> {
 	}
 	
 	/**
-	 * Generates the key used to index events based on their start time
-	 * @return
-	 */
-	public String getKey(){
-		Calendar day = Calendar.getInstance();
-		day.setTimeInMillis(firstTime);
-		return String.format("%d:%02d", day.get(Calendar.HOUR), day.get(Calendar.MINUTE));
-	}
-	
-	/**
 	 * Tests whether this event conflicts with another event 
 	 * @param e the other event to be tested
 	 * @return
@@ -51,7 +41,10 @@ public class Event implements Serializable, Comparable<Event> {
 	 */
 	public String toString(){
 		long minutes = duration / MINUTE_MILLIS;
-		return String.format("%s at %s for %d minutes", name, getKey(), minutes);
+		Calendar day = Calendar.getInstance();
+		day.setTimeInMillis(firstTime);
+		String timeHoursMinutes = String.format("%d:%02d", day.get(Calendar.HOUR), day.get(Calendar.MINUTE));
+		return String.format("%s at %s for %d minutes", name, timeHoursMinutes, minutes);
 	}
 
 	public String getName() {
