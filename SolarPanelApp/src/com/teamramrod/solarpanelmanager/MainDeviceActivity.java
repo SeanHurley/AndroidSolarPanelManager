@@ -203,7 +203,7 @@ public class MainDeviceActivity extends BaseActivity {
 					@Override
 					public void onComplete(ViewChargeConstraintsResponse response) {
 						if (response == null) {
-
+							showDeviceNotAvailable();
 						} else {
 
 							apiCallsRunning--;
@@ -233,7 +233,7 @@ public class MainDeviceActivity extends BaseActivity {
 			@Override
 			public void onComplete(SnapshotResponse response) {
 				if (response == null) {
-					return;
+					showDeviceNotAvailable();
 				}
 
 				apiCallsRunning--;

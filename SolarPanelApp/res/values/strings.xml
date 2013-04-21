@@ -66,6 +66,8 @@
     <string name="power_settings_label">Power User Options</string>
     <string name="pass_phrase">Security Passphrase</string>
     <string name="forbidden_error_title">Permission Forbidden</string>
+    <string name="device_connection_error_title">Device Connection Error</string>
+    <string name="device_connection_error">Could not find the device. Is it out of range?</string>
     <string name="forbidden_error">This device cannot confirm your security passphrase. Maybe check your settings?</string>
     <string name="title_activity_calendar">CalendarActivity</string>
     <string name="menu_history">History</string>

@@ -3,43 +3,41 @@ package com.teamramrod.solarpanelmanager;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.view.View;
-import android.widget.EditText;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.example.solarpanelmanager.R;
 
 public class BaseActivity extends SherlockActivity {
 	private boolean forbiddenDialogShowing = false;
+	private boolean noDeviceDialogShowing = false;
 
 	protected void showForbiddenErrorDialog() {
 		if (!forbiddenDialogShowing) {
 			forbiddenDialogShowing = true;
-			AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
-			alert.setTitle(R.string.error_setting_password);
-			alert.setMessage(R.string.forbidden_error);
-
-			// Set an EditText view to get user input
-			final EditText input = new EditText(this);
-			alert.setView(input);
-
-			alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+			DialogInterface.OnClickListener okListener = new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int whichButton) {
 					forbiddenDialogShowing = false;
 				}
-			});
-
-			alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int whichButton) {
-					// Canceled.
-					forbiddenDialogShowing = false;
-				}
-			});
-
-			alert.show();
+			};
+			showDialog(R.string.forbidden_error_title, R.string.forbidden_error, okListener, okListener);
 		}
+	}
+
+	protected void showDeviceNotAvailable() {
+		if (!noDeviceDialogShowing) {
+			noDeviceDialogShowing = true;
+
+			DialogInterface.OnClickListener okListener = new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int whichButton) {
+					noDeviceDialogShowing = false;
+				}
+			};
+			showDialog(R.string.device_connection_error_title, R.string.device_connection_error, okListener, okListener);
+		}
+
 	}
 
 	protected void showDialogNoNegative(int titleId, int messageId, DialogInterface.OnClickListener positiveListener,
@@ -49,6 +47,11 @@ public class BaseActivity extends SherlockActivity {
 
 	protected void showDialog(int titleId, int messageId, DialogInterface.OnClickListener positiveListener) {
 		showDialog(titleId, messageId, positiveListener, defaultCancel, null);
+	}
+
+	protected void showDialog(int titleId, int messageId, DialogInterface.OnClickListener positiveListener,
+			DialogInterface.OnClickListener cancelListener) {
+		showDialog(titleId, messageId, positiveListener, cancelListener, null);
 	}
 
 	protected void showDialog(int titleId, int messageId, DialogInterface.OnClickListener positiveListener,
