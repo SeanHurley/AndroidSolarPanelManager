@@ -36,7 +36,7 @@ public class CalendarActivity extends Activity {
 	BasicCalendar calendar;
 	String deviceId;
 	String pass;
-	ArrayAdapter<EventDisplay> arrayAdapter;
+	ArrayAdapter<Event> arrayAdapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +50,7 @@ public class CalendarActivity extends Activity {
 			// TODO - Tell the user that something is wrong
 		}
 		
-		arrayAdapter = new ArrayAdapter<EventDisplay>(this,
+		arrayAdapter = new ArrayAdapter<Event>(this,
 				android.R.layout.simple_list_item_1);
 		ListView eventListView = (ListView) findViewById(R.id.calendar_event_list);
 		eventListView.setAdapter(arrayAdapter);
@@ -68,7 +68,7 @@ public class CalendarActivity extends Activity {
 				
 				calendar = new BasicCalendar(response.getEvents());
 				for (Entry<String, Event> entry : calendar.getCalendar().entrySet())
-					arrayAdapter.add(new EventDisplay(entry.getValue(), entry.getKey()));
+					arrayAdapter.add(entry.getValue());
 			}
 			
 		}, deviceId, pass)).performAction();
@@ -84,8 +84,8 @@ public class CalendarActivity extends Activity {
 
 					@Override
 					public void onClick(DialogInterface d, int which) {
-						final EventDisplay disp = (EventDisplay) lis.getItemAtPosition(position);
-						final String id = disp.event.getId();
+						final Event disp = (Event) lis.getItemAtPosition(position);
+						final String id = disp.getId();
 						
 						final ProgressDialog dialog = new ProgressDialog(CalendarActivity.this);
 						dialog.setTitle("Loading");
@@ -162,7 +162,7 @@ public class CalendarActivity extends Activity {
 						if (!calendar.addEvent(toAdd)) {
 							Toast.makeText(CalendarActivity.this, "Event conflicts with another event", Toast.LENGTH_SHORT).show();
 						} else {
-							arrayAdapter.add(new EventDisplay(e, BasicCalendar.eventToKey(e)));
+							arrayAdapter.add(e);
 						}
 					} else {
 						Toast.makeText(CalendarActivity.this, "Could not add event", Toast.LENGTH_SHORT).show();
@@ -170,21 +170,6 @@ public class CalendarActivity extends Activity {
 				}
 				
 			}, deviceId, pass, e.getName(), e.getFirstTime(), e.getDuration(), e.getInterval())).performAction();
-		}
-	}
-	
-	private static class EventDisplay {
-		public Event event;
-		public String time;
-		
-		public EventDisplay(Event e, String t) {
-			event = e;
-			time = t;
-		}
-		
-		public String toString() {
-			long duration = event.getDuration() / (1000 * 60);
-			return String.format("%s at %s for %d minutes", event.getName(), time, duration);
 		}
 	}
 	

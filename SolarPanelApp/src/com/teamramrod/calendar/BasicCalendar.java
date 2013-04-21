@@ -20,15 +20,15 @@ public class BasicCalendar {
 	
 	public boolean addEvent(Event event) {
 		for (Event e : calendar.values()) {
-			if (isOverlap(event, e))
+			if (e.isOverlapping(event))
 				return false;
 		}
-		calendar.put(eventToKey(event), event);
+		calendar.put(event.getKey(), event);
 		return true;
 	}
 	
 	public void removeEvent(Event event) {
-		calendar.remove(eventToKey(event));
+		calendar.remove(event.getKey());
 	}
 	
 	public void removeEvent(String id) {
@@ -44,19 +44,4 @@ public class BasicCalendar {
 		return calendar;
 	}
 	
-	public static String eventToKey(Event e) {
-		Calendar day = Calendar.getInstance();
-		day.setTimeInMillis(e.getFirstTime());
-		return String.format("%d:%02d", day.get(Calendar.HOUR), day.get(Calendar.MINUTE));
-	}
-	
-	private static boolean isOverlap(Event e1, Event e2) {
-		long newStart = e1.getFirstTime() % DAY_MILLIS;
-		long newEnd = (newStart + e1.getDuration()) % DAY_MILLIS;
-		
-		long oldStart = e2.getFirstTime() % DAY_MILLIS;
-		long oldEnd = (oldStart + e2.getDuration()) % DAY_MILLIS;
-		
-		return (newStart >= oldStart && newStart < oldEnd) || (newEnd <= oldEnd && newEnd > oldStart);
-	}
 }
