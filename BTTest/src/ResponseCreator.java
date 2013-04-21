@@ -26,6 +26,8 @@ public class ResponseCreator {
 		json.put(MessageKeys.SNAPSHOT_PANEL_CURRENT, snap.getPanelI());
 		json.put(MessageKeys.SNAPSHOT_INTAKE, snap.getIntake());
 		json.put(MessageKeys.SNAPSHOT_OUTTAKE, snap.getOutake());
+		json.put(MessageKeys.CHARGE_MIN, snap.getMin());
+		json.put(MessageKeys.CHARGE_MAX, snap.getMax());
 		return json;
 	}
 
@@ -46,7 +48,7 @@ public class ResponseCreator {
 		json.put(MessageKeys.RESPONSE_MESSAGE, OK_MESSAGE);
 		return json.toJSONString();
 	}
-	
+
 	public static String buildEventCreated(String id) {
 		JSONObject json = new JSONObject();
 		json.put(MessageKeys.MESSAGE_TYPE, MessageTypes.SCHEDULE_EVENT_REPONSE);

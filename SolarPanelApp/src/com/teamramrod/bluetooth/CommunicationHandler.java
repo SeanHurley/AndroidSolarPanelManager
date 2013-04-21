@@ -4,8 +4,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.UUID;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -32,6 +32,7 @@ public abstract class CommunicationHandler<T extends BaseResponse> {
 	private String address;
 	private String pass;
 	private ServiceASyncTask task;
+	private static LinkedBlockingQueue<AsyncTask> tasks = new LinkedBlockingQueue<AsyncTask>();
 
 	/**
 	 * @return A JSONObject which will tell the bluetooth device which type of
@@ -110,7 +111,7 @@ public abstract class CommunicationHandler<T extends BaseResponse> {
 				json.put(MessageKeys.PIN_PASSWORD, pass);
 			}
 			String request = json + "\n";
-			BluetoothSocket clientSocket = null;
+			// clientSocket = null;
 
 			if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
 				// Bluetooth is not enabled
@@ -122,21 +123,25 @@ public abstract class CommunicationHandler<T extends BaseResponse> {
 			try {
 
 				// The app's UUID string, also used by the server code
-				clientSocket = mmDevice.createRfcommSocketToServiceRecord(UUID
-						.fromString("00001101-0000-1000-8000-00805F9B34FB"));
-
-				mBluetoothAdapter.cancelDiscovery(); // Cancel, discovery slows
-														// connection
+				// BluetoothSocket clientSocket =
+				// mmDevice.createRfcommSocketToServiceRecord(UUID
+				// .fromString("00001101-0000-1000-8000-00805F9B34FB"));
+				Method m = mmDevice.getClass().getMethod("createRfcommSocket", new Class[] { int.class });
+				BluetoothSocket clientSocket = (BluetoothSocket) m.invoke(mmDevice, 1);
 
 				try {
 					clientSocket.connect();
 				} catch (IOException e) {
 					// sad little hack from here:
 					// http://stackoverflow.com/questions/3397071/service-discovery-failed-exception-using-bluetooth-on-android
-					Method m = mmDevice.getClass().getMethod("createRfcommSocket", new Class[] {int.class});
-			        clientSocket = (BluetoothSocket) m.invoke(mmDevice, 1);
-			        clientSocket.connect();
+					clientSocket.close();
+					m = mmDevice.getClass().getMethod("createRfcommSocket", new Class[] { int.class });
+					clientSocket = (BluetoothSocket) m.invoke(mmDevice, 1);
+					clientSocket.connect();
 				}
+
+				mBluetoothAdapter.cancelDiscovery(); // Cancel, discovery slows
+														// connection
 
 				DataInputStream in = new DataInputStream(clientSocket.getInputStream());
 				DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
@@ -151,7 +156,7 @@ public abstract class CommunicationHandler<T extends BaseResponse> {
 
 				in.close();
 				out.close();
-				clientSocket.close();
+				// clientSocket.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

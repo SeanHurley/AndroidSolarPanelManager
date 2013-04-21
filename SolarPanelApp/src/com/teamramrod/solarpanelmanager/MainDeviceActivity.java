@@ -202,14 +202,13 @@ public class MainDeviceActivity extends BaseActivity {
 
 					@Override
 					public void onComplete(ViewChargeConstraintsResponse response) {
+						apiCallsRunning--;
+						if (apiCallsRunning == 0) {
+							showUI();
+						}
 						if (response == null) {
 							showDeviceNotAvailable();
 						} else {
-
-							apiCallsRunning--;
-							if (apiCallsRunning == 0) {
-								showUI();
-							}
 
 							if (response.getResult() == 200) {
 								minVal = response.getMin();
@@ -232,13 +231,13 @@ public class MainDeviceActivity extends BaseActivity {
 
 			@Override
 			public void onComplete(SnapshotResponse response) {
-				if (response == null) {
-					showDeviceNotAvailable();
-				}
-
 				apiCallsRunning--;
 				if (apiCallsRunning == 0) {
 					showUI();
+				}
+
+				if (response == null) {
+					showDeviceNotAvailable();
 				}
 
 				if (response.getResult() == 200) {
