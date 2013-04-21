@@ -15,13 +15,13 @@ import com.actionbarsherlock.view.MenuItem;
 import com.example.solarpanelmanager.R;
 import com.teamramrod.Constants;
 
-public class PreferencesActivity extends SherlockPreferenceActivity {
+public class ApplicationPreferencesActivity extends SherlockPreferenceActivity {
 
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		setupActionBar();
 
 		// TODO replace these old deprecated api calls with ABS calls
@@ -39,8 +39,9 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
 				if (!powerUserPref.isChecked()) {
 					powerUserPref.setChecked(false);
 				} else {
-					new AlertDialog.Builder(PreferencesActivity.this).setIcon(android.R.drawable.ic_dialog_alert)
-							.setTitle(R.string.power_user_message_title).setMessage(R.string.power_user_warning)
+					new AlertDialog.Builder(ApplicationPreferencesActivity.this)
+							.setIcon(android.R.drawable.ic_dialog_alert).setTitle(R.string.power_user_message_title)
+							.setMessage(R.string.power_user_warning)
 							.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
 
 								@Override
@@ -65,40 +66,40 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
 			}
 		});
 	}
-	
+
 	private void setupActionBar() {
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent;
-		
+
 		switch (item.getItemId()) {
 		case R.id.menu_history:
-			intent = new Intent(this, MainActivity.class);
+			intent = new Intent(this, HistoryGraphActivity.class);
 			startActivity(intent);
 			return true;
 		case R.id.menu_schedule:
-			//TODO: start schedule activity
+			// TODO: start schedule activity
 			return true;
 		case R.id.menu_device_settings:
-			//TODO: start device settings activity
+			// TODO: start device settings activity
 			return true;
 		case R.id.menu_change_device:
-			intent = new Intent(this, ConnectActivity.class);
+			intent = new Intent(this, ChooseDeviceActivity.class);
 			startActivity(intent);
 			return true;
 		case R.id.menu_settings:
-			intent = new Intent(this, PreferencesActivity.class);
+			intent = new Intent(this, ApplicationPreferencesActivity.class);
 			startActivity(intent);
 			return true;
 		case android.R.id.home:
 			onBackPressed();
-//			intent = new Intent(this, BatteryActivity.class);
-//			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//			startActivity(intent);
+			// intent = new Intent(this, BatteryActivity.class);
+			// intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			// startActivity(intent);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

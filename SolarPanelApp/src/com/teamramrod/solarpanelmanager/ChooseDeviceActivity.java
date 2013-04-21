@@ -24,17 +24,17 @@ import com.example.solarpanelmanager.R;
 import com.teamramrod.Constants;
 import com.teamramrod.bluetooth.BaseResponseHandler;
 import com.teamramrod.bluetooth.BluetoothScanner;
+import com.teamramrod.bluetooth.BluetoothScanner.BluetoothDeviceWrapper;
 import com.teamramrod.bluetooth.Callback;
 import com.teamramrod.bluetooth.GenericCallback;
 import com.teamramrod.bluetooth.HandshakeHandler;
-import com.teamramrod.bluetooth.BluetoothScanner.BluetoothDeviceWrapper;
 import com.teamramrod.solarpanelmanager.api.responses.BaseResponse;
 
 /**
  * @author mikecandido
  * 
  */
-public class ConnectActivity extends SherlockActivity {
+public class ChooseDeviceActivity extends SherlockActivity {
 	private BluetoothScanner scanner;
 
 	@Override
@@ -55,12 +55,12 @@ public class ConnectActivity extends SherlockActivity {
 				final String device = ((BluetoothDeviceWrapper) parent.getItemAtPosition(position)).address;
 				final String deviceName = ((BluetoothDeviceWrapper) parent.getItemAtPosition(position)).name;
 
-				final ProgressDialog dialog = new ProgressDialog(ConnectActivity.this);
+				final ProgressDialog dialog = new ProgressDialog(ChooseDeviceActivity.this);
 				dialog.setTitle(R.string.Loading);
 				dialog.setMessage(getString(R.string.Communicating));
 				dialog.show();
 
-				String pass = PreferenceManager.getDefaultSharedPreferences(ConnectActivity.this).getString(
+				String pass = PreferenceManager.getDefaultSharedPreferences(ChooseDeviceActivity.this).getString(
 						Constants.PASS_PHRASE_PREFERENCE, null);
 				BaseResponseHandler handler = new HandshakeHandler(new Callback<BaseResponse>() {
 
@@ -71,15 +71,15 @@ public class ConnectActivity extends SherlockActivity {
 						dialog.dismiss();
 						if (itWorked) {
 							SharedPreferences prefs = PreferenceManager
-									.getDefaultSharedPreferences(ConnectActivity.this);
+									.getDefaultSharedPreferences(ChooseDeviceActivity.this);
 							prefs.edit().putString(Constants.CURRENT_DEVICE, device).commit();
 							prefs.edit().putString(Constants.CURRENT_DEVICE_NAME, deviceName).commit();
 
-							Intent intent = new Intent(ConnectActivity.this, BatteryActivity.class);
+							Intent intent = new Intent(ChooseDeviceActivity.this, MainDeviceActivity.class);
 							startActivity(intent);
-							ConnectActivity.this.finish();
+							ChooseDeviceActivity.this.finish();
 						} else {
-							new AlertDialog.Builder(ConnectActivity.this).setTitle(R.string.failed_communication)
+							new AlertDialog.Builder(ChooseDeviceActivity.this).setTitle(R.string.failed_communication)
 									.setMessage(getString(R.string.connection_error))
 									.setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
 
@@ -139,7 +139,7 @@ public class ConnectActivity extends SherlockActivity {
 	}
 
 	private void setupActionBar() {
-		String deviceId = PreferenceManager.getDefaultSharedPreferences(ConnectActivity.this).getString(
+		String deviceId = PreferenceManager.getDefaultSharedPreferences(ChooseDeviceActivity.this).getString(
 				Constants.CURRENT_DEVICE, null);
 		if (deviceId != null) {
 			ActionBar actionBar = getSupportActionBar();
@@ -169,7 +169,7 @@ public class ConnectActivity extends SherlockActivity {
 
 		switch (item.getItemId()) {
 		case R.id.menu_history:
-			intent = new Intent(this, MainActivity.class);
+			intent = new Intent(this, HistoryGraphActivity.class);
 			startActivity(intent);
 			return true;
 		case R.id.menu_schedule:
@@ -179,11 +179,11 @@ public class ConnectActivity extends SherlockActivity {
 			// TODO: start device settings activity
 			return true;
 		case R.id.menu_change_device:
-			intent = new Intent(this, ConnectActivity.class);
+			intent = new Intent(this, ChooseDeviceActivity.class);
 			startActivity(intent);
 			return true;
 		case R.id.menu_settings:
-			intent = new Intent(this, PreferencesActivity.class);
+			intent = new Intent(this, ApplicationPreferencesActivity.class);
 			startActivity(intent);
 			return true;
 		case android.R.id.home:

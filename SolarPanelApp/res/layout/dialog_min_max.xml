@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:gravity="center_vertical"
     android:padding="5dp"
-    tools:context=".BatteryActivity" >
+    tools:context=".MainDeviceActivity" >
 
     <LinearLayout
         android:id="@+id/range_seek_area"

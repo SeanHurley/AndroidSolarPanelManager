@@ -12,7 +12,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.DisplayMetrics;
 
-class BatteryLevel {
+class BatteryImageCreator {
 	private int width, top_h, body_h, bottom_h;
 	private Canvas canvas;
 	private Paint fill_paint, bitmap_paint;
@@ -21,11 +21,11 @@ class BatteryLevel {
 	public static final int SIZE_LARGE = 1;
 	public static final int SIZE_NOTIFICATION = 4;
 
-	public BatteryLevel(Context context) {
+	public BatteryImageCreator(Context context) {
 		this(context, SIZE_LARGE);
 	}
 
-	public BatteryLevel(Context context, int inSampleSize) {
+	public BatteryImageCreator(Context context, int inSampleSize) {
 		Resources res = context.getResources();
 		// ?context = null;
 

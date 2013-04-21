@@ -9,31 +9,37 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.example.solarpanelmanager.R;
 
 public class BaseActivity extends SherlockActivity {
+	private boolean forbiddenDialogShowing = false;
+
 	protected void showForbiddenErrorDialog() {
-		AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		if (!forbiddenDialogShowing) {
+			forbiddenDialogShowing = true;
+			AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
-		alert.setTitle(R.string.error_setting_password);
-		alert.setMessage(R.string.forbidden_error);
+			alert.setTitle(R.string.error_setting_password);
+			alert.setMessage(R.string.forbidden_error);
 
-		// Set an EditText view to get user input
-		final EditText input = new EditText(this);
-		alert.setView(input);
+			// Set an EditText view to get user input
+			final EditText input = new EditText(this);
+			alert.setView(input);
 
-		alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int whichButton) {
+			alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int whichButton) {
+					forbiddenDialogShowing = false;
+				}
+			});
 
-			}
-		});
+			alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int whichButton) {
+					// Canceled.
+					forbiddenDialogShowing = false;
+				}
+			});
 
-		alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int whichButton) {
-				// Canceled.
-			}
-		});
-
-		alert.show();
+			alert.show();
+		}
 	}
 
 	protected void showDialogNoNegative(int titleId, int messageId, DialogInterface.OnClickListener positiveListener,

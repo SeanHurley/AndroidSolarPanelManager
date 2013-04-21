@@ -1,7 +1,5 @@
 package com.teamramrod.solarpanelmanager;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -15,7 +13,6 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -29,7 +26,7 @@ import com.teamramrod.solarpanelmanager.api.responses.BaseResponse;
 import com.teamramrod.solarpanelmanager.api.responses.SnapshotResponse;
 import com.teamramrod.solarpanelmanager.api.responses.ViewChargeConstraintsResponse;
 
-public class BatteryActivity extends SherlockActivity {
+public class MainDeviceActivity extends BaseActivity {
 
 	private int minVal;
 	private int maxVal;
@@ -43,7 +40,7 @@ public class BatteryActivity extends SherlockActivity {
 	private TextView snapshot_powered;
 	private TextView batteryleveltext;
 	private ImageView battery_image;
-	private BatteryLevel batteryLevel;
+	private BatteryImageCreator batteryLevel;
 	private double battery_voltage;
 	private double battery_current;
 	private double pvcurrent;
@@ -67,7 +64,7 @@ public class BatteryActivity extends SherlockActivity {
 		pvcurrent = 0;
 		pvvoltage = 0;
 		timestamp = 0;
-		batteryLevel = new BatteryLevel(getApplicationContext(), BatteryLevel.SIZE_NOTIFICATION);
+		batteryLevel = new BatteryImageCreator(getApplicationContext(), BatteryImageCreator.SIZE_NOTIFICATION);
 
 		getUI();
 		setupUI();
@@ -205,23 +202,28 @@ public class BatteryActivity extends SherlockActivity {
 
 					@Override
 					public void onComplete(ViewChargeConstraintsResponse response) {
-						apiCallsRunning--;
-						if (apiCallsRunning == 0) {
-							showUI();
-						}
+						if (response == null) {
 
-						if (response.getResult() == 200) {
-							minVal = response.getMin();
-							maxVal = response.getMax();
-							System.out.println("start: " + minVal + ", " + maxVal);
-							min.setProgress(minVal);
-							min.refreshDrawableState();
-							max.setProgress(maxVal);
-							max.refreshDrawableState();
-						} else if (response.getResult() == 403) {
-							showForbiddenErrorDialog();
 						} else {
-							System.out.println("failure in communication");
+
+							apiCallsRunning--;
+							if (apiCallsRunning == 0) {
+								showUI();
+							}
+
+							if (response.getResult() == 200) {
+								minVal = response.getMin();
+								maxVal = response.getMax();
+								System.out.println("start: " + minVal + ", " + maxVal);
+								min.setProgress(minVal);
+								min.refreshDrawableState();
+								max.setProgress(maxVal);
+								max.refreshDrawableState();
+							} else if (response.getResult() == 403) {
+								showForbiddenErrorDialog();
+							} else {
+								System.out.println("failure in communication");
+							}
 						}
 					}
 
@@ -308,27 +310,6 @@ public class BatteryActivity extends SherlockActivity {
 		call.performAction();
 	}
 
-	private void showForbiddenErrorDialog() {
-		if (!dialogShowing) {
-			dialogShowing = true;
-			new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert)
-					.setTitle(R.string.forbidden_error_title).setMessage(R.string.forbidden_error)
-					.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							dialogShowing = false;
-						}
-
-					}).setOnCancelListener(new DialogInterface.OnCancelListener() {
-						@Override
-						public void onCancel(DialogInterface dialog) {
-							dialogShowing = false;
-						}
-					}).show();
-		}
-	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getSupportMenuInflater();
@@ -354,11 +335,11 @@ public class BatteryActivity extends SherlockActivity {
 			startActivity(intent);
 			return true;
 		case R.id.menu_change_device:
-			intent = new Intent(this, ConnectActivity.class);
+			intent = new Intent(this, ChooseDeviceActivity.class);
 			startActivity(intent);
 			return true;
 		case R.id.menu_settings:
-			intent = new Intent(this, PreferencesActivity.class);
+			intent = new Intent(this, ApplicationPreferencesActivity.class);
 			startActivity(intent);
 			return true;
 		case android.R.id.home:

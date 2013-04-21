@@ -32,11 +32,11 @@ public class SplashActivity extends SherlockActivity {
 				if (deviceId == null) {
 					// The user hasn't chosen a device to manage yet, so send
 					// them to the screen to choose one
-					Intent mainIntent = new Intent().setClass(SplashActivity.this, ConnectActivity.class);
+					Intent mainIntent = new Intent().setClass(SplashActivity.this, ChooseDeviceActivity.class);
 					startActivity(mainIntent);
 				} else {
 					// Send them straight to the actual details screen.
-					Intent mainIntent = new Intent().setClass(SplashActivity.this, BatteryActivity.class);
+					Intent mainIntent = new Intent().setClass(SplashActivity.this, MainDeviceActivity.class);
 					startActivity(mainIntent);
 				}
 				finish();
