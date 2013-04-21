@@ -17,13 +17,17 @@ public class BasicCalendarTest extends TestCase {
 		cal = new BasicCalendar(new HashSet<Event>());
 	}
 	
-	public void testAdd(){
+	public void testAddRemove(){
 		GregorianCalendar d = new GregorianCalendar(2100, 0, 1, 1, 0);
 		Event e = new Event("1", "Name", d.getTimeInMillis(), HOUR, 0);
-		assertEquals(0, cal.getCalendar().size());
+		assertEquals(0, cal.getEventList().size());
 		assertTrue(cal.addEvent(e));
 		assertFalse(cal.addEvent(e));
-		assertEquals(1, cal.getCalendar().size());
+		assertEquals(1, cal.getEventList().size());
+		cal.removeEvent(e);
+		assertEquals(0, cal.getEventList().size());
+		cal.addEvent(e);
+		assertEquals(1, cal.getEventList().size());
 	}
 	
 	public void testNoConflict(){

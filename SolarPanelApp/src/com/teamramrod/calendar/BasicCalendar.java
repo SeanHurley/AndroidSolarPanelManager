@@ -1,16 +1,13 @@
 package com.teamramrod.calendar;
 
-
 import java.util.Collection;
-import java.util.Calendar;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.Set;
+import java.util.TreeSet;
 
 import com.teamramrod.solarpanelmanager.api.responses.Event;
 
 public class BasicCalendar {
-	private Map<String, Event> calendar = new TreeMap<String, Event>();
-	private static final long DAY_MILLIS = 24 * 60 * 60 * 1000;
+	private Set<Event> eventList = new TreeSet<Event>();
 	
 	public BasicCalendar(Collection<Event> events) {
 		for (Event e : events) {
@@ -19,20 +16,20 @@ public class BasicCalendar {
 	}
 	
 	public boolean addEvent(Event event) {
-		for (Event e : calendar.values()) {
+		for (Event e : eventList) {
 			if (e.isOverlapping(event))
 				return false;
 		}
-		calendar.put(event.getKey(), event);
+		eventList.add(event);
 		return true;
 	}
 	
 	public void removeEvent(Event event) {
-		calendar.remove(event.getKey());
+		eventList.remove(event);
 	}
 	
 	public void removeEvent(String id) {
-		for (Event e : calendar.values()) {
+		for (Event e : eventList) {
 			if (e.getId() == id) {
 				removeEvent(e);
 				break;
@@ -40,8 +37,8 @@ public class BasicCalendar {
 		}
 	}
 	
-	public Map<String, Event> getCalendar() {
-		return calendar;
+	public Set<Event> getEventList(){
+		return eventList;
 	}
 	
 }

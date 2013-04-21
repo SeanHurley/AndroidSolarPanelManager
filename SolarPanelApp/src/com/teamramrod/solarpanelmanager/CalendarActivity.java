@@ -1,7 +1,5 @@
 package com.teamramrod.solarpanelmanager;
 
-import java.util.Map.Entry;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -67,8 +65,8 @@ public class CalendarActivity extends Activity {
 				loadDialog.dismiss();
 				
 				calendar = new BasicCalendar(response.getEvents());
-				for (Entry<String, Event> entry : calendar.getCalendar().entrySet())
-					arrayAdapter.add(entry.getValue());
+				for(Event e : calendar.getEventList())
+					arrayAdapter.add(e);
 			}
 			
 		}, deviceId, pass)).performAction();
@@ -138,7 +136,6 @@ public class CalendarActivity extends Activity {
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == ADD_EVENT_CODE && resultCode == RESULT_OK){
 			Bundle bundle = data.getExtras();

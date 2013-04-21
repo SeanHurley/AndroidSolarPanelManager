@@ -3,14 +3,16 @@ package com.teamramrod.solarpanelmanager.api.responses;
 import java.io.Serializable;
 import java.util.Calendar;
 
-public class Event implements Serializable {
+public class Event implements Serializable, Comparable<Event> {
 
 	private static final long DAY_MILLIS = 24 * 60 * 60 * 1000;
+	private static final long MINUTE_MILLIS = 60 * 1000;
+	
 	private String id;
 	private String name;
 	private long firstTime;
 	private long duration;
-	private long interval;
+	private long interval; // currently unused - every Event is assumed to repeat daily
 
 	public Event(String id, String name, long firstTime, long duration, long interval) {
 		this.id = id;
@@ -40,7 +42,7 @@ public class Event implements Serializable {
 		long end = (start + duration) % DAY_MILLIS;	
 		long otherStart = e.getFirstTime() % DAY_MILLIS;
 		long otherEnd = (otherStart + e.getDuration()) % DAY_MILLIS;
-		return (start >= otherStart && start < otherEnd) || (end <= otherEnd && end > otherStart);
+		return (otherStart >= start && otherStart < end) || (otherEnd <= end && otherEnd > start);
 	}
 	
 
@@ -48,7 +50,7 @@ public class Event implements Serializable {
 	 * The string representation of an event is its name, start time, and duration in minutes
 	 */
 	public String toString(){
-		long minutes = duration / (1000 * 60);
+		long minutes = duration / MINUTE_MILLIS;
 		return String.format("%s at %s for %d minutes", name, getKey(), minutes);
 	}
 
@@ -86,6 +88,13 @@ public class Event implements Serializable {
 
 	public String getId() {
 		return id;
+	}
+
+	@Override
+	public int compareTo(Event another) {
+		Long start = firstTime % DAY_MILLIS;
+		Long otherStart = another.getFirstTime() % DAY_MILLIS;
+		return start.compareTo(otherStart);
 	}
 
 }
