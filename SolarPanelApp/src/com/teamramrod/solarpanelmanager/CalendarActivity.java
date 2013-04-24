@@ -27,20 +27,28 @@ import com.teamramrod.solarpanelmanager.api.responses.BaseResponse;
 import com.teamramrod.solarpanelmanager.api.responses.Event;
 import com.teamramrod.solarpanelmanager.api.responses.EventsResponse;
 
+/**
+ * Activity class for the scheduler screen. Displays a list of currently
+ * scheduled events and provides a functionality to delete existing events
+ * and add new ones.
+ * 
+ * @author michael
+ */
 public class CalendarActivity extends Activity {
 
 	private static final int ADD_EVENT_CODE = 2048;
 	
-	BasicCalendar calendar;
-	String deviceId;
-	String pass;
-	ArrayAdapter<Event> arrayAdapter;
+	private BasicCalendar calendar;
+	private String deviceId;
+	private String pass;
+	private ArrayAdapter<Event> arrayAdapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_calendar);
 		
+		// this legwork should probably be handled in a shared SolarActivity superclass
 		deviceId = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.CURRENT_DEVICE, null);
 		pass = PreferenceManager.getDefaultSharedPreferences(this).getString(
 				Constants.PASS_PHRASE_PREFERENCE + deviceId, null);
@@ -53,6 +61,26 @@ public class CalendarActivity extends Activity {
 		ListView eventListView = (ListView) findViewById(R.id.calendar_event_list);
 		eventListView.setAdapter(arrayAdapter);
 		
+		pullEvents();
+		
+		eventListView.setOnItemClickListener(new EventClickListener());
+		
+		((Button) findViewById(R.id.calendar_add_event_button)).setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				Intent i = new Intent(CalendarActivity.this, AddEventActivity.class);
+				startActivityForResult(i, ADD_EVENT_CODE);
+			}
+			
+		});
+	}
+	
+	/**
+	 * Pull the initial list of events from the controller and add them to the
+	 * interface.
+	 */
+	private void pullEvents() {
 		final ProgressDialog loadDialog = new ProgressDialog(CalendarActivity.this);
 		loadDialog.setTitle("Loading");
 		loadDialog.setMessage("Loading events");
@@ -70,104 +98,111 @@ public class CalendarActivity extends Activity {
 			}
 			
 		}, deviceId, pass)).performAction();
+	}
+	
+	/**
+	 * Make a request to the controller to remove an event. If successful,
+	 * also remove the event from the interface.
+	 * 
+	 * @param event    the event to delete
+	 */
+	private void removeEvent(final Event event) {
+		final ProgressDialog dialog = new ProgressDialog(CalendarActivity.this);
+		dialog.setTitle("Loading");
+		dialog.setMessage("Communicating with device");
+		dialog.show();
 		
-		eventListView.setOnItemClickListener(new OnItemClickListener() {
+		(new UnscheduleEventHandler(new Callback<BaseResponse>() {
 
 			@Override
-			public void onItemClick(final AdapterView<?> lis, View arg1, final int position,
-					long arg3) {
-				new AlertDialog.Builder(CalendarActivity.this).setIcon(android.R.drawable.ic_dialog_alert)
-				.setTitle(R.string.events_delete_confirm_title).setMessage(R.string.events_delete_confirm_message)
-				.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface d, int which) {
-						final Event disp = (Event) lis.getItemAtPosition(position);
-						final String id = disp.getId();
-						
-						final ProgressDialog dialog = new ProgressDialog(CalendarActivity.this);
-						dialog.setTitle("Loading");
-						dialog.setMessage("Communicating with device");
-						dialog.show();
-						
-						(new UnscheduleEventHandler(new Callback<BaseResponse>() {
-
-							@Override
-							public void onComplete(BaseResponse response) {
-								dialog.dismiss();
-								if (response.getResult() == 200) {
-									calendar.removeEvent(id);
-									arrayAdapter.remove(disp);
-								} else {
-									Toast.makeText(CalendarActivity.this, "Could not remove event", Toast.LENGTH_SHORT).show();
-								}
-							}
-							
-						}, deviceId, pass, id)).performAction();		
-					}
-
-				}).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						// do nothing
-					}
-				}).setOnCancelListener(new DialogInterface.OnCancelListener() {
-					@Override
-					public void onCancel(DialogInterface dialog) {
-						// do nothing
-					}
-				}).show();
-
+			public void onComplete(BaseResponse response) {
+				dialog.dismiss();
+				if (response.getResult() == 200) {
+					calendar.removeEvent(event.getId());
+					arrayAdapter.remove(event);
+				} else {
+					Toast.makeText(CalendarActivity.this, "Could not remove event", Toast.LENGTH_SHORT).show();
+				}
 			}
 			
-		});
+		}, deviceId, pass, event.getId())).performAction();
+	}
+	
+	/**
+	 * Make a request to the controller to add an event. If successful, add
+	 * the event to the interface. The id of the event to be added doesn't
+	 * matter since the controller will assign an id.
+	 * 
+	 * @param event    the event to add
+	 */
+	private void addEvent(final Event event) {
+		final ProgressDialog dialog = new ProgressDialog(CalendarActivity.this);
+		dialog.setTitle("Loading");
+		dialog.setMessage("Communicating with device");
+		dialog.show();
 		
-		((Button) findViewById(R.id.calendar_add_event_button)).setOnClickListener(new OnClickListener() {
+		(new ScheduleEventHandler(new Callback<BaseResponse>() {
 
 			@Override
-			public void onClick(View arg0) {
-				Intent i = new Intent(CalendarActivity.this, AddEventActivity.class);
-				startActivityForResult(i, ADD_EVENT_CODE);
+			public void onComplete(BaseResponse response) {
+				dialog.dismiss();
+				if (response.getResult() == 200) {
+					String id = response.getMessage();
+					// TODO: replace event data with data from the message instead of
+					// assuming it's the same as the event requested to be added.
+					Event toAdd = new Event(id, event.getName(), event.getFirstTime(), event.getDuration(), event.getInterval());
+					if (!calendar.addEvent(toAdd)) {
+						Toast.makeText(CalendarActivity.this, "Event conflicts with another event", Toast.LENGTH_SHORT).show();
+					} else {
+						arrayAdapter.add(toAdd);
+					}
+				} else {
+					Toast.makeText(CalendarActivity.this, "Could not add event", Toast.LENGTH_SHORT).show();
+				}
 			}
 			
-		});
+		}, deviceId, pass, event.getName(), event.getFirstTime(), event.getDuration(), event.getInterval())).performAction();
 	}
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == ADD_EVENT_CODE && resultCode == RESULT_OK){
-			Bundle bundle = data.getExtras();
-			final Event e = (Event) bundle.get(Constants.EVENT_RESULT_CODE);
+		if (requestCode == ADD_EVENT_CODE && resultCode == RESULT_OK) {
+			addEvent((Event) data.getExtras().get(Constants.EVENT_RESULT_CODE));
+		}
+	}
+	
+	/**
+	 * Listens for clicks on event rows and deletes the clicked events. 
+	 */
+	private class EventClickListener implements OnItemClickListener {
 
-			final ProgressDialog dialog = new ProgressDialog(CalendarActivity.this);
-			dialog.setTitle("Loading");
-			dialog.setMessage("Communicating with device");
-			dialog.show();
-			
-			(new ScheduleEventHandler(new Callback<BaseResponse>() {
+		@Override
+		public void onItemClick(final AdapterView<?> lis, View arg1, final int position,
+				long arg3) {
+			new AlertDialog.Builder(CalendarActivity.this).setIcon(android.R.drawable.ic_dialog_alert)
+			.setTitle(R.string.events_delete_confirm_title).setMessage(R.string.events_delete_confirm_message)
+			.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
 
 				@Override
-				public void onComplete(BaseResponse response) {
-					dialog.dismiss();
-					if (response.getResult() == 200) {
-						String id = response.getMessage();
-						// TODO: replace event data with data from the message instead of
-						// assuming it's the same.
-						Event toAdd = new Event(id, e.getName(), e.getFirstTime(), e.getDuration(), e.getInterval());
-						if (!calendar.addEvent(toAdd)) {
-							Toast.makeText(CalendarActivity.this, "Event conflicts with another event", Toast.LENGTH_SHORT).show();
-						} else {
-							arrayAdapter.add(e);
-						}
-					} else {
-						Toast.makeText(CalendarActivity.this, "Could not add event", Toast.LENGTH_SHORT).show();
-					}
+				public void onClick(DialogInterface d, int which) {
+					removeEvent((Event) lis.getItemAtPosition(position));	
 				}
-				
-			}, deviceId, pass, e.getName(), e.getFirstTime(), e.getDuration(), e.getInterval())).performAction();
+
+			}).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// do nothing
+				}
+			}).setOnCancelListener(new DialogInterface.OnCancelListener() {
+				@Override
+				public void onCancel(DialogInterface dialog) {
+					// do nothing
+				}
+			}).show();
 		}
+		
 	}
 	
 }
