@@ -19,16 +19,19 @@
         android:uiOptions="splitActionBarWhenNarrow">
         <activity
             android:name="com.teamramrod.solarpanelmanager.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name" 
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.teamramrod.solarpanelmanager.MainDeviceActivity"
             android:label="@string/app_name"
-            android:launchMode="singleInstance" >
+            android:launchMode="singleInstance" 
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.teamramrod.solarpanelmanager.SplashActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,33 +40,45 @@
         </activity>
         <activity
             android:name="com.teamramrod.solarpanelmanager.HistoricalGraphActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="org.achartengine.GraphicalActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.teamramrod.solarpanelmanager.KnownDevicesActivity"
-            android:label="@string/title_activity_known_devices" >
+            android:label="@string/title_activity_known_devices"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity android:name="com.teamramrod.solarpanelmanager.ChooseDeviceActivity" >
+        <activity 
+            android:name="com.teamramrod.solarpanelmanager.ChooseDeviceActivity"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity android:name="com.teamramrod.solarpanelmanager.ApplicationPreferencesActivity" >
+        <activity 
+            android:name="com.teamramrod.solarpanelmanager.ApplicationPreferencesActivity"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity android:name="com.teamramrod.solarpanelmanager.DevicePreferencesActivity" >
+        <activity 
+            android:name="com.teamramrod.solarpanelmanager.DevicePreferencesActivity"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.teamramrod.solarpanelmanager.HistoryGraphActivity"
-            android:label="@string/title_activity_history_graph" >
+            android:label="@string/title_activity_history_graph"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.teamramrod.solarpanelmanager.CalendarActivity"
-            android:label="@string/title_activity_calendar" >
+            android:label="@string/title_activity_calendar"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.teamramrod.solarpanelmanager.AddEventActivity"
-            android:label="@string/title_activity_add_event" >
+            android:label="@string/title_activity_add_event"
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 

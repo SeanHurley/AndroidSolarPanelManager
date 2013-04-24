@@ -13,7 +13,6 @@ import org.achartengine.renderer.XYSeriesRenderer;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.View;
-
 import com.teamramrod.solarpanelmanager.HistoryGraphActivity.GraphLabelEnum;
 import com.teamramrod.solarpanelmanager.api.responses.SnapshotResponse;
 
@@ -27,12 +26,10 @@ public class LineGraph {
 
 	public View getView(Context context, Collection<SnapshotResponse> history,
 			GraphLabelEnum graphLabel) {
-		// Convert our data into series object via TimeSeries
-		// Creates a line called "Line 1"
 		
+		// Convert our data into series object via TimeSeries
 		TimeSeries series = new TimeSeries(nameOfGraph);
 
-		// TODO fix the labels
 		int x = 1;
 		for (SnapshotResponse sr : history) {
 			series.add(x, sr.getBatteryPercent());
@@ -67,6 +64,9 @@ public class LineGraph {
 		mRenderer.setXTitle(nameXAxis);
 		// YAxis Title
 		mRenderer.setYTitle(nameYAxis);
+		
+		mRenderer.setZoomButtonsVisible(true);
+		mRenderer.setZoomEnabled(true);
 
 		// Covert timestamp into date and use this as new XAxis label
 		x = 1;
@@ -79,20 +79,24 @@ public class LineGraph {
 				case MONTH:
 					DateFormat shortDf = DateFormat.getDateInstance(DateFormat.SHORT);
 					mRenderer.addXTextLabel(x, shortDf.format(date));
+					break;
 				case DATE:
-					DateFormat mediumDf = DateFormat.getDateInstance(DateFormat.MEDIUM);
-					mRenderer.addXTextLabel(x, mediumDf.format(date));
+					DateFormat fullDf = DateFormat.getDateInstance(DateFormat.FULL);
+					mRenderer.addXTextLabel(x, fullDf.format(date));
+					break;
 				case TIME:
 					DateFormat longDf = DateFormat.getTimeInstance(DateFormat.LONG);
 					mRenderer.addXTextLabel(x, longDf.format(date));
+					break;
+				default:
+					break;
 				}
 			}
 			x++;
 		}
 
 		// Embeds graph in Activity Gives you view, linearLayout.view
-		View mChartView = ChartFactory.getLineChartView(context, mDataset,
-				mRenderer);
+		View mChartView = ChartFactory.getLineChartView(context, mDataset,mRenderer);
 
 		return mChartView;
 	}
