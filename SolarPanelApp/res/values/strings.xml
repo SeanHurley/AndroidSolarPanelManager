@@ -48,7 +48,7 @@
     <string name="bluetooth_warning">bluetooth not enabled; cannot continue</string>
     <string name="rescan">Rescan</string>
     <string name="PV_voltage">PV Voltage</string>
-    <string name="PV_current">PV　Current</string>
+    <string name="PV_current">PV Current</string>
     <string name="battery_percent">Battery Percent</string>
     <string name="zero">0</string>
     <string name="button_bluetooth_settings">Pair Device</string>

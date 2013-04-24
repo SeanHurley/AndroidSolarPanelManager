@@ -55,7 +55,7 @@ public class ResponseParser {
 		if (response == "") {
 			return new SnapshotResponse(500, null);
 		}
-		
+
 		// Call the parse response for the basic map, and then create the proper
 		// response object
 		JSONObject json = (JSONObject) (JSONValue.parse(response));
@@ -83,9 +83,11 @@ public class ResponseParser {
 		double outtake = getDouble(json.get(MessageKeys.SNAPSHOT_OUTTAKE));
 
 		int percent = (Integer) json.get(MessageKeys.SNAPSHOT_BATTERY_PERCENT);
+		int min = (Integer) json.get(MessageKeys.CHARGE_MIN);
+		int max = (Integer) json.get(MessageKeys.CHARGE_MAX);
 
-		return new SnapshotResponse(result, message, longTimestamp, percent, batteryVoltage, PVCurrent, PVVoltage,
-				batteryCurrent, intake, outtake);
+		return new SnapshotResponse(result, message, longTimestamp, percent, min, max, batteryVoltage, PVCurrent,
+				PVVoltage, batteryCurrent, intake, outtake);
 	}
 
 	private static double getDouble(Object obj) {
@@ -104,7 +106,7 @@ public class ResponseParser {
 		} else {
 			System.out.println(response);
 		}
-		
+
 		JSONObject json = (JSONObject) (JSONValue.parse(response));
 
 		int result = (Integer) json.get(MessageKeys.RESPONSE_CODE);

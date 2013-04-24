@@ -94,34 +94,30 @@ public class MainDeviceActivity extends BaseActivity {
 			}
 
 			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {
-				// TODO Auto-generated method stub
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				System.out.println("min: " + minVal + ", max: " + maxVal);
+				updateLevels();
 			}
 
 			@Override
-			public void onStopTrackingTouch(SeekBar seekBar) {
-				// TODO Auto-generated method stub
-				System.out.println("min: " + minVal + ", max: " + maxVal);
-				updateLevels();
+			public void onStartTrackingTouch(SeekBar seekBar) {
+				
 			}
 		});
 
 		max.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-				// TODO Auto-generated method stub
 				maxvalue.setText(R.string.max + ":" + progress);
 				maxVal = progress;
 			}
 
 			@Override
 			public void onStartTrackingTouch(SeekBar seekBar) {
-				// TODO Auto-generated method stub
 			}
 
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
-				// TODO Auto-generated method stub
 				System.out.println("min: " + minVal + ", max: " + maxVal);
 				updateLevels();
 			}
@@ -137,13 +133,10 @@ public class MainDeviceActivity extends BaseActivity {
 	private void showUI() {
 		powerUserEnabled = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
 				Constants.POWER_USER_PREFERENCE, false);
-		Log.d("show", "show");
 
 		activityIndicator.setVisibility(View.GONE);
 		battery_image.setVisibility(View.VISIBLE);
 		batteryleveltext.setVisibility(View.VISIBLE);
-
-		// TODO remove these completely
 		maxvalue.setVisibility(View.INVISIBLE);
 		minvalue.setVisibility(View.INVISIBLE);
 
@@ -165,7 +158,6 @@ public class MainDeviceActivity extends BaseActivity {
 
 	private void setupActionBar() {
 		ActionBar actionBar = getSupportActionBar();
-
 		String deviceName = PreferenceManager.getDefaultSharedPreferences(this).getString(
 				Constants.CURRENT_DEVICE_NAME, "Unknown Device");
 		actionBar.setSubtitle(deviceName);
@@ -173,8 +165,7 @@ public class MainDeviceActivity extends BaseActivity {
 
 	private void hideUI() {
 		activityIndicator.setVisibility(View.VISIBLE);
-
-		min.setVisibility(View.INVISIBLE);
+        min.setVisibility(View.INVISIBLE);
 		max.setVisibility(View.INVISIBLE);
 		battery_image.setVisibility(View.INVISIBLE);
 		batteryleveltext.setVisibility(View.INVISIBLE);
@@ -184,6 +175,7 @@ public class MainDeviceActivity extends BaseActivity {
 		minvalue.setVisibility(View.INVISIBLE);
 	}
 
+	
 	private void getData() {
 		powerUserEnabled = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
 				Constants.POWER_USER_PREFERENCE, false);
@@ -191,43 +183,20 @@ public class MainDeviceActivity extends BaseActivity {
 		String pass = PreferenceManager.getDefaultSharedPreferences(this).getString(
 				Constants.PASS_PHRASE_PREFERENCE + deviceId, null);
 		if (deviceId == null) {
-			// TODO - Tell the user that something is wrong
+			showDeviceNotAvailable();
 		}
-
 		hideUI();
 		apiCallsRunning = 2;
-		// TODO use the deviceid when calling the handler
-		ViewChargeConstraintsHandler handler = new ViewChargeConstraintsHandler(
-				new Callback<ViewChargeConstraintsResponse>() {
+		ViewChargeConstraintsHandler handler = getChargeConstraintResponse(
+				deviceId, pass);
+		SnapshotHandler snapshotHandler = getSnapshotResponse(deviceId, pass);
+		
+        snapshotHandler.performAction();
+		handler.performAction();
 
-					@Override
-					public void onComplete(ViewChargeConstraintsResponse response) {
-						if (response == null) {
-							showDeviceNotAvailable();
-						} else {
+	}
 
-							apiCallsRunning--;
-							if (apiCallsRunning == 0) {
-								showUI();
-							}
-
-							if (response.getResult() == 200) {
-								minVal = response.getMin();
-								maxVal = response.getMax();
-								System.out.println("start: " + minVal + ", " + maxVal);
-								min.setProgress(minVal);
-								min.refreshDrawableState();
-								max.setProgress(maxVal);
-								max.refreshDrawableState();
-							} else if (response.getResult() == 403) {
-								showForbiddenErrorDialog();
-							} else {
-								System.out.println("failure in communication");
-							}
-						}
-					}
-
-				}, deviceId, pass);
+	private SnapshotHandler getSnapshotResponse(String deviceId, String pass) {
 		SnapshotHandler snapshotHandler = new SnapshotHandler(new Callback<SnapshotResponse>() {
 
 			@Override
@@ -235,33 +204,12 @@ public class MainDeviceActivity extends BaseActivity {
 				if (response == null) {
 					showDeviceNotAvailable();
 				}
-
 				apiCallsRunning--;
 				if (apiCallsRunning == 0) {
 					showUI();
 				}
-
 				if (response.getResult() == 200) {
-
-					level = response.getBatteryPercent();
-					battery_voltage = response.getBatteryVoltage();
-					battery_current = response.getBatteryCurrent();
-					pvvoltage = response.getPVVoltage();
-					pvcurrent = response.getPVCurrent();
-					timestamp = response.getTimestamp();
-
-					batteryLevel.setLevel(level);
-					battery_image.setImageBitmap(batteryLevel.getBitmap());
-					// TODO Don't use raw strings here
-
-					Resources res = getResources();
-
-					minvalue.setText(res.getString(R.string.battery_min) + ":" + minVal);
-					maxvalue.setText(res.getString(R.string.battery_max) + ":" + maxVal);
-					snapshot_powered.setText(res.getString(R.string.battery_in) + "\n"
-							+ res.getString(R.string.battery_out) + "\n"
-							+ res.getString(R.string.battery_estimatedtime));
-
+					Resources res = assignSnapshotResponse(response);
 					if (!powerUserEnabled) {
 						snapshot.setText(res.getString(R.string.battery_in) + "\n"
 								+ res.getString(R.string.battery_out) + "\n"
@@ -283,10 +231,60 @@ public class MainDeviceActivity extends BaseActivity {
 			}
 
 		}, deviceId, pass);
+		return snapshotHandler;
+	}
+	
 
-		snapshotHandler.performAction();
-		handler.performAction();
+	private Resources assignSnapshotResponse(SnapshotResponse response) {
+		level = response.getBatteryPercent();
+		battery_voltage = response.getBatteryVoltage();
+		battery_current = response.getBatteryCurrent();
+		pvvoltage = response.getPVVoltage();
+		pvcurrent = response.getPVCurrent();
+		timestamp = response.getTimestamp();
+		batteryLevel.setLevel(level);
+		battery_image.setImageBitmap(batteryLevel.getBitmap());
+		Resources res = getResources();
+		minvalue.setText(res.getString(R.string.battery_min) + ":" + minVal);
+		maxvalue.setText(res.getString(R.string.battery_max) + ":" + maxVal);
+		snapshot_powered.setText(res.getString(R.string.battery_in) + "\n"
+				+ res.getString(R.string.battery_out) + "\n"
+				+ res.getString(R.string.battery_estimatedtime));
+		return res;
+	}
 
+
+	private ViewChargeConstraintsHandler getChargeConstraintResponse(
+			String deviceId, String pass) {
+		ViewChargeConstraintsHandler handler = new ViewChargeConstraintsHandler(
+				new Callback<ViewChargeConstraintsResponse>() {
+					
+					@Override
+					public void onComplete(ViewChargeConstraintsResponse response) {
+						if (response == null) {
+							showDeviceNotAvailable();
+						} else {
+							apiCallsRunning--;
+							if (apiCallsRunning == 0) {
+								showUI();
+							}
+							if (response.getResult() == 200) {
+								minVal = response.getMin();
+								maxVal = response.getMax();
+								System.out.println("start: " + minVal + ", " + maxVal);
+								min.setProgress(minVal);
+								min.refreshDrawableState();
+								max.setProgress(maxVal);
+								max.refreshDrawableState();
+							} else if (response.getResult() == 403) {
+								showForbiddenErrorDialog();
+							} else {
+								System.out.println("failure in communication");
+							}
+						}
+					}
+				}, deviceId, pass);
+		return handler;
 	}
 
 	private void updateLevels() {
@@ -294,17 +292,15 @@ public class MainDeviceActivity extends BaseActivity {
 		String pass = PreferenceManager.getDefaultSharedPreferences(this).getString(
 				Constants.PASS_PHRASE_PREFERENCE + deviceId, null);
 		if (deviceId == null) {
-			// TODO - Tell the user that something is wrong
+			showDeviceNotAvailable(); 
 		}
 
-		// TODO - Show spinner and whatnot
 		SetChargeConstraintsHandler call = new SetChargeConstraintsHandler(new Callback<BaseResponse>() {
 			@Override
 			public void onComplete(BaseResponse response) {
 				if (response.getResult() == 403) {
 					showForbiddenErrorDialog();
 				}
-				// System.out.println(response.getResult());
 			}
 		}, deviceId, pass, maxVal, minVal);
 		call.performAction();
@@ -320,7 +316,6 @@ public class MainDeviceActivity extends BaseActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent;
-
 		switch (item.getItemId()) {
 		case R.id.menu_history:
 			intent = new Intent(this, HistoryGraphActivity.class);

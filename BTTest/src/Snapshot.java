@@ -2,8 +2,10 @@ public class Snapshot {
 	private long time;
 	private double panelV, panelI, batteryV, batteryI, intake, outtake;
 	private int percent;
+	private int min, max;
 
-	public Snapshot(long t, int percent, double pV, double pI, double bV, double bI, double in, double out) {
+	public Snapshot(long t, int percent, int min, int max, double pV, double pI, double bV, double bI, double in,
+			double out) {
 		this.time = t;
 		this.panelI = pI;
 		this.panelV = pV;
@@ -12,6 +14,8 @@ public class Snapshot {
 		this.percent = percent;
 		this.intake = in;
 		this.outtake = out;
+		this.min = min;
+		this.max = max;
 	}
 
 	public long getTime() {
@@ -44,6 +48,14 @@ public class Snapshot {
 
 	public double getOutake() {
 		return this.outtake;
+	}
+
+	public int getMin() {
+		return this.min;
+	}
+
+	public int getMax() {
+		return this.max;
 	}
 
 }

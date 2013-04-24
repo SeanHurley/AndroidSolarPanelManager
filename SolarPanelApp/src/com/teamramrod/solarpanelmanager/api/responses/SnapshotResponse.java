@@ -11,10 +11,11 @@ public class SnapshotResponse extends BaseResponse {
 	private double batteryCurrent;
 	private double intakeRate;
 	private double outtakeRate;
-	private int batteryPercent;
+	private int batteryPercent, minCharge, maxCharge;
 
-	public SnapshotResponse(int result, String message, long timestamp, int batteryPercent, double batteryVoltage,
-			double PVCurrent, double PVVoltage, double batteryCurrent, double intake, double outtake) {
+	public SnapshotResponse(int result, String message, long timestamp, int batteryPercent, int min, int max,
+			double batteryVoltage, double PVCurrent, double PVVoltage, double batteryCurrent, double intake,
+			double outtake) {
 		super(MessageTypes.SNAPSHOT_RESPONSE, result, message);
 		this.timestamp = timestamp;
 		this.batteryPercent = batteryPercent;
@@ -24,6 +25,8 @@ public class SnapshotResponse extends BaseResponse {
 		this.batteryCurrent = batteryCurrent;
 		this.intakeRate = intake;
 		this.outtakeRate = outtake;
+		this.minCharge = min;
+		this.maxCharge = max;
 	}
 
 	public SnapshotResponse(int result, String message) {
@@ -60,6 +63,14 @@ public class SnapshotResponse extends BaseResponse {
 
 	public double getOuttakeRate() {
 		return outtakeRate;
+	}
+
+	public int getMin() {
+		return this.minCharge;
+	}
+
+	public int getMax() {
+		return this.maxCharge;
 	}
 
 	@Override
