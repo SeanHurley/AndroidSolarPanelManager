@@ -5,7 +5,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -32,7 +31,6 @@ public abstract class CommunicationHandler<T extends BaseResponse> {
 	private String address;
 	private String pass;
 	private ServiceASyncTask task;
-	private static LinkedBlockingQueue<AsyncTask> tasks = new LinkedBlockingQueue<AsyncTask>();
 
 	/**
 	 * @return A JSONObject which will tell the bluetooth device which type of
