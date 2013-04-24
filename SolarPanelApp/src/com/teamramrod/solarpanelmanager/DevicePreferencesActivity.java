@@ -74,9 +74,6 @@ public class DevicePreferencesActivity extends BaseActivity {
 		deviceId = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.CURRENT_DEVICE, null);
 		oldPassPhrase = PreferenceManager.getDefaultSharedPreferences(this).getString(
 				Constants.PASS_PHRASE_PREFERENCE + deviceId, null);
-		if (deviceId == null) {
-			// TODO - Tell the user that something is wrong
-		}
 
 		ViewChargeConstraintsHandler handler = new ViewChargeConstraintsHandler(
 				new Callback<ViewChargeConstraintsResponse>() {
@@ -127,7 +124,7 @@ public class DevicePreferencesActivity extends BaseActivity {
 							} else if (response.getResult() == 403) {
 								showForbiddenErrorDialog();
 							} else {
-								// TODO Something went wrong, tell the user
+								showDeviceNotAvailable();
 							}
 						}
 					}, deviceId, oldPassPhrase, value);
@@ -141,6 +138,24 @@ public class DevicePreferencesActivity extends BaseActivity {
 		}
 	};
 
+	private RangeSeekBar<Integer> buildSeekBar(final TextView minValueText, final TextView maxValueText) {
+		final RangeSeekBar<Integer> seekBar = new RangeSeekBar<Integer>(0, 100, DevicePreferencesActivity.this);
+		seekBar.setNotifyWhileDragging(true);
+		seekBar.setSelectedMinValue(minValue);
+		seekBar.setSelectedMaxValue(maxValue);
+		minValueText.setText(minValue + "");
+		maxValueText.setText(maxValue + "");
+
+		seekBar.setOnRangeSeekBarChangeListener(new OnRangeSeekBarChangeListener<Integer>() {
+			@Override
+			public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Integer minValue, Integer maxValue) {
+				minValueText.setText(minValue + "");
+				maxValueText.setText(maxValue + "");
+			}
+		});
+		return seekBar;
+	}
+
 	private View.OnClickListener minMaxRowOnClick = new View.OnClickListener() {
 
 		@Override
@@ -151,22 +166,7 @@ public class DevicePreferencesActivity extends BaseActivity {
 			LinearLayout seekArea = (LinearLayout) dialoglayout.findViewById(R.id.range_seek_area);
 			final TextView minValueText = (TextView) dialoglayout.findViewById(R.id.min_value);
 			final TextView maxValueText = (TextView) dialoglayout.findViewById(R.id.max_value);
-
-			final RangeSeekBar<Integer> seekBar = new RangeSeekBar<Integer>(0, 100, DevicePreferencesActivity.this);
-			minValueText.setText(minValue + "");
-			maxValueText.setText(maxValue + "");
-
-			seekBar.setOnRangeSeekBarChangeListener(new OnRangeSeekBarChangeListener<Integer>() {
-				@Override
-				public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Integer minValue, Integer maxValue) {
-					minValueText.setText(minValue + "");
-					maxValueText.setText(maxValue + "");
-				}
-			});
-			seekBar.setNotifyWhileDragging(true);
-			seekBar.setSelectedMinValue(minValue);
-			seekBar.setSelectedMaxValue(maxValue);
-
+			final RangeSeekBar<Integer> seekBar = buildSeekBar(minValueText, maxValueText);
 			seekArea.addView(seekBar);
 			DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
 
@@ -206,10 +206,12 @@ public class DevicePreferencesActivity extends BaseActivity {
 						@Override
 						public void onComplete(BaseResponse response) {
 							hideLoadingSpinner();
-							if (response.getResult() == 403) {
+							if (response.getResult() == 200) {
+								// TODO Everything is fine, tell user
+							} else if (response.getResult() == 403) {
 								showForbiddenErrorDialog();
 							} else {
-								// TODO Tell user
+								showDeviceNotAvailable();
 							}
 						}
 					}, deviceId, oldPassPhrase, System.currentTimeMillis());
@@ -234,10 +236,12 @@ public class DevicePreferencesActivity extends BaseActivity {
 						@Override
 						public void onComplete(BaseResponse response) {
 							hideLoadingSpinner();
-							if (response.getResult() == 403) {
+							if (response.getResult() == 200) {
+								// TODO Everything is fine, tell user
+							} else if (response.getResult() == 403) {
 								showForbiddenErrorDialog();
 							} else {
-								// TODO - Tell the user
+								showDeviceNotAvailable();
 							}
 						}
 						// TODO Get the real values
@@ -273,8 +277,7 @@ public class DevicePreferencesActivity extends BaseActivity {
 							} else if (response.getResult() == 403) {
 								showForbiddenErrorDialog();
 							} else {
-								// TODO Something went wrong, tell the user
-								System.out.println("FAILED SETTING NEW PASS");
+								showDeviceNotAvailable();
 							}
 						}
 					}, deviceId, value, value);

@@ -30,8 +30,8 @@
     <string name="title_activity_historical_graph">HistoricalGraph</string>
     <string name="battery_main">Battery Settings</string>
     <string name="battery_voltage">Battery voltage</string>
-    <string name="battery_max">Maximum voltage</string>
-    <string name="battery_min">Minimum voltage</string>
+	<string name="min_charge_label">Minimum charge level</string>
+	<string name="max_charge_label">Maximum charge level</string>
     <string name="battery_in">In</string>
     <string name="battery_out">Out</string>
     <string name="battery_estimatedtime">Estimated Time</string>

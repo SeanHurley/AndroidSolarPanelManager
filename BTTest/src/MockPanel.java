@@ -31,8 +31,8 @@ public class MockPanel {
 		events.put("b", new Event("b", "Event 2", 3000000, 1000000, 3000000));
 	}
 
-	private static int maxCharge;
-	private static int minCharge;
+	private static int maxCharge = 95;
+	private static int minCharge = 5;
 	private static int currentEventID = 0;
 
 	public static void main(String[] args) {

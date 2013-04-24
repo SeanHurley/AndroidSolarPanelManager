@@ -26,9 +26,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:visibility="gone"
         android:text="@string/battery_main"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/currVoltage"
@@ -36,84 +36,62 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/top"
-        android:layout_marginLeft="20dp" 
-        android:layout_marginTop="20dp" 
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
         android:visibility="gone" />
-    
-   <TextView
+
+    <TextView
         android:id="@+id/currVoltageText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
- 		android:layout_alignLeft="@+id/currVoltage"
-    	android:layout_alignTop="@+id/currVoltage"
-    	android:layout_alignRight="@+id/currVoltage"
-    	android:layout_alignBottom="@+id/currVoltage"
-    	android:gravity="center"
-        android:visibility="gone"
-        android:layout_marginTop="17dp" />
-    
-    
+        android:layout_alignBottom="@+id/currVoltage"
+        android:layout_alignLeft="@+id/currVoltage"
+        android:layout_alignRight="@+id/currVoltage"
+        android:layout_alignTop="@+id/currVoltage"
+        android:layout_marginTop="17dp"
+        android:gravity="center"
+        android:visibility="gone" />
+
     <TextView
         android:id="@+id/snapshot_powered"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
         android:layout_toRightOf="@+id/currVoltage"
-        android:layout_marginLeft="20dp" 
-        android:layout_marginTop="30dp" 
-        android:textSize="20sp"/>
-    
+        android:textSize="20sp"
+        android:visibility="gone" />
+
     <TextView
         android:id="@+id/snapshot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:visibility="gone"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/currVoltage"
-        android:layout_marginLeft="10dp" 
-        android:textSize="20sp"/>
-		
-    <SeekBar
-        android:id="@+id/maxbar"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/snapshot"
-        android:layout_marginTop="20dp"
-        android:max="100"
-        android:minWidth="250dp"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/maxView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:visibility="gone"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/maxbar"
-        android:layout_marginBottom="14dp"
-        android:layout_marginLeft="10dp" />
-
-    <SeekBar
-        android:id="@+id/minbar"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/maxView"
-        android:layout_marginTop="18dp"
-        android:max="100"
-        android:minWidth="250dp"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/minView"
-        android:layout_width="wrap_content"
-        android:visibility="gone"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/minbar"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="19dp" />
+        android:textSize="20sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/min_charge_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/snapshot"
+        android:layout_marginLeft="10dp"
+        android:textSize="20sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/max_charge_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/min_charge_text"
+        android:layout_marginLeft="10dp"
+        android:textSize="20sp"
+        android:visibility="gone" />
 
 </RelativeLayout>
