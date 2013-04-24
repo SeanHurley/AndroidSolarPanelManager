@@ -80,6 +80,10 @@ public class DevicePreferencesActivity extends BaseActivity {
 
 					@Override
 					public void onComplete(ViewChargeConstraintsResponse response) {
+						if (response == null) {
+							showDeviceNotAvailable();
+							return;	
+						}
 						hideLoadingSpinner();
 						if (response.getResult() == 200) {
 							minValue = response.getMin();
@@ -116,6 +120,10 @@ public class DevicePreferencesActivity extends BaseActivity {
 
 						@Override
 						public void onComplete(BaseResponse response) {
+							if (response == null) {
+								showDeviceNotAvailable();
+								return;	
+							}
 							hideLoadingSpinner();
 							if (response.getResult() == 200) {
 								oldPassPhrase = value;
@@ -176,6 +184,10 @@ public class DevicePreferencesActivity extends BaseActivity {
 
 						@Override
 						public void onComplete(BaseResponse response) {
+							if (response == null) {
+								showDeviceNotAvailable();
+								return;	
+							}
 							hideLoadingSpinner();
 							if (response.getResult() == 200) {
 								minValue = seekBar.getSelectedMinValue();
@@ -205,6 +217,10 @@ public class DevicePreferencesActivity extends BaseActivity {
 
 						@Override
 						public void onComplete(BaseResponse response) {
+							if (response == null) {
+								showDeviceNotAvailable();
+								return;	
+							}
 							hideLoadingSpinner();
 							if (response.getResult() == 200) {
 								// TODO Everything is fine, tell user
@@ -235,6 +251,10 @@ public class DevicePreferencesActivity extends BaseActivity {
 
 						@Override
 						public void onComplete(BaseResponse response) {
+							if (response == null) {
+								showDeviceNotAvailable();
+								return;	
+							}
 							hideLoadingSpinner();
 							if (response.getResult() == 200) {
 								// TODO Everything is fine, tell user
@@ -269,6 +289,10 @@ public class DevicePreferencesActivity extends BaseActivity {
 
 						@Override
 						public void onComplete(BaseResponse response) {
+							if (response == null) {
+								showDeviceNotAvailable();
+								return;	
+							}
 							hideLoadingSpinner();
 							if (response.getResult() == 200) {
 								oldPassPhrase = value;
