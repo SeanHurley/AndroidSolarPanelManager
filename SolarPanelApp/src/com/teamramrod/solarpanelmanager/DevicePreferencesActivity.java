@@ -56,7 +56,16 @@ public class DevicePreferencesActivity extends BaseActivity {
 		getData();
 		setupUI();
 	}
+	
+	@Override
+	protected void setupActionBar() {
+		super.setupActionBar();
+		actionBar.setTitle(R.string.menu_activity_device_preferences_title);
+	}
 
+	/**
+	 * Gets all of the different necessary UI components
+	 */
 	private void getUI() {
 		activityIndicator = findViewById(R.id.activityIndicator);
 		passRow = findViewById(R.id.row_password_pref);
@@ -67,6 +76,9 @@ public class DevicePreferencesActivity extends BaseActivity {
 		recoverRow = findViewById(R.id.row_recover);
 	}
 
+	/**
+	 * Sets up all of the different handlers and UI components for the screen
+	 */
 	private void setupUI() {
 		passRow.setOnClickListener(passphraseRowOnClick);
 		minMaxRow.setOnClickListener(minMaxRowOnClick);
@@ -75,19 +87,23 @@ public class DevicePreferencesActivity extends BaseActivity {
 		recoverRow.setOnClickListener(recoverRowOnClick);
 	}
 
+	/**
+	 * Gets the initial data needed for this screen asynchronously
+	 */
 	private void getData() {
 		deviceId = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.CURRENT_DEVICE, null);
 		oldPassPhrase = PreferenceManager.getDefaultSharedPreferences(this).getString(
 				Constants.PASS_PHRASE_PREFERENCE + deviceId, null);
-		if (deviceId == null) {
-			// TODO - Tell the user that something is wrong
-		}
 
 		ViewChargeConstraintsHandler handler = new ViewChargeConstraintsHandler(
 				new Callback<ViewChargeConstraintsResponse>() {
 
 					@Override
 					public void onComplete(ViewChargeConstraintsResponse response) {
+						if (response == null) {
+							showDeviceNotAvailable();
+							return;
+						}
 						hideLoadingSpinner();
 						if (response.getResult() == 200) {
 							minValue = response.getMin();
@@ -99,16 +115,26 @@ public class DevicePreferencesActivity extends BaseActivity {
 		handler.performAction();
 	}
 
+	/**
+	 * Shows the loading spinner and hides the rest of the components
+	 */
 	private void showLoadingSpinner() {
 		this.activityIndicator.setVisibility(View.VISIBLE);
 		this.scroller.setVisibility(View.GONE);
 	}
 
+	/**
+	 * Hides the loading spinner and brings the rest of the components back in
+	 * to view
+	 */
 	private void hideLoadingSpinner() {
 		this.activityIndicator.setVisibility(View.GONE);
 		this.scroller.setVisibility(View.VISIBLE);
 	}
 
+	/*
+	 * ClickListener for when the user clicks on the row to set a password.
+	 */
 	private View.OnClickListener passphraseRowOnClick = new View.OnClickListener() {
 
 		@Override
@@ -124,6 +150,10 @@ public class DevicePreferencesActivity extends BaseActivity {
 
 						@Override
 						public void onComplete(BaseResponse response) {
+							if (response == null) {
+								showDeviceNotAvailable();
+								return;
+							}
 							hideLoadingSpinner();
 							if (response.getResult() == 200) {
 								oldPassPhrase = value;
@@ -132,7 +162,7 @@ public class DevicePreferencesActivity extends BaseActivity {
 							} else if (response.getResult() == 403) {
 								showForbiddenErrorDialog();
 							} else {
-								// TODO Something went wrong, tell the user
+								showDeviceNotAvailable();
 							}
 						}
 					}, deviceId, oldPassPhrase, value);
@@ -146,6 +176,37 @@ public class DevicePreferencesActivity extends BaseActivity {
 		}
 	};
 
+	/**
+	 * @param minValueText
+	 *            The TextView which will be set with the user inputted min
+	 *            values
+	 * @param maxValueText
+	 *            The TextView which will be set with the user inputted max
+	 *            values
+	 * @return
+	 */
+	private RangeSeekBar<Integer> buildSeekBar(final TextView minValueText, final TextView maxValueText) {
+		final RangeSeekBar<Integer> seekBar = new RangeSeekBar<Integer>(0, 100, DevicePreferencesActivity.this);
+		seekBar.setNotifyWhileDragging(true);
+		seekBar.setSelectedMinValue(minValue);
+		seekBar.setSelectedMaxValue(maxValue);
+		minValueText.setText(minValue + "");
+		maxValueText.setText(maxValue + "");
+
+		seekBar.setOnRangeSeekBarChangeListener(new OnRangeSeekBarChangeListener<Integer>() {
+			@Override
+			public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Integer minValue, Integer maxValue) {
+				minValueText.setText(minValue + "");
+				maxValueText.setText(maxValue + "");
+			}
+		});
+		return seekBar;
+	}
+
+	/*
+	 * ClickListener for when the user clicks the row to set the min and max
+	 * charge levels
+	 */
 	private View.OnClickListener minMaxRowOnClick = new View.OnClickListener() {
 
 		@Override
@@ -156,22 +217,7 @@ public class DevicePreferencesActivity extends BaseActivity {
 			LinearLayout seekArea = (LinearLayout) dialoglayout.findViewById(R.id.range_seek_area);
 			final TextView minValueText = (TextView) dialoglayout.findViewById(R.id.min_value);
 			final TextView maxValueText = (TextView) dialoglayout.findViewById(R.id.max_value);
-
-			final RangeSeekBar<Integer> seekBar = new RangeSeekBar<Integer>(0, 100, DevicePreferencesActivity.this);
-			minValueText.setText(minValue + "");
-			maxValueText.setText(maxValue + "");
-
-			seekBar.setOnRangeSeekBarChangeListener(new OnRangeSeekBarChangeListener<Integer>() {
-				@Override
-				public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Integer minValue, Integer maxValue) {
-					minValueText.setText(minValue + "");
-					maxValueText.setText(maxValue + "");
-				}
-			});
-			seekBar.setNotifyWhileDragging(true);
-			seekBar.setSelectedMinValue(minValue);
-			seekBar.setSelectedMaxValue(maxValue);
-
+			final RangeSeekBar<Integer> seekBar = buildSeekBar(minValueText, maxValueText);
 			seekArea.addView(seekBar);
 			DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
 
@@ -181,6 +227,10 @@ public class DevicePreferencesActivity extends BaseActivity {
 
 						@Override
 						public void onComplete(BaseResponse response) {
+							if (response == null) {
+								showDeviceNotAvailable();
+								return;
+							}
 							hideLoadingSpinner();
 							if (response.getResult() == 200) {
 								minValue = seekBar.getSelectedMinValue();
@@ -198,6 +248,10 @@ public class DevicePreferencesActivity extends BaseActivity {
 		}
 	};
 
+	/*
+	 * ClickListener for when the user clicks the row to set the time on the
+	 * device
+	 */
 	private View.OnClickListener timeRowOnClick = new View.OnClickListener() {
 
 		@Override
@@ -210,11 +264,17 @@ public class DevicePreferencesActivity extends BaseActivity {
 
 						@Override
 						public void onComplete(BaseResponse response) {
+							if (response == null) {
+								showDeviceNotAvailable();
+								return;
+							}
 							hideLoadingSpinner();
-							if (response.getResult() == 403) {
+							if (response.getResult() == 200) {
+
+							} else if (response.getResult() == 403) {
 								showForbiddenErrorDialog();
 							} else {
-								// TODO Tell user
+								showDeviceNotAvailable();
 							}
 						}
 					}, deviceId, oldPassPhrase, System.currentTimeMillis());
@@ -226,6 +286,10 @@ public class DevicePreferencesActivity extends BaseActivity {
 		}
 	};
 
+	/*
+	 * ClickListener for when the user clicks the row to set location of the
+	 * device
+	 */
 	private View.OnClickListener locationRowOnClick = new View.OnClickListener() {
 
 		@Override
@@ -238,11 +302,17 @@ public class DevicePreferencesActivity extends BaseActivity {
 
 						@Override
 						public void onComplete(BaseResponse response) {
+							if (response == null) {
+								showDeviceNotAvailable();
+								return;
+							}
 							hideLoadingSpinner();
-							if (response.getResult() == 403) {
+							if (response.getResult() == 200) {
+
+							} else if (response.getResult() == 403) {
 								showForbiddenErrorDialog();
 							} else {
-								// TODO - Tell the user
+								showDeviceNotAvailable();
 							}
 						}
 						// TODO Get the real values
@@ -255,6 +325,13 @@ public class DevicePreferencesActivity extends BaseActivity {
 		}
 	};
 
+	/*
+	 * ClickListener for when the user wants to tell the application what the
+	 * password for the current device is, but doesn't want the application to
+	 * sync this password with the device. We can use this for if the user knows
+	 * the password on the device and wants to add this device to communicate
+	 * with it.
+	 */
 	private View.OnClickListener recoverRowOnClick = new View.OnClickListener() {
 
 		@Override
@@ -270,6 +347,10 @@ public class DevicePreferencesActivity extends BaseActivity {
 
 						@Override
 						public void onComplete(BaseResponse response) {
+							if (response == null) {
+								showDeviceNotAvailable();
+								return;
+							}
 							hideLoadingSpinner();
 							if (response.getResult() == 200) {
 								oldPassPhrase = value;
@@ -278,8 +359,7 @@ public class DevicePreferencesActivity extends BaseActivity {
 							} else if (response.getResult() == 403) {
 								showForbiddenErrorDialog();
 							} else {
-								// TODO Something went wrong, tell the user
-								System.out.println("FAILED SETTING NEW PASS");
+								showDeviceNotAvailable();
 							}
 						}
 					}, deviceId, value, value);

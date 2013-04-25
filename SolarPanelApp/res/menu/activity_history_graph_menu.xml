@@ -2,6 +2,12 @@
 
     <group android:id="@+id/action_buttons" >
         <item
+            android:id="@+id/menu_home"
+            android:icon="@drawable/home"
+            android:orderInCategory="1"
+            android:showAsAction="always"
+            android:title="@string/menu_home"/>
+        <item
             android:id="@+id/menu_schedule"
             android:icon="@drawable/schedule"
             android:orderInCategory="2"

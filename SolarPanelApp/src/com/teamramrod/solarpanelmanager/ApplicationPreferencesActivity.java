@@ -70,6 +70,7 @@ public class ApplicationPreferencesActivity extends SherlockPreferenceActivity {
 	private void setupActionBar() {
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setTitle(R.string.menu_activity_application_preferences_title);
 	}
 	
 	@Override

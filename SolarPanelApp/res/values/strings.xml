@@ -30,8 +30,8 @@
     <string name="title_activity_historical_graph">HistoricalGraph</string>
     <string name="battery_main">Battery Settings</string>
     <string name="battery_voltage">Battery voltage</string>
-    <string name="battery_max">Maximum voltage</string>
-    <string name="battery_min">Minimum voltage</string>
+	<string name="min_charge_label">Minimum charge level</string>
+	<string name="max_charge_label">Maximum charge level</string>
     <string name="battery_in">In</string>
     <string name="battery_out">Out</string>
     <string name="battery_estimatedtime">Estimated Time</string>
@@ -48,7 +48,7 @@
     <string name="bluetooth_warning">bluetooth not enabled; cannot continue</string>
     <string name="rescan">Rescan</string>
     <string name="PV_voltage">PV Voltage</string>
-    <string name="PV_current">PV　Current</string>
+    <string name="PV_current">PV Current</string>
     <string name="battery_percent">Battery Percent</string>
     <string name="zero">0</string>
     <string name="button_bluetooth_settings">Pair Device</string>
@@ -67,7 +67,7 @@
     <string name="pass_phrase">Security Passphrase</string>
     <string name="forbidden_error_title">Permission Forbidden</string>
     <string name="device_connection_error_title">Device Connection Error</string>
-    <string name="device_connection_error">Could not find the device. Is it out of range?</string>
+    <string name="device_connection_error">Could not find the device. Is bluetooth on or is the device out of range?</string>
     <string name="forbidden_error">This device cannot confirm your security passphrase. Maybe check your settings?</string>
     <string name="title_activity_calendar">CalendarActivity</string>
     <string name="menu_history">History</string>
@@ -87,4 +87,11 @@
     <string name="error_setting_password">Error Setting Password</string>
     <string name="menu_rescan">Rescan</string>
     <string name="menu_home">Home</string>
+    <string name="menu_activity_add_event_title">Add Event</string>
+    <string name="menu_activity_application_preferences_title">Application Preferences</string>
+    <string name="menu_activity_calendar_title">Calendar</string>
+    <string name="menu_activity_choose_device_title">Choose Device</string>
+    <string name="menu_activity_device_preferences_title">Device Preferences</string>
+    <string name="menu_activity_history_graph_title">Device History</string>
+    <string name="menu_activity_main_device_title">Solar Panel Manager</string>
 </resources>

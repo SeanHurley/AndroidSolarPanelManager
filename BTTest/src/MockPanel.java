@@ -30,9 +30,9 @@ public class MockPanel {
 		events.put("a", new Event("a", "Event 1", 1000, 1000000, 3000000));
 		events.put("b", new Event("b", "Event 2", 3000000, 1000000, 3000000));
 	}
-	
-	private static int maxCharge;
-	private static int minCharge;
+
+	private static int maxCharge = 95;
+	private static int minCharge = 5;
 	private static int currentEventID = 0;
 
 	public static void main(String[] args) {
@@ -62,10 +62,10 @@ public class MockPanel {
 			while (true) {
 				Snapshot snap;
 				if (testing) {
-					snap = new Snapshot(System.currentTimeMillis(), 50, 0.5, 0.5, 0.5, 0.5, .5, .5);
+					snap = new Snapshot(System.currentTimeMillis(), 50, 5, 95, 0.5, 0.5, 0.5, 0.5, .5, .5);
 				} else {
-					snap = new Snapshot(System.currentTimeMillis(), (int) (Math.random() * 100), Math.random(),
-							Math.random(), Math.random(), Math.random(), Math.random(), Math.random());
+					snap = new Snapshot(System.currentTimeMillis(), (int) (Math.random() * 100), minCharge, maxCharge,
+							Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random());
 				}
 
 				if (historyData.size() > 10) {
@@ -129,7 +129,7 @@ public class MockPanel {
 			}
 
 			response += "\n";
-
+			System.out.println("Responding with: " + response);
 			return response;
 		}
 
@@ -247,10 +247,10 @@ public class MockPanel {
 				}
 				Snapshot snap;
 				if (testing) {
-					snap = new Snapshot(System.currentTimeMillis(), 50, 0.5, 0.5, 0.5, 0.5, .5, .5);
+					snap = new Snapshot(System.currentTimeMillis(), 50, 5, 95, 0.5, 0.5, 0.5, 0.5, .5, .5);
 				} else {
-					snap = new Snapshot(System.currentTimeMillis(), (int) (Math.random() * 100), Math.random(),
-							Math.random(), Math.random(), Math.random(), Math.random(), Math.random());
+					snap = new Snapshot(System.currentTimeMillis(), (int) (Math.random() * 100), minCharge, maxCharge,
+							Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random());
 				}
 				return ResponseCreator.buildSnapshot(snap);
 			} catch (Exception e) {
@@ -270,8 +270,8 @@ public class MockPanel {
 					snaps = new ArrayList<Snapshot>(historyData);
 				} else {
 					snaps = new ArrayList<Snapshot>();
-					snaps.add(new Snapshot(System.currentTimeMillis(), 25, 0.1, 0.2, 0.3, 0.4, .5, .6));
-					snaps.add(new Snapshot(System.currentTimeMillis(), 30, 0.6, 0.7, 0.8, 0.9, .11, .22));
+					snaps.add(new Snapshot(System.currentTimeMillis(), 25, 5, 95, 0.1, 0.2, 0.3, 0.4, .5, .6));
+					snaps.add(new Snapshot(System.currentTimeMillis(), 30, 5, 95, 0.6, 0.7, 0.8, 0.9, .11, .22));
 				}
 				History history = new History(snaps);
 				return ResponseCreator.buildHistory(history);
@@ -309,7 +309,7 @@ public class MockPanel {
 						interval = (Integer) json.get(MessageKeys.EVENT_INTERVAL);
 					}
 					String id = String.valueOf(++currentEventID);
-					
+
 					Event e = new Event(id, name, firstRun, duration, interval);
 					events.put(id, e);
 					return ResponseCreator.buildEventCreated(id);

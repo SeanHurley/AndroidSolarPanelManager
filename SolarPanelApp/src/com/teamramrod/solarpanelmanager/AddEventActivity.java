@@ -75,4 +75,10 @@ public class AddEventActivity extends BaseActivity {
 			}
 		});
 	}
+	
+	@Override
+	protected void setupActionBar() {
+		super.setupActionBar();
+		actionBar.setTitle(R.string.menu_activity_add_event_title);
+	}
 }

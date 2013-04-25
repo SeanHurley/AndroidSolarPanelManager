@@ -1,17 +1,14 @@
 package com.teamramrod.solarpanelmanager;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.example.solarpanelmanager.R;
 import com.teamramrod.Constants;
 import com.teamramrod.bluetooth.Callback;
@@ -72,7 +69,7 @@ public class HistoryGraphActivity extends BaseActivity {
 			}
 		});
 
-		// BUTTON: Month
+		// BUTTON: Date
 		dateButton = (Button) findViewById(R.id.button_date);
 		dateButton.setOnClickListener(new View.OnClickListener() {
 
@@ -91,7 +88,15 @@ public class HistoryGraphActivity extends BaseActivity {
 				showGraph(GraphLabelEnum.TIME);
 			}
 		});
+		
+		showGraph(GraphLabelEnum.MONTH);
 
+	}
+	
+	@Override
+	protected void setupActionBar() {
+		super.setupActionBar();
+		actionBar.setTitle(R.string.menu_activity_history_graph_title);
 	}
 
 	private void showGraph(final GraphLabelEnum graphLabel) {
@@ -113,25 +118,29 @@ public class HistoryGraphActivity extends BaseActivity {
 					@Override
 					public void onComplete(HistoryResponse response) {
 						if (response == null) {
-							// TODO Something went wrong Alert the user
+							showDeviceNotAvailable();
 							return;
+						} else if (response.getResult() == 403) {
+							showForbiddenErrorDialog();
+						} else if (response.getResult() == 200) {
+							LineGraph lineGraph = new LineGraph();
+							/**
+							 * TODO: Pass a collection of SnapshotResponses to
+							 * display in our graph
+							 */
+							View lineGraphView = lineGraph.getView(
+									HistoryGraphActivity.this,
+									response.getHistoryData(), graphLabel);
+							// Whenever they hit a button, call removeAllViews
+							graphView.removeAllViews();
+							graphView.addView(lineGraphView);
+
+							// When you actually get all the data and create the
+							// dialog, remove the dialog
+							showUI();
+						} else {
+							System.out.println("failure in communication");
 						}
-
-						LineGraph lineGraph = new LineGraph();
-						/**
-						 * TODO: Pass a collection of SnapshotResponses to
-						 * display in our graph
-						 */
-						View lineGraphView = lineGraph.getView(
-								HistoryGraphActivity.this,
-								response.getHistoryData(), graphLabel);
-						// Whenever they hit a button, call removeAllViews
-						graphView.removeAllViews();
-						graphView.addView(lineGraphView);
-
-						// When you actually get all the data and create the
-						// dialog, remove the dialog
-						showUI();
 					}
 
 				}, deviceId, pass);

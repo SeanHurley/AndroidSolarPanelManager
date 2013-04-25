@@ -2,15 +2,21 @@
 
     <group android:id="@+id/action_buttons" >
         <item
+            android:id="@+id/menu_home"
+            android:icon="@drawable/home"
+            android:orderInCategory="1"
+            android:showAsAction="always"
+            android:title="@string/menu_home"/>
+        <item
             android:id="@+id/menu_history"
             android:icon="@drawable/history"
-            android:orderInCategory="1"
+            android:orderInCategory="2"
             android:showAsAction="always"
             android:title="@string/menu_history"/>
         <item
             android:id="@+id/menu_schedule"
             android:icon="@drawable/schedule"
-            android:orderInCategory="2"
+            android:orderInCategory="3"
             android:showAsAction="always"
             android:title="@string/menu_schedule"/>
     </group>
