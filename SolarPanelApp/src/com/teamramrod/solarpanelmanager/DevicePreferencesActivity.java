@@ -358,8 +358,7 @@ public class DevicePreferencesActivity extends BaseActivity {
 				}
 			};
 
-			showDialogNoNegative(R.string.set_pass_phrase_title, R.string.set_pass_phrase_message, positiveListener,
-					input);
+			showDialogNoNegative(R.string.recover_device, R.string.recover_device_message, positiveListener, input);
 		}
 	};
 
