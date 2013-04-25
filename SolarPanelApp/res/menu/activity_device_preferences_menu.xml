@@ -1,0 +1,29 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <group android:id="@+id/action_buttons" >
+        <item
+            android:id="@+id/menu_history"
+            android:icon="@drawable/history"
+            android:orderInCategory="1"
+            android:showAsAction="always"
+            android:title="@string/menu_history"/>
+        <item
+            android:id="@+id/menu_schedule"
+            android:icon="@drawable/schedule"
+            android:orderInCategory="2"
+            android:showAsAction="always"
+            android:title="@string/menu_schedule"/>
+    </group>
+
+    <item
+        android:id="@+id/menu_change_device"
+        android:orderInCategory="1"
+        android:showAsAction="never"
+        android:title="@string/menu_change_device"/>
+    <item
+        android:id="@+id/menu_settings"
+        android:orderInCategory="2"
+        android:showAsAction="never"
+        android:title="@string/menu_settings"/>
+
+</menu>

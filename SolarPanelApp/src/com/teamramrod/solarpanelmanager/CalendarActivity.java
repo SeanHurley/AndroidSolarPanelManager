@@ -18,6 +18,10 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.example.solarpanelmanager.R;
 import com.teamramrod.Constants;
 import com.teamramrod.bluetooth.Callback;
@@ -29,7 +33,7 @@ import com.teamramrod.solarpanelmanager.api.responses.BaseResponse;
 import com.teamramrod.solarpanelmanager.api.responses.Event;
 import com.teamramrod.solarpanelmanager.api.responses.EventsResponse;
 
-public class CalendarActivity extends Activity {
+public class CalendarActivity extends BaseActivity {
 
 	private static final int ADD_EVENT_CODE = 2048;
 	
@@ -188,4 +192,10 @@ public class CalendarActivity extends Activity {
 		}
 	}
 	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getSupportMenuInflater();
+		inflater.inflate(R.menu.activity_calendar_menu, menu);
+		return true;
+	}	
 }

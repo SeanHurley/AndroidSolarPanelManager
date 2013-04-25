@@ -71,38 +71,16 @@ public class ApplicationPreferencesActivity extends SherlockPreferenceActivity {
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 	}
-
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent;
-
 		switch (item.getItemId()) {
-		case R.id.menu_history:
-			intent = new Intent(this, HistoryGraphActivity.class);
-			startActivity(intent);
-			return true;
-		case R.id.menu_schedule:
-			// TODO: start schedule activity
-			return true;
-		case R.id.menu_device_settings:
-			// TODO: start device settings activity
-			return true;
-		case R.id.menu_change_device:
-			intent = new Intent(this, ChooseDeviceActivity.class);
-			startActivity(intent);
-			return true;
-		case R.id.menu_settings:
-			intent = new Intent(this, ApplicationPreferencesActivity.class);
-			startActivity(intent);
-			return true;
 		case android.R.id.home:
 			onBackPressed();
-			// intent = new Intent(this, BatteryActivity.class);
-			// intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			// startActivity(intent);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
+
 		}
 	}
 }

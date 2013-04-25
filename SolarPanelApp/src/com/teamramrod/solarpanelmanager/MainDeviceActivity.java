@@ -69,7 +69,6 @@ public class MainDeviceActivity extends BaseActivity {
 		getUI();
 		setupUI();
 		// was a conflict here. Might be fishy
-		setupActionBar();
 	}
 
 	private void getUI() {
@@ -163,7 +162,8 @@ public class MainDeviceActivity extends BaseActivity {
 		}
 	}
 
-	private void setupActionBar() {
+	@Override
+	protected void setupActionBar() {
 		ActionBar actionBar = getSupportActionBar();
 
 		String deviceName = PreferenceManager.getDefaultSharedPreferences(this).getString(
@@ -313,43 +313,8 @@ public class MainDeviceActivity extends BaseActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getSupportMenuInflater();
-		inflater.inflate(R.menu.activity_battery_settings_menu, menu);
+		inflater.inflate(R.menu.activity_main_device_menu, menu);
 		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent;
-
-		switch (item.getItemId()) {
-		case R.id.menu_history:
-			intent = new Intent(this, HistoryGraphActivity.class);
-			startActivity(intent);
-			return true;
-		case R.id.menu_schedule:
-			intent = new Intent(this, CalendarActivity.class);
-			startActivity(intent);
-			return true;
-		case R.id.menu_device_settings:
-			intent = new Intent(this, DevicePreferencesActivity.class);
-			startActivity(intent);
-			return true;
-		case R.id.menu_change_device:
-			intent = new Intent(this, ChooseDeviceActivity.class);
-			startActivity(intent);
-			return true;
-		case R.id.menu_settings:
-			intent = new Intent(this, ApplicationPreferencesActivity.class);
-			startActivity(intent);
-			return true;
-		case android.R.id.home:
-			onBackPressed();
-			return true;
-
-		default:
-			return super.onOptionsItemSelected(item);
-
-		}
 	}
 
 	public static double round(double value, int places) {

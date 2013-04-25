@@ -23,12 +23,6 @@
             android:indeterminateOnly="true" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/button_bluetooth_scan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/rescan" />
-
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

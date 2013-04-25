@@ -1,0 +1,24 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <group android:id="@+id/action_buttons" >
+        <item
+            android:id="@+id/menu_refresh"
+            android:icon="@drawable/refresh"
+            android:orderInCategory="1"
+            android:showAsAction="always"
+            android:title="@string/menu_rescan"/>
+        <item
+            android:id="@+id/menu_home"
+            android:icon="@drawable/home"
+            android:orderInCategory="2"
+            android:showAsAction="always"
+            android:title="@string/menu_home" />
+    </group>
+
+    <item
+        android:id="@+id/menu_settings"
+        android:orderInCategory="1"
+        android:showAsAction="never"
+        android:title="@string/menu_settings"/>
+
+</menu>

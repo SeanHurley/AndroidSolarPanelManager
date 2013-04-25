@@ -85,4 +85,6 @@
     <string name="calendar_add_event_button">Add Event</string>
     <string name="recover_device">Recover Device Passphrase</string>
     <string name="error_setting_password">Error Setting Password</string>
+    <string name="menu_rescan">Rescan</string>
+    <string name="menu_home">Home</string>
 </resources>

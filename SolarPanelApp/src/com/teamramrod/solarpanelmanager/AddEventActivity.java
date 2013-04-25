@@ -12,11 +12,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.MenuItem;
 import com.example.solarpanelmanager.R;
 import com.teamramrod.Constants;
 import com.teamramrod.solarpanelmanager.api.responses.Event;
 
-public class AddEventActivity extends Activity {
+public class AddEventActivity extends BaseActivity {
 	
 	private static final long DAY_INTERVAL = 24 * 60 * 60 * 1000;
 

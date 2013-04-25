@@ -1,21 +1,24 @@
 package com.teamramrod.solarpanelmanager;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.example.solarpanelmanager.R;
 import com.teamramrod.Constants;
 import com.teamramrod.bluetooth.Callback;
 import com.teamramrod.bluetooth.HistoryHandler;
 import com.teamramrod.solarpanelmanager.api.responses.HistoryResponse;
 
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.view.Menu;
-import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
-
-public class HistoryGraphActivity extends Activity {
+public class HistoryGraphActivity extends BaseActivity {
 
 	private Button dateButton;
 	private Button monthButton;
@@ -52,6 +55,8 @@ public class HistoryGraphActivity extends Activity {
 		setContentView(R.layout.activity_history_graph);
 		activityIndicator = findViewById(R.id.activityIndicator);
 		graphView = (LinearLayout) findViewById(R.id.graph_view);
+		
+		setupActionBar();
 		
 		dialog = new ProgressDialog(HistoryGraphActivity.this);
 		dialog.setTitle(R.string.Loading);
@@ -135,9 +140,8 @@ public class HistoryGraphActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_history_graph, menu);
+		MenuInflater inflater = getSupportMenuInflater();
+		inflater.inflate(R.menu.activity_history_graph_menu, menu);
 		return true;
 	}
-
 }
