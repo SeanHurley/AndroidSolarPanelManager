@@ -54,41 +54,6 @@ public class BluetoothScanner {
 	}
 
 	/**
-	 * Initialize by the scanner to registering a receiver to receive
-	 * bluetooth events.
-	 */
-	public void register() {
-		if (isRegistered)
-			return;
-		
-		receiver = new BroadcastReceiver() {
-
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				String action = intent.getAction();
-				if (action.equals(BluetoothAdapter.ACTION_DISCOVERY_STARTED)) {
-					startCallback.onComplete(null);
-				} else if (action.equals(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)) {
-					doneCallback.onComplete(null);
-				} else if (action.equals(BluetoothDevice.ACTION_FOUND)) {
-					BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-					if (!added.contains(device.getAddress())) {
-						updateCallback.onComplete(device.getAddress(), device.getName(), device.getBondState() == BluetoothDevice.BOND_BONDED);
-						added.add(device.getAddress());
-					}
-				}
-			}
-		};
-
-		IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-		filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
-		filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-		context.registerReceiver(receiver, filter);
-		
-		isRegistered = true;
-	}
-
-	/**
 	 * Begin scanning for devices. Will fail if a scan is already in progress
 	 * or if bluetooth is disabled.
 	 * 
@@ -139,6 +104,41 @@ public class BluetoothScanner {
 	 */
 	public void destroy() {
 		context.unregisterReceiver(receiver);
+	}
+	
+	/**
+	 * Initialize by the scanner to registering a receiver to receive
+	 * bluetooth events.
+	 */
+	private void register() {
+		if (isRegistered)
+			return;
+		
+		receiver = new BroadcastReceiver() {
+
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				String action = intent.getAction();
+				if (action.equals(BluetoothAdapter.ACTION_DISCOVERY_STARTED)) {
+					startCallback.onComplete(null);
+				} else if (action.equals(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)) {
+					doneCallback.onComplete(null);
+				} else if (action.equals(BluetoothDevice.ACTION_FOUND)) {
+					BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+					if (!added.contains(device.getAddress())) {
+						updateCallback.onComplete(device.getAddress(), device.getName(), device.getBondState() == BluetoothDevice.BOND_BONDED);
+						added.add(device.getAddress());
+					}
+				}
+			}
+		};
+
+		IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+		filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
+		filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+		context.registerReceiver(receiver, filter);
+		
+		isRegistered = true;
 	}
 
 	/**

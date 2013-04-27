@@ -28,7 +28,7 @@ import com.teamramrod.solarpanelmanager.api.responses.BaseResponse;
  * Activity for choosing the controller device to work with and making the
  * initial bluetooth connection.
  * 
- * @author mikecandido
+ * @author Michael Candido
  */
 public class ChooseDeviceActivity extends BaseActivity {
 	private BluetoothScanner scanner;
