@@ -288,10 +288,10 @@ public class MockPanel {
 			try {
 				boolean pass = checkPin(json);
 				if (!pass) {
-					return ResponseCreator.buildDefaultPermissionDenied(MessageTypes.SCHEDULE_EVENT_REPONSE);
+					return ResponseCreator.buildDefaultPermissionDenied(MessageTypes.SCHEDULE_EVENT_RESPONSE);
 				}
 				if (testing) {
-					return ResponseCreator.buildDefaultOK(MessageTypes.SCHEDULE_EVENT_REPONSE);
+					return ResponseCreator.buildDefaultOK(MessageTypes.SCHEDULE_EVENT_RESPONSE);
 				} else {
 					String name = (String) json.get(MessageKeys.EVENT_NAME);
 					long firstRun = 0, duration = 0, interval = 0;
@@ -317,7 +317,7 @@ public class MockPanel {
 					return ResponseCreator.buildEventCreated(id);
 				}
 			} catch (Exception e) {
-				return ResponseCreator.buildDefaultInternalError(MessageTypes.SCHEDULE_EVENT_REPONSE,
+				return ResponseCreator.buildDefaultInternalError(MessageTypes.SCHEDULE_EVENT_RESPONSE,
 						"Schedule error: " + e.getMessage());
 			}
 		}
@@ -326,17 +326,17 @@ public class MockPanel {
 			try {
 				boolean pass = checkPin(json);
 				if (!pass) {
-					return ResponseCreator.buildDefaultPermissionDenied(MessageTypes.UNSCHEDULE_EVENT_REPONSE);
+					return ResponseCreator.buildDefaultPermissionDenied(MessageTypes.UNSCHEDULE_EVENT_RESPONSE);
 				}
 				if (testing) {
-					return ResponseCreator.buildDefaultOK(MessageTypes.UNSCHEDULE_EVENT_REPONSE);
+					return ResponseCreator.buildDefaultOK(MessageTypes.UNSCHEDULE_EVENT_RESPONSE);
 				} else {
 					String id = (String) json.get(MessageKeys.EVENT_ID);
 					events.remove(id);
-					return ResponseCreator.buildDefaultOK(MessageTypes.UNSCHEDULE_EVENT_REPONSE);
+					return ResponseCreator.buildDefaultOK(MessageTypes.UNSCHEDULE_EVENT_RESPONSE);
 				}
 			} catch (Exception e) {
-				return ResponseCreator.buildDefaultInternalError(MessageTypes.UNSCHEDULE_EVENT_REPONSE,
+				return ResponseCreator.buildDefaultInternalError(MessageTypes.UNSCHEDULE_EVENT_RESPONSE,
 						"Unschedule error: " + e.getMessage());
 			}
 		}
