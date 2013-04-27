@@ -5,16 +5,16 @@ import java.util.HashSet;
 
 import junit.framework.TestCase;
 
-import com.teamramrod.calendar.BasicCalendar;
+import com.teamramrod.calendar.Calendar;
 import com.teamramrod.solarpanelmanager.api.responses.Event;
 
 public class BasicCalendarTest extends TestCase {
-	private BasicCalendar cal;
+	private Calendar cal;
 	private static final long HOUR = 60 * 60 * 1000;
 	
 	@Override
 	protected void setUp(){
-		cal = new BasicCalendar(new HashSet<Event>());
+		cal = new Calendar(new HashSet<Event>());
 	}
 	
 	public void testAddRemove(){

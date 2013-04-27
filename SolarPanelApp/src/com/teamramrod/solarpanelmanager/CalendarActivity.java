@@ -26,7 +26,7 @@ import com.teamramrod.bluetooth.Callback;
 import com.teamramrod.bluetooth.EventHandler;
 import com.teamramrod.bluetooth.ScheduleEventHandler;
 import com.teamramrod.bluetooth.UnscheduleEventHandler;
-import com.teamramrod.calendar.BasicCalendar;
+import com.teamramrod.calendar.Calendar;
 import com.teamramrod.solarpanelmanager.api.responses.BaseResponse;
 import com.teamramrod.solarpanelmanager.api.responses.Event;
 import com.teamramrod.solarpanelmanager.api.responses.EventsResponse;
@@ -42,7 +42,7 @@ public class CalendarActivity extends BaseActivity {
 
 	private static final int ADD_EVENT_CODE = 2048;
 	
-	private BasicCalendar calendar;
+	private Calendar calendar;
 	private String deviceId;
 	private String pass;
 	private ArrayAdapter<Event> arrayAdapter;
@@ -96,7 +96,7 @@ public class CalendarActivity extends BaseActivity {
 			public void onComplete(EventsResponse response) {
 				loadDialog.dismiss();
 				
-				calendar = new BasicCalendar(response.getEvents());
+				calendar = new Calendar(response.getEvents());
 				for(Event e : calendar.getEventList())
 					arrayAdapter.add(e);
 			}
