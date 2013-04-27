@@ -20,9 +20,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.example.solarpanelmanager.R;
 import com.teamramrod.Constants;
 import com.teamramrod.bluetooth.BluetoothScanner;
-import com.teamramrod.bluetooth.BluetoothScanner.BluetoothDeviceWrapper;
 import com.teamramrod.bluetooth.Callback;
-import com.teamramrod.bluetooth.GenericCallback;
 import com.teamramrod.bluetooth.HandshakeHandler;
 import com.teamramrod.solarpanelmanager.api.responses.BaseResponse;
 
@@ -123,11 +121,11 @@ public class ChooseDeviceActivity extends BaseActivity {
 			public void onComplete(BaseResponse json) {
 				indicator.setVisibility(View.INVISIBLE);
 			}
-		}, new GenericCallback<BluetoothScanner.BluetoothDeviceWrapper>() {
+		}, new BluetoothScanner.ScannerCallback() {
 
 			@Override
-			public void onComplete(BluetoothScanner.BluetoothDeviceWrapper device) {
-				arrayAdapter.add(device);
+			public void onComplete(String address, String name, boolean isBonded) {
+				arrayAdapter.add(new BluetoothDeviceWrapper(address, name, isBonded));
 			}
 		});
 	}
@@ -180,5 +178,27 @@ public class ChooseDeviceActivity extends BaseActivity {
 		}
 		
 		return true;
+	}
+	
+	/**
+	 * Wraps information about a BluetoothDevice for user friendly display
+	 * in an Android ArrayAdapter.
+	 */
+	private class BluetoothDeviceWrapper {
+		public final String address;
+		public final String name;
+		public boolean isBonded;
+
+		public BluetoothDeviceWrapper(String address, String name, boolean isBonded) {
+			this.address = address;
+			this.name = name;
+			this.isBonded = isBonded;
+		}
+
+		@Override
+		public String toString() {
+			String bonded = isBonded ? " (paired)" : "";
+			return String.format("%s\n%s%s", name, address, bonded);
+		}
 	}
 }
