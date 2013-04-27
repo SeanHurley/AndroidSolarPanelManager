@@ -1,5 +1,8 @@
 
 public class MessageTypes {
+	public static final String HANDSHAKE = "handshake";
+	public static final String HANDSHAKE_RESPONSE = "handshake-response";
+	
 	public static final String PIN_UPDATE = "pin-update";
 	public static final String PIN_UPDATE_RESPONSE = "pin-update-response";
 	

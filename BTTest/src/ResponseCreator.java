@@ -123,4 +123,11 @@ public class ResponseCreator {
 		json.put(MessageKeys.CHARGE_MIN, min);
 		return json.toJSONString();
 	}
+	
+	public static String buildHandshake() {
+		JSONObject json = new JSONObject();
+		json.put(MessageKeys.MESSAGE_TYPE, MessageTypes.HANDSHAKE_RESPONSE);
+		json.put(MessageKeys.RESPONSE_CODE, RESULT_OK);
+		return json.toJSONString();
+	}
 }

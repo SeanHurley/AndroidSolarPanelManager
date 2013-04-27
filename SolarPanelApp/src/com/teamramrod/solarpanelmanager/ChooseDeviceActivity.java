@@ -62,11 +62,9 @@ public class ChooseDeviceActivity extends BaseActivity {
 				BaseResponseHandler handler = new HandshakeHandler(new Callback<BaseResponse>() {
 
 					@Override
-					public void onComplete(BaseResponse json) {
-						boolean itWorked = true;
-
+					public void onComplete(BaseResponse response) {
 						dialog.dismiss();
-						if (itWorked) {
+						if (response.getResult() == 200) {
 							SharedPreferences prefs = PreferenceManager
 									.getDefaultSharedPreferences(ChooseDeviceActivity.this);
 							prefs.edit().putString(Constants.CURRENT_DEVICE, device).commit();
@@ -77,15 +75,15 @@ public class ChooseDeviceActivity extends BaseActivity {
 							ChooseDeviceActivity.this.finish();
 						} else {
 							new AlertDialog.Builder(ChooseDeviceActivity.this).setTitle(R.string.failed_communication)
-									.setMessage(getString(R.string.connection_error))
-									.setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
+								.setMessage(getString(R.string.connection_error))
+								.setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
 
-										@Override
-										public void onClick(DialogInterface arg0, int arg1) {
-											finish();
-										}
-
-									}).show();
+									@Override
+									public void onClick(DialogInterface arg0, int arg1) {
+										finish();
+									}
+								
+								}).show();
 						}
 					}
 

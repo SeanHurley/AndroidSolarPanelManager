@@ -124,6 +124,8 @@ public class MockPanel {
 				response = handleViewChargeConstraints(json);
 			} else if (MessageTypes.PIN_UPDATE.equals(type)) {
 				response = handlePinUpdate(json);
+			} else if (MessageTypes.HANDSHAKE.equals(type)) {
+				response = handleHandshake(json);
 			} else {
 				response = handleUnknownRequest(json);
 			}
@@ -393,6 +395,15 @@ public class MockPanel {
 			} catch (Exception e) {
 				return ResponseCreator.buildDefaultInternalError(MessageTypes.VIEW_CHARGE_CONSTRAINTS_RESPONSE,
 						"View charge constrints error: " + e.getMessage());
+			}
+		}
+		
+		private String handleHandshake(JSONObject json) {
+			try {
+				return ResponseCreator.buildHandshake();
+			} catch (Exception e) {
+				return ResponseCreator.buildDefaultInternalError(MessageTypes.HANDSHAKE_RESPONSE,
+						"Handshake error: " + e.getMessage());
 			}
 		}
 

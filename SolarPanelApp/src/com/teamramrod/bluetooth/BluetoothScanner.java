@@ -41,7 +41,7 @@ public class BluetoothScanner {
 	public final static int BLUETOOTH_READY = 1;
 	public final static int BLUETOOTH_DISABLED = 2;
 
-	private BroadcastReceiver mReceiver;
+	private BroadcastReceiver receiver;
 	private Activity context;
 	private Callback<BaseResponse> doneCallback;
 	private Callback<BaseResponse> startCallback;
@@ -60,7 +60,7 @@ public class BluetoothScanner {
 	private static final int REQUEST_ENABLE_BT = 242423423;
 
 	public void register() {
-		mReceiver = new BroadcastReceiver() {
+		receiver = new BroadcastReceiver() {
 
 			@Override
 			public void onReceive(Context context, Intent intent) {
@@ -82,7 +82,7 @@ public class BluetoothScanner {
 		IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
 		filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
 		filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-		context.registerReceiver(mReceiver, filter);
+		context.registerReceiver(receiver, filter);
 	}
 
 	public boolean scan() {
@@ -116,7 +116,7 @@ public class BluetoothScanner {
 	}
 
 	public void destroy() {
-		context.unregisterReceiver(mReceiver);
+		context.unregisterReceiver(receiver);
 	}
 
 	private void addBonded() {
