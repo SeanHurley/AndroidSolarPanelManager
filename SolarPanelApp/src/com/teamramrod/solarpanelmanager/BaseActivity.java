@@ -18,6 +18,7 @@ public class BaseActivity extends SherlockActivity {
 	protected ActionBar actionBar;
 	private static final int REQUEST_ENABLE_BT = 1;
 
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -58,7 +59,8 @@ public class BaseActivity extends SherlockActivity {
 					forbiddenDialogShowing = false;
 				}
 			};
-			showDialog(R.string.forbidden_error_title, R.string.forbidden_error, okListener, okListener);
+			showDialog(R.string.forbidden_error_title,
+					R.string.forbidden_error, okListener, okListener);
 		}
 	}
 
@@ -76,7 +78,8 @@ public class BaseActivity extends SherlockActivity {
 					noDeviceDialogShowing = false;
 				}
 			};
-			showDialog(R.string.device_connection_error_title, R.string.device_connection_error, okListener, okListener);
+			showDialogOkOnly(R.string.device_connection_error_title,
+					R.string.device_connection_error, okListener, null);
 		}
 	}
 
@@ -88,7 +91,7 @@ public class BaseActivity extends SherlockActivity {
 			}
 		};
 		// TODO Get rid of cancel and ok
-		showDialog(R.string.bluetooth_not_available, R.string.bluetooth_not_available_message, okListener, okListener);
+		showDialogOkOnly(R.string.bluetooth_not_available, R.string.bluetooth_not_available_message, okListener, null);
 	}
 
 	/**
@@ -108,9 +111,10 @@ public class BaseActivity extends SherlockActivity {
 	 *            example a text input). Can be left null and instead it will
 	 *            just be a default dialog
 	 */
-	protected void showDialogNoNegative(int titleId, int messageId, DialogInterface.OnClickListener positiveListener,
-			View customView) {
-		showDialog(titleId, messageId, positiveListener, defaultCancel, customView);
+	protected void showDialogNoNegative(int titleId, int messageId,
+			DialogInterface.OnClickListener positiveListener, View customView) {
+		showDialog(titleId, messageId, positiveListener, defaultCancel,
+				customView);
 	}
 
 	/**
@@ -126,7 +130,8 @@ public class BaseActivity extends SherlockActivity {
 	 *            This will be called when the user selects that "ok" option
 	 *            from the dialog
 	 */
-	protected void showDialog(int titleId, int messageId, DialogInterface.OnClickListener positiveListener) {
+	protected void showDialog(int titleId, int messageId,
+			DialogInterface.OnClickListener positiveListener) {
 		showDialog(titleId, messageId, positiveListener, defaultCancel, null);
 	}
 
@@ -146,7 +151,8 @@ public class BaseActivity extends SherlockActivity {
 	 *            This will be called when the user selects that "cancel" option
 	 *            from the dialog
 	 */
-	protected void showDialog(int titleId, int messageId, DialogInterface.OnClickListener positiveListener,
+	protected void showDialog(int titleId, int messageId,
+			DialogInterface.OnClickListener positiveListener,
 			DialogInterface.OnClickListener cancelListener) {
 		showDialog(titleId, messageId, positiveListener, cancelListener, null);
 	}
@@ -171,7 +177,8 @@ public class BaseActivity extends SherlockActivity {
 	 *            example a text input). Can be left null and instead it will
 	 *            just be a default dialog
 	 */
-	protected void showDialog(int titleId, int messageId, DialogInterface.OnClickListener positiveListener,
+	protected void showDialog(int titleId, int messageId,
+			DialogInterface.OnClickListener positiveListener,
 			DialogInterface.OnClickListener cancelListener, View customView) {
 		AlertDialog.Builder alert = new AlertDialog.Builder(this);
 		alert.setTitle(titleId);
@@ -181,6 +188,18 @@ public class BaseActivity extends SherlockActivity {
 		}
 		alert.setPositiveButton(R.string.ok, positiveListener);
 		alert.setNegativeButton(R.string.cancel, cancelListener);
+		alert.show();
+	}
+
+	protected void showDialogOkOnly(int titleId, int messageId,
+			DialogInterface.OnClickListener positiveListener, View customView) {
+		AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		alert.setTitle(titleId);
+		alert.setMessage(messageId);
+		if (customView != null) {
+			alert.setView(customView);
+		}
+		alert.setPositiveButton(R.string.ok, positiveListener);
 		alert.show();
 	}
 

@@ -1,8 +1,11 @@
 package com.teamramrod.solarpanelmanager;
 
 /*
+<<<<<<< Updated upstream
     Taken from : https://github.com/darshan-/Battery-Indicator
    
+=======
+>>>>>>> Stashed changes
     Copyright (c) 2013 Darshan-Josiah Barber
 
     This program is free software: you can redistribute it and/or modify
