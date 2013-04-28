@@ -12,9 +12,15 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.example.solarpanelmanager.R;
 import com.teamramrod.Constants;
 
+/**
+ * Activity class for the splash screen.  Upon opening application, displays
+ * the welcoming splash screen, then proceeds to "choose device" activity.
+ * 
+ * @author Soo Woo
+ */
 public class SplashActivity extends SherlockActivity {
-	// Holds length of time to keep splash screen up
-	private int SPLASH_DELAY = 1000; // 1000 = 1 sec
+	// Holds length of time to keep splash screen up, 1000 = 1 sec
+	private int SPLASH_DELAY = 1000; 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +36,7 @@ public class SplashActivity extends SherlockActivity {
 				String deviceId = PreferenceManager.getDefaultSharedPreferences(SplashActivity.this).getString(
 						Constants.CURRENT_DEVICE, null);
 				if (deviceId == null) {
-					// The user hasn't chosen a device to manage yet, so send
-					// them to the screen to choose one
+					// The user hasn't chosen a device to manage yet, so send them to the screen to choose one
 					Intent mainIntent = new Intent().setClass(SplashActivity.this, ChooseDeviceActivity.class);
 					startActivity(mainIntent);
 				} else {
