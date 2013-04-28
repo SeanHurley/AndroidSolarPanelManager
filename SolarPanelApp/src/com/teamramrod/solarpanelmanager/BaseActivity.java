@@ -1,6 +1,7 @@
 package com.teamramrod.solarpanelmanager;
 
 import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,15 +16,29 @@ public class BaseActivity extends SherlockActivity {
 	private boolean forbiddenDialogShowing = false;
 	private boolean noDeviceDialogShowing = false;
 	protected ActionBar actionBar;
-	
+	private static final int REQUEST_ENABLE_BT = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		setupActionBar();
 	}
-	
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+		if (mBluetoothAdapter == null) {
+			showNoBluetoothAvailable();
+		} else {
+			if (!mBluetoothAdapter.isEnabled()) {
+				Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+				startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+			}
+		}
+	}
+
 	protected void setupActionBar() {
 		actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
@@ -63,7 +78,17 @@ public class BaseActivity extends SherlockActivity {
 			};
 			showDialog(R.string.device_connection_error_title, R.string.device_connection_error, okListener, okListener);
 		}
+	}
 
+	protected void showNoBluetoothAvailable() {
+		DialogInterface.OnClickListener okListener = new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int whichButton) {
+				noDeviceDialogShowing = false;
+			}
+		};
+		// TODO Get rid of cancel and ok
+		showDialog(R.string.bluetooth_not_available, R.string.bluetooth_not_available_message, okListener, okListener);
 	}
 
 	/**
@@ -170,7 +195,7 @@ public class BaseActivity extends SherlockActivity {
 			// Do Nothing
 		}
 	};
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -196,12 +221,13 @@ public class BaseActivity extends SherlockActivity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
+
 	private boolean changeActivity(Class c) {
 		Intent intent = new Intent(this, c);
 		startActivity(intent);
 		return true;
 	}
-	
-	protected void refresh() {}
+
+	protected void refresh() {
+	}
 }

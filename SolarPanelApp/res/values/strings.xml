@@ -26,6 +26,8 @@
     <string name="set_min_max_row">Set Min/Max Charge Levels</string>
     <string name="button_about">About</string>
     <string name="button_historical_data">Display Historical Data</string>
+    <string name="bluetooth_not_available">Bluetooth Not Available</string>
+    <string name="bluetooth_not_available_message">It seems your device does not support Bluetooth. This application will not work without it. We apologize</string>
     <string name="title_activity_history_graph">HistoryGraphActivity</string>
     <string name="title_activity_historical_graph">HistoricalGraph</string>
     <string name="battery_main">Battery Settings</string>
