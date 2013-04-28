@@ -1,6 +1,8 @@
 package com.teamramrod.solarpanelmanager;
 
 /*
+    Taken from : https://github.com/darshan-/Battery-Indicator
+   
     Copyright (c) 2013 Darshan-Josiah Barber
 
     This program is free software: you can redistribute it and/or modify
@@ -50,7 +52,6 @@ class BatteryImageCreator {
 		//Initialize the battery body and then call setlevel() which actually draws the battery on to the canvas.
 		Resources res = context.getResources();
   
-		BitmapFactory bf = new BitmapFactory();
 		BitmapFactory.Options bfo = new BitmapFactory.Options();
 		
 		// Change attributes of the bitmap
