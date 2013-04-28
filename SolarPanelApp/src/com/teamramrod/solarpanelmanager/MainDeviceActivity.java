@@ -38,6 +38,8 @@ public class MainDeviceActivity extends BaseActivity {
 	private double pvvoltage;
 	private long timestamp;
 	private boolean powerUserEnabled;
+	private double powerRateIn;
+	private double powerRateOut;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -53,10 +55,13 @@ public class MainDeviceActivity extends BaseActivity {
 		pvcurrent = 0;
 		pvvoltage = 0;
 		timestamp = 0;
-		batteryLevel = new BatteryImageCreator(getApplicationContext(), BatteryImageCreator.SIZE_NOTIFICATION);
+		powerRateIn = 0;
+		powerRateOut = 0;
+		batteryLevel = new BatteryImageCreator(getApplicationContext(),
+				BatteryImageCreator.SIZE_NOTIFICATION);
 
 		getUI();
-//		setupUI();
+		// setupUI();
 	}
 
 	private void getUI() {
@@ -76,8 +81,8 @@ public class MainDeviceActivity extends BaseActivity {
 	}
 
 	private void showUI() {
-		powerUserEnabled = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
-				Constants.POWER_USER_PREFERENCE, false);
+		powerUserEnabled = PreferenceManager.getDefaultSharedPreferences(this)
+				.getBoolean(Constants.POWER_USER_PREFERENCE, false);
 
 		activityIndicator.setVisibility(View.GONE);
 		battery_image.setVisibility(View.VISIBLE);
@@ -85,14 +90,16 @@ public class MainDeviceActivity extends BaseActivity {
 
 		if (!powerUserEnabled) {
 			RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-					RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+					RelativeLayout.LayoutParams.FILL_PARENT,
+					RelativeLayout.LayoutParams.WRAP_CONTENT);
 			battery_image.setLayoutParams(params);
 			snapshot.setVisibility(View.VISIBLE);
 			snapshot_powered.setVisibility(View.INVISIBLE);
 
 		} else {
 			RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-					RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+					RelativeLayout.LayoutParams.WRAP_CONTENT,
+					RelativeLayout.LayoutParams.WRAP_CONTENT);
 			battery_image.setLayoutParams(params);
 			snapshot.setVisibility(View.VISIBLE);
 			snapshot_powered.setVisibility(View.VISIBLE);
@@ -104,8 +111,8 @@ public class MainDeviceActivity extends BaseActivity {
 	@Override
 	protected void setupActionBar() {
 		ActionBar actionBar = getSupportActionBar();
-		String deviceName = PreferenceManager.getDefaultSharedPreferences(this).getString(
-				Constants.CURRENT_DEVICE_NAME, "Unknown Device");
+		String deviceName = PreferenceManager.getDefaultSharedPreferences(this)
+				.getString(Constants.CURRENT_DEVICE_NAME, "Unknown Device");
 		actionBar.setTitle(R.string.menu_activity_main_device_title);
 		actionBar.setSubtitle(deviceName);
 	}
@@ -121,11 +128,12 @@ public class MainDeviceActivity extends BaseActivity {
 	}
 
 	private void getData() {
-		powerUserEnabled = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
-				Constants.POWER_USER_PREFERENCE, false);
-		String deviceId = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.CURRENT_DEVICE, null);
-		String pass = PreferenceManager.getDefaultSharedPreferences(this).getString(
-				Constants.PASS_PHRASE_PREFERENCE + deviceId, null);
+		powerUserEnabled = PreferenceManager.getDefaultSharedPreferences(this)
+				.getBoolean(Constants.POWER_USER_PREFERENCE, false);
+		String deviceId = PreferenceManager.getDefaultSharedPreferences(this)
+				.getString(Constants.CURRENT_DEVICE, null);
+		String pass = PreferenceManager.getDefaultSharedPreferences(this)
+				.getString(Constants.PASS_PHRASE_PREFERENCE + deviceId, null);
 		if (deviceId == null) {
 			showDeviceNotAvailable();
 		}
@@ -136,44 +144,77 @@ public class MainDeviceActivity extends BaseActivity {
 	}
 
 	private SnapshotHandler getSnapshotResponse(String deviceId, String pass) {
-		SnapshotHandler snapshotHandler = new SnapshotHandler(new Callback<SnapshotResponse>() {
+		SnapshotHandler snapshotHandler = new SnapshotHandler(
+				new Callback<SnapshotResponse>() {
 
-			@Override
-			public void onComplete(SnapshotResponse response) {
-				if (response == null) {
-					showDeviceNotAvailable();
-					return;
-				}
+					@Override
+					public void onComplete(SnapshotResponse response) {
+						if (response == null) {
+							showDeviceNotAvailable();
+							return;
+						}
 
-				showUI();
+						showUI();
 
-				if (response.getResult() == 200) {
-					Resources res = assignSnapshotResponse(response);
-					if (!powerUserEnabled) {
-						snapshot.setText(res.getString(R.string.battery_in) + "\n"
-								+ res.getString(R.string.battery_out) + "\n"
-								+ res.getString(R.string.battery_estimatedtime));
-					} else {
-						snapshot.setText(res.getString(R.string.battery_voltage) + ":" + round(battery_voltage, 2)
-								+ "\n" + res.getString(R.string.battery_curr) + ":" + round(battery_current, 2) + "\n"
-								+ res.getString(R.string.PV_voltage) + ":" + round(pvvoltage, 2) + "\n"
-								+ res.getString(R.string.PV_current) + ":" + round(pvcurrent, 2) + "\n"
-								+ res.getString(R.string.Timestamp) + ":" + round(timestamp, 2));
+						if (response.getResult() == 200) {
+							Resources res = assignSnapshotResponse(response);
+
+							powerRateIn = round(response.getIntakeRate(), 2);
+							powerRateIn = round(response.getOuttakeRate(), 2);
+
+							if (!powerUserEnabled) {
+								snapshot.setText(res
+										.getString(R.string.battery_in)
+										+ ": "
+										+ powerRateIn
+										+ "\n"
+										+ res.getString(R.string.battery_out)
+										+ ": "
+										+ powerRateOut
+										+ "\n"
+										+ res.getString(R.string.battery_estimatedtime));
+							} else {
+								snapshot.setText(res
+										.getString(R.string.battery_voltage)
+										+ ":"
+										+ round(battery_voltage, 2)
+										+ "\n"
+										+ res.getString(R.string.battery_curr)
+										+ ":"
+										+ round(battery_current, 2)
+										+ "\n"
+										+ res.getString(R.string.PV_voltage)
+										+ ":"
+										+ round(pvvoltage, 2)
+										+ "\n"
+										+ res.getString(R.string.PV_current)
+										+ ":"
+										+ round(pvcurrent, 2)
+										+ "\n"
+										+ res.getString(R.string.Timestamp)
+										+ ":" + round(timestamp, 2));
+							}
+							batteryleveltext.setText("" + level);
+							battery_image.setImageBitmap(batteryLevel
+									.getBitmap());
+							minVal = response.getMin();
+							maxVal = response.getMax();
+							minChargeLevel.setText(res
+									.getString(R.string.min_charge_label)
+									+ ": " + minVal);
+							maxChargeLevel.setText(res
+									.getString(R.string.max_charge_label)
+									+ ": " + maxVal);
+						} else if (response.getResult() == 403) {
+							showForbiddenErrorDialog();
+						} else {
+							System.out
+									.println("failure in communication, response: "
+											+ response.getResult());
+						}
 					}
-					batteryleveltext.setText("" + level);
-					battery_image.setImageBitmap(batteryLevel.getBitmap());
-					minVal = response.getMin();
-					maxVal = response.getMax();
-					minChargeLevel.setText(res.getString(R.string.min_charge_label) + ": " + minVal);
-					maxChargeLevel.setText(res.getString(R.string.max_charge_label) + ": " + maxVal);
-				} else if (response.getResult() == 403) {
-					showForbiddenErrorDialog();
-				} else {
-					System.out.println("failure in communication, response: " + response.getResult());
-				}
-			}
 
-		}, deviceId, pass);
+				}, deviceId, pass);
 		return snapshotHandler;
 	}
 
@@ -187,9 +228,13 @@ public class MainDeviceActivity extends BaseActivity {
 		batteryLevel.setLevel(level);
 		battery_image.setImageBitmap(batteryLevel.getBitmap());
 		Resources res = getResources();
-		minChargeLevel.setText(res.getString(R.string.min_charge_label) + ":" + minVal);
-		maxChargeLevel.setText(res.getString(R.string.max_charge_label) + ":" + maxVal);
-		snapshot_powered.setText(res.getString(R.string.battery_in) + "\n" + res.getString(R.string.battery_out) + "\n"
+		minChargeLevel.setText(res.getString(R.string.min_charge_label) + ":"
+				+ minVal);
+		maxChargeLevel.setText(res.getString(R.string.max_charge_label) + ":"
+				+ maxVal);
+		snapshot_powered.setText(res.getString(R.string.battery_in) + ": "
+				+ powerRateIn + "\n" + res.getString(R.string.battery_out)
+				+ ": " + powerRateOut + "\n"
 				+ res.getString(R.string.battery_estimatedtime));
 		return res;
 	}
