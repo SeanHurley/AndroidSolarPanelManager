@@ -1,7 +1,22 @@
 package com.teamramrod.solarpanelmanager;
 
-import com.example.solarpanelmanager.R;
+/*
+    Copyright (c) 2013 Darshan-Josiah Barber
 
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+*/
+
+
+
+import com.example.solarpanelmanager.R;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -11,6 +26,12 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.DisplayMetrics;
+
+/**
+ * This class is used to create an image of the battery displaying the current charge by rendering the image onto
+ * a canvas and displaying it onto the screen.
+ */
+
 
 class BatteryImageCreator {
 	private int width, top_h, body_h, bottom_h;
@@ -26,20 +47,23 @@ class BatteryImageCreator {
 	}
 
 	public BatteryImageCreator(Context context, int inSampleSize) {
+		//Initialize the battery body and then call setlevel() which actually draws the battery on to the canvas.
 		Resources res = context.getResources();
-		// ?context = null;
-
+  
 		BitmapFactory bf = new BitmapFactory();
 		BitmapFactory.Options bfo = new BitmapFactory.Options();
-		bfo.inDensity = DisplayMetrics.DENSITY_DEFAULT;
+		
+		// Change attributes of the bitmap
+		bfo.inDensity = DisplayMetrics.DENSITY_DEFAULT; 
 		bfo.inScaled = false;
-		bfo.inTargetDensity = DisplayMetrics.DENSITY_DEFAULT;
+		bfo.inTargetDensity = DisplayMetrics.DENSITY_DEFAULT; 
 		bfo.inSampleSize = inSampleSize;
 
+		//Initialize the bitmap to the empty pictures of top, body and bottom.s
 		battery_top = BitmapFactory.decodeResource(res, R.drawable.empty_battery_top, bfo);
 		battery_body = BitmapFactory.decodeResource(res, R.drawable.empty_battery_body, bfo);
 		battery_bottom = BitmapFactory.decodeResource(res, R.drawable.empty_battery_bottom, bfo);
-		// ?res = null;
+		
 
 		width = battery_top.getWidth();
 		top_h = battery_top.getHeight();
@@ -51,6 +75,8 @@ class BatteryImageCreator {
 		battery = Bitmap.createBitmap(width, top_h + body_h + bottom_h, Bitmap.Config.ARGB_8888);
 		battery.setDensity(DisplayMetrics.DENSITY_DEFAULT);
 		canvas.setBitmap(battery);
+
+		// The Paint class holds the style and color information about how to draw the bitmap.
 
 		fill_paint = new Paint();
 		fill_paint.setColor(0xaa33b5e5);
@@ -64,14 +90,17 @@ class BatteryImageCreator {
 		bitmap_paint.setAntiAlias(true);
 		bitmap_paint.setDither(true);
 
-		setLevel(40); // TODO: Does it make sense to show an empty battery at
-						// first, in case it take a moment to get level?
+		setLevel(40); 
 	}
 
+	/**
+	 * Get the current battery level and draw the body of the battery after having set the different components 
+	 * of the battery such as the top, the main body and the bottom.
+	 */
+	
 	public void setLevel(int level) {
 		if (level < 0) {
-			level = 0; // I suspect we might get called with -1 in certain
-						// circumstances
+			level = 0; 
 		}
 
 		int rect_top = top_h + (body_h * (100 - level) / 100);
@@ -91,7 +120,11 @@ class BatteryImageCreator {
 	public Bitmap getBitmap() {
 		return battery;
 	}
-
+   
+	/**
+	 * Manually recycle the bitmap as the image of the battery is constantly changing.
+	 */
+	
 	public void recycle() {
 		battery_top.recycle();
 		battery_body.recycle();
