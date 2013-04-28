@@ -15,23 +15,34 @@ import com.teamramrod.solarpanelmanager.api.responses.HistoryResponse;
 import com.teamramrod.solarpanelmanager.api.responses.SnapshotResponse;
 import com.teamramrod.solarpanelmanager.api.responses.ViewChargeConstraintsResponse;
 
+/**
+ * Used to parse JSON strings into various types of response objects
+ * 
+ * @author Aaron
+ */
 public class ResponseParser {
-
+	
+	/**
+	 * Parse a response consisting of just a message type, response code, and message
+	 * @param response
+	 * @return
+	 */
 	public static BaseResponse parseBasicResponse(String response) {
 		if (response == "") {
 			return new BaseResponse(null, 500, null);
 		}
 
-		// Call the parse response for the basic map, and then create the proper
-		// response object
 		JSONObject json = (JSONObject) JSONValue.parse(response);
 		return new BaseResponse((String) json.get(MessageKeys.MESSAGE_TYPE),
 				(Integer) json.get(MessageKeys.RESPONSE_CODE), (String) json.get(MessageKeys.RESPONSE_MESSAGE));
 	}
 
+	/**
+	 * Parse a response including a list of Snapshots
+	 * @param response
+	 * @return
+	 */
 	public static HistoryResponse parseHistoryResponse(String response) {
-		// Call the parse response for the basic map, and then create the proper
-		// response object
 		JSONObject json = (JSONObject) JSONValue.parse(response);
 
 		int result = (Integer) json.get(MessageKeys.RESPONSE_CODE);
@@ -51,13 +62,16 @@ public class ResponseParser {
 		return new HistoryResponse(result, message, snapshotResponses);
 	}
 
+	/**
+	 * Parse a response containing data on the state of the panel and battery
+	 * @param response
+	 * @return
+	 */
 	public static SnapshotResponse parseSnapshotResponse(String response) {
 		if (response == "") {
 			return new SnapshotResponse(500, null);
 		}
 
-		// Call the parse response for the basic map, and then create the proper
-		// response object
 		JSONObject json = (JSONObject) (JSONValue.parse(response));
 		int result = 200;
 		if (json.containsKey(MessageKeys.RESPONSE_CODE)) {
@@ -90,6 +104,12 @@ public class ResponseParser {
 				PVVoltage, batteryCurrent, intake, outtake);
 	}
 
+	/**
+	 * Converts sufficiently small BigDecimals into doubles
+	 * Needed because doubles can get converted to BigDecimal when added to a JSON object
+	 * @param obj
+	 * @return
+	 */
 	private static double getDouble(Object obj) {
 		if (obj instanceof BigDecimal) {
 			BigDecimal dec = (BigDecimal) obj;
@@ -99,12 +119,14 @@ public class ResponseParser {
 		}
 	}
 
+	/**
+	 * Parse a response containing the list of Events stored on the control box
+	 * @param response
+	 * @return
+	 */
 	public static EventsResponse parseEventsResponse(String response) {
 		if (response == "") {
-			System.out.println("bad news");
 			return new EventsResponse(500, null);
-		} else {
-			System.out.println(response);
 		}
 
 		JSONObject json = (JSONObject) (JSONValue.parse(response));
@@ -126,6 +148,11 @@ public class ResponseParser {
 		return new EventsResponse(result, message, events);
 	}
 
+	/**
+	 * Parse an individual event from a JSONObject
+	 * @param json
+	 * @return
+	 */
 	private static Event parseEvent(JSONObject json) {
 		String id = (String) json.get(MessageKeys.EVENT_ID);
 		String name = (String) json.get(MessageKeys.EVENT_NAME);
@@ -135,6 +162,12 @@ public class ResponseParser {
 		return new Event(id, name, firstTime, duration, interval);
 	}
 
+	/**
+	 * Converts integers to longs
+	 * Needed because sufficiently small longs are converted to integers when added to a JSON object
+	 * @param obj
+	 * @return
+	 */
 	private static long getLong(Object obj) {
 		if (obj instanceof Integer) {
 			return (Integer) obj;
@@ -143,6 +176,11 @@ public class ResponseParser {
 		}
 	}
 
+	/**
+	 * Parses a response containing the min and max charge levels for the battery
+	 * @param response
+	 * @return
+	 */
 	public static ViewChargeConstraintsResponse parseViewChargeConstraintsResponse(String response) {
 		if (response == "") {
 			return new ViewChargeConstraintsResponse(500, null, -1, -1);

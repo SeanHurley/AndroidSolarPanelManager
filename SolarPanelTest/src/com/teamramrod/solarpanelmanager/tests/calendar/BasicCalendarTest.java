@@ -19,7 +19,7 @@ public class BasicCalendarTest extends TestCase {
 	
 	public void testAddRemove(){
 		GregorianCalendar d = new GregorianCalendar(2100, 0, 1, 1, 0);
-		Event e = new Event("1", "Name", d.getTimeInMillis(), HOUR, 0);
+		Event e = new Event("1", "Name", d.getTimeInMillis(), HOUR, 0); // 1:00 AM - 2:00 AM
 		assertEquals(0, cal.getEventList().size());
 		assertTrue(cal.addEvent(e));
 		assertFalse(cal.addEvent(e));
@@ -33,8 +33,8 @@ public class BasicCalendarTest extends TestCase {
 	public void testNoConflict(){
 		GregorianCalendar d1 = new GregorianCalendar(2100, 4, 4, 1, 0);
 		GregorianCalendar d2 = new GregorianCalendar(2100, 4, 4, 3, 0);
-		Event e1 = new Event("1", "Name", d1.getTimeInMillis(), HOUR * 2, 0);
-		Event e2 = new Event("2", "Name", d2.getTimeInMillis(), HOUR * 10, 0);
+		Event e1 = new Event("1", "Name", d1.getTimeInMillis(), HOUR * 2, 0); // 1:00 AM - 3:00 AM
+		Event e2 = new Event("2", "Name", d2.getTimeInMillis(), HOUR * 10, 0); // 3:00 AM - 1:00 PM
 		assertTrue(cal.addEvent(e1));
 		assertTrue(cal.addEvent(e2));
 	}
@@ -42,8 +42,8 @@ public class BasicCalendarTest extends TestCase {
 	public void testLoopoverNoConflict(){
 		GregorianCalendar d1 = new GregorianCalendar(2000, 3, 5, 1, 0);
 		GregorianCalendar d2 = new GregorianCalendar(2000, 3, 5, 23, 30);
-		Event e1 = new Event("1", "Name", d1.getTimeInMillis(), HOUR * 22, 0);
-		Event e2 = new Event("2", "Name", d2.getTimeInMillis(), HOUR, 0);
+		Event e1 = new Event("1", "Name", d1.getTimeInMillis(), HOUR * 22, 0); // 1:00 AM - 11:00 PM
+		Event e2 = new Event("2", "Name", d2.getTimeInMillis(), HOUR, 0); // 11:00 PM - 12:00 AM
 		assertTrue(cal.addEvent(e1));
 		assertTrue(cal.addEvent(e2));
 	}
@@ -51,8 +51,8 @@ public class BasicCalendarTest extends TestCase {
 	public void testStartConflict(){
 		GregorianCalendar d1 = new GregorianCalendar(2100, 0, 1, 1, 0);
 		GregorianCalendar d2 = new GregorianCalendar(2100, 0, 1, 3, 0);
-		Event e1 = new Event("1", "Name", d1.getTimeInMillis(), HOUR * 4, 0);
-		Event e2 = new Event("2", "Name", d2.getTimeInMillis(), HOUR, 0);
+		Event e1 = new Event("1", "Name", d1.getTimeInMillis(), HOUR * 4, 0); // 1:00 AM - 5:00 AM
+		Event e2 = new Event("2", "Name", d2.getTimeInMillis(), HOUR, 0); // 3:00 AM - 4:00 AM
 		assertTrue(cal.addEvent(e1));
 		assertFalse(cal.addEvent(e2));
 	}
@@ -60,8 +60,8 @@ public class BasicCalendarTest extends TestCase {
 	public void testEndConflict(){
 		GregorianCalendar d1 = new GregorianCalendar(0, 0, 1, 11, 0);
 		GregorianCalendar d2 = new GregorianCalendar(0, 0, 1, 5, 0);
-		Event e1 = new Event("1", "Name", d1.getTimeInMillis(), HOUR, 0);
-		Event e2 = new Event("2", "Name", d2.getTimeInMillis(), HOUR * 7, 0);
+		Event e1 = new Event("1", "Name", d1.getTimeInMillis(), HOUR, 0); // 11:00 AM - 12:00 PM
+		Event e2 = new Event("2", "Name", d2.getTimeInMillis(), HOUR * 7, 0); // 5:00 AM - 12:00 PM
 		assertTrue(cal.addEvent(e1));
 		assertFalse(cal.addEvent(e2));
 	}
