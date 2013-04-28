@@ -17,6 +17,14 @@ import javax.microedition.io.StreamConnectionNotifier;
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONValue;
 
+/**
+ * This is a basic implementation of a control box.
+ * This is nothing like a real control box.
+ * All data is made up.
+ * Only use for testing purposes.
+ *
+ * P.S. This code is terrible. We know. Don't worry about it.
+ */
 public class MockPanel {
 	private static boolean testing = false;
 

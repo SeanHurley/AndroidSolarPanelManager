@@ -2,6 +2,7 @@ package com.teamramrod.solarpanelmanager;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -37,7 +37,7 @@ public class ChooseDeviceActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_connect);
+		setContentView(R.layout.activity_choose_device);
 
 		arrayAdapter = new ArrayAdapter<BluetoothDeviceWrapper>(this,
 				android.R.layout.simple_list_item_1);
@@ -156,11 +156,10 @@ public class ChooseDeviceActivity extends BaseActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-		int code = scanner.handleResult(requestCode, resultCode);
-		if (code == BluetoothScanner.BLUETOOTH_READY) {
+		super.onActivityResult(requestCode, resultCode, intent);
+		BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+		if (mBluetoothAdapter != null && mBluetoothAdapter.isEnabled()) {
 			scanner.scan();
-		} else if (code == BluetoothScanner.BLUETOOTH_DISABLED) {
-			Toast.makeText(this, R.string.bluetooth_warning, Toast.LENGTH_SHORT).show();
 		}
 	}
 	

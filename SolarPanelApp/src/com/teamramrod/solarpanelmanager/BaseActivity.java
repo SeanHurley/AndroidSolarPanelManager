@@ -11,13 +11,17 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.example.solarpanelmanager.R;
+import com.teamramrod.bluetooth.BluetoothScanner;
 
+/**
+ * @author tim
+ * 
+ */
 public class BaseActivity extends SherlockActivity {
 	private boolean forbiddenDialogShowing = false;
 	private boolean noDeviceDialogShowing = false;
 	protected ActionBar actionBar;
 	private static final int REQUEST_ENABLE_BT = 1;
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,17 +33,37 @@ public class BaseActivity extends SherlockActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+		BluetoothAdapter mBluetoothAdapter = BluetoothAdapter
+				.getDefaultAdapter();
 		if (mBluetoothAdapter == null) {
 			showNoBluetoothAvailable();
 		} else {
 			if (!mBluetoothAdapter.isEnabled()) {
-				Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+				Intent enableBtIntent = new Intent(
+						BluetoothAdapter.ACTION_REQUEST_ENABLE);
 				startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+				forbiddenDialogShowing = true;
+				noDeviceDialogShowing = true;
 			}
 		}
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode,
+			Intent intent) {
+		if (resultCode == BluetoothScanner.BLUETOOTH_READY) {
+			forbiddenDialogShowing = false;
+			noDeviceDialogShowing = false;
+		} else if (resultCode == BluetoothScanner.BLUETOOTH_DISABLED) {
+			forbiddenDialogShowing = false;
+			noDeviceDialogShowing = false;
+		}
+	}
+
+	/**
+	 * Setup the action bar for the activity.
+	 * Base functionality enables the up functionality.
+	 */
 	protected void setupActionBar() {
 		actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
@@ -83,6 +107,9 @@ public class BaseActivity extends SherlockActivity {
 		}
 	}
 
+	/**
+	 * Displays dialog box saying bluetooth is not available.
+	 */
 	protected void showNoBluetoothAvailable() {
 		DialogInterface.OnClickListener okListener = new DialogInterface.OnClickListener() {
 			@Override
@@ -91,7 +118,8 @@ public class BaseActivity extends SherlockActivity {
 			}
 		};
 		// TODO Get rid of cancel and ok
-		showDialogOkOnly(R.string.bluetooth_not_available, R.string.bluetooth_not_available_message, okListener, null);
+		showDialogOkOnly(R.string.bluetooth_not_available,
+				R.string.bluetooth_not_available_message, okListener, null);
 	}
 
 	/**
@@ -191,6 +219,22 @@ public class BaseActivity extends SherlockActivity {
 		alert.show();
 	}
 
+	/**
+	 * Generates a dialog box with only an OK button
+	 * 
+	 * @param titleId
+	 *            The resource id which will be the title of the dialog to show
+	 * @param messageId
+	 *            The resource id which will be the central message of the
+	 *            dialog to show
+	 * @param positiveListener
+	 *            This will be called when the user selects that "ok" option
+	 *            from the dialog
+	 * @param customView
+	 *            This can be used if you want to show a custom view (For
+	 *            example a text input). Can be left null and instead it will
+	 *            just be a default dialog
+	 */
 	protected void showDialogOkOnly(int titleId, int messageId,
 			DialogInterface.OnClickListener positiveListener, View customView) {
 		AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -241,12 +285,24 @@ public class BaseActivity extends SherlockActivity {
 		}
 	}
 
+	/**
+	 * Changes the activity to the one specified
+	 * 
+	 * @param c
+	 *            The class of the activity to start
+	 * @return Returns true to inform the system to not automatically handle the
+	 *         change
+	 */
 	private boolean changeActivity(Class c) {
 		Intent intent = new Intent(this, c);
 		startActivity(intent);
 		return true;
 	}
 
+	/**
+	 * Empty function to allow refresh behavior. Override for activities that
+	 * require refresh functionality.
+	 */
 	protected void refresh() {
 	}
 }
