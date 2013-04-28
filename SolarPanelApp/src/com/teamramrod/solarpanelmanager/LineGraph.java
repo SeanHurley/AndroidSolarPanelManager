@@ -16,6 +16,11 @@ import android.view.View;
 import com.teamramrod.solarpanelmanager.HistoryGraphActivity.GraphLabelEnum;
 import com.teamramrod.solarpanelmanager.api.responses.SnapshotResponse;
 
+/**
+ * Class for generating the line graph view.
+ * 
+ * @author Soo Woo
+ */
 public class LineGraph {
 
 	private static final String nameOfGraph = "Power Usage";
@@ -24,9 +29,18 @@ public class LineGraph {
 	private static final float sizeOfAxisTitleText = 20;
 	private static final float sizeOfLabelsText = 20;
 
+	/**
+	 * Utilizes AChartEngine (library) to create an instance of the line graph
+	 * which is displayed in the history graph activity
+	 * 
+	 * @param context
+	 * @param history the collection of snapshots, snapshot contains the information to plot
+	 * @param graphLabel the Enum which specifies different options for x-axis label
+	 * @return view of the history graph
+	 */
 	public View getView(Context context, Collection<SnapshotResponse> history,
 			GraphLabelEnum graphLabel) {
-		
+
 		// Convert our data into series object via TimeSeries
 		TimeSeries series = new TimeSeries(nameOfGraph);
 
@@ -37,38 +51,28 @@ public class LineGraph {
 		}
 
 		// A graph may have multiple "lines" in them
-		// The following snip of code acts as a "collection" which allows us to
-		// plot multiple lines
+		// The following snip of code acts as a "collection" which allows us to plot multiple lines
 		XYMultipleSeriesDataset mDataset = new XYMultipleSeriesDataset();
 		mDataset.addSeries(series);
 
 		// A graph may have multiple lines, so again same logic as previous
 		XYMultipleSeriesRenderer mRenderer = new XYMultipleSeriesRenderer();
 
-		// Properties for series
-		// Following gives a line its properties, thus you can customize this
-		// line
 		// Each renderer corresponds to a single series
+		// Properties for series
 		XYSeriesRenderer renderer = new XYSeriesRenderer();
 		renderer.setColor(Color.RED);
 		mRenderer.addSeriesRenderer(renderer);
-		// Change axis title text size
 		mRenderer.setAxisTitleTextSize(sizeOfAxisTitleText);
-		// Change axis label text size
 		mRenderer.setLabelsTextSize(sizeOfLabelsText);
-		// Turn on/off grid
 		mRenderer.setShowGrid(true);
-		// Turn off Default XAxis label
 		mRenderer.setXLabels(0);
-		// XAxis Title
 		mRenderer.setXTitle(nameXAxis);
-		// YAxis Title
 		mRenderer.setYTitle(nameYAxis);
-		
 		mRenderer.setZoomButtonsVisible(true);
 		mRenderer.setZoomEnabled(true);
 
-		// Covert timestamp into date and use this as new XAxis label
+		// Covert timestamp into date and use this as new x-axis label
 		x = 1;
 		Date date;
 		for (SnapshotResponse sr : history) {
@@ -89,14 +93,15 @@ public class LineGraph {
 					mRenderer.addXTextLabel(x, longDf.format(date));
 					break;
 				default:
+					System.out.println("Did not specify X-Axis Label");
 					break;
 				}
 			}
 			x++;
 		}
 
-		// Embeds graph in Activity Gives you view, linearLayout.view
-		View mChartView = ChartFactory.getLineChartView(context, mDataset,mRenderer);
+		// Embeds graph in a view to be displayed in history graph activity
+		View mChartView = ChartFactory.getLineChartView(context, mDataset, mRenderer);
 
 		return mChartView;
 	}
