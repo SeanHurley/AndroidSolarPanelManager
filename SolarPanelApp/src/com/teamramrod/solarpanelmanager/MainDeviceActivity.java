@@ -40,6 +40,8 @@ public class MainDeviceActivity extends BaseActivity {
 	private double pvvoltage;
 	private long timestamp;
 	private boolean powerUserEnabled;
+	private double powerRateIn;
+	private double powerRateOut;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -55,6 +57,8 @@ public class MainDeviceActivity extends BaseActivity {
 		pvcurrent = 0;
 		pvvoltage = 0;
 		timestamp = 0;
+		powerRateIn = 0;
+		powerRateOut = 0;
 		batteryLevel = new BatteryImageCreator(getApplicationContext(), BatteryImageCreator.SIZE_NOTIFICATION);
 
 		getUI();
@@ -169,9 +173,14 @@ public class MainDeviceActivity extends BaseActivity {
 
 				if (response.getResult() == 200) {
 					Resources res = assignSnapshotResponse(response);
+
+					powerRateIn = round(response.getIntakeRate(), 2);
+					powerRateIn = round(response.getOuttakeRate(), 2);
+
 					if (!powerUserEnabled) {
-						snapshot.setText(res.getString(R.string.battery_in) + "\n"
-								+ res.getString(R.string.battery_out) + "\n"
+						// TODO Calculate ETA until charged/discharged
+						snapshot.setText(res.getString(R.string.battery_in) + ": " + powerRateIn + "\n"
+								+ res.getString(R.string.battery_out) + ": " + powerRateOut + "\n"
 								+ res.getString(R.string.battery_estimatedtime));
 					} else {
 						snapshot.setText(res.getString(R.string.battery_voltage) + ":" + round(battery_voltage, 2)
@@ -213,7 +222,9 @@ public class MainDeviceActivity extends BaseActivity {
 		Resources res = getResources();
 		minChargeLevel.setText(res.getString(R.string.min_charge_label) + ":" + minVal);
 		maxChargeLevel.setText(res.getString(R.string.max_charge_label) + ":" + maxVal);
-		snapshot_powered.setText(res.getString(R.string.battery_in) + "\n" + res.getString(R.string.battery_out) + "\n"
+		// TODO Calculate ETA until charged/discharged
+		snapshot_powered.setText(res.getString(R.string.battery_in) + ": " + powerRateIn + "\n"
+				+ res.getString(R.string.battery_out) + ": " + powerRateOut + "\n"
 				+ res.getString(R.string.battery_estimatedtime));
 		return res;
 	}
